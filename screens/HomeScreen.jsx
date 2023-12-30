@@ -1,36 +1,66 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-} from "react-native";
-import React from "react";
+import { Image, StyleSheet, Text, View, Pressable } from "react-native";
+import { React, useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faClock } from "@fortawesome/free-regular-svg-icons/faClock";
 
 export default function HomeScreen() {
+  const [currentDate, setCurrentDate] = useState("");
+  const weekday = [
+    "Minggu",
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+  ];
+  const moon = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  const d = new Date();
+  let day = weekday[d.getDay()];
+  // Get current date and time
+  useEffect(() => {
+    var date = new Date().getDate(); //Current Date
+    const d = new Date();
+    let month = moon[d.getMonth()];
+    var year = new Date().getFullYear(); //Current Year
+    setCurrentDate(date + " " + month + " " + year);
+  }, []);
+
   return (
-    <View  className="mt-6">
-      <StatusBar backgroundColor="#5A9CFF" style="light"/>
+    <View className="mt-6">
+      <StatusBar backgroundColor="#5A9CFF" style="light" />
       <View className="flex-row justify-between items-center bg-[#5A9CFF] p-5">
-        <Text className="text-white text-xl font-bold">PT. Kenzou Aplikasi</Text>
-      
+        <Text className="text-white text-xl font-bold">
+          PT. Kenzou Aplikasi
+        </Text>
       </View>
 
       <View className="flex flex-col gap-4 mt-6 p-5">
         <View className="bg-white rounded-lg shadow-lg shadow-blue-200 p-4">
           <View className=" items-center mb-4">
-            <Text className="text-3xl font-bold">Selasa,</Text>
-            <Text className="text-2xl font-bold">12 Desember 2023</Text>
+            <Text className="text-3xl font-bold">{day},</Text>
+            <Text className="text-2xl font-bold">{currentDate}</Text>
           </View>
           <Separator />
-          <View className="flex-row justify-between">
+          <View className="flex-row justify-center gap-32">
             <View className="flex-row gap-2 mt-3">
-              <FontAwesomeIcon icon={faClock} />
               <View>
-                <Text className="text-lg text-gray-600 font-bold">Masuk</Text>
+                <Text className="text-lg text-black font-bold">Masuk</Text>
                 <Text className="text-2xl text-gray-600 font-medium">
                   08:30:12
                 </Text>
@@ -38,7 +68,7 @@ export default function HomeScreen() {
             </View>
             <View className="flex-row gap-2 mt-3">
               <View>
-                <Text className="text-lg text-gray-600 font-bold">Keluar</Text>
+                <Text className="text-lg text-black font-bold">Keluar</Text>
                 <Text className="text-2xl text-gray-600 font-medium">-</Text>
               </View>
             </View>

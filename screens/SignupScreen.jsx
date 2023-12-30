@@ -116,12 +116,11 @@ const SignupScreen = () => {
                 entering={FadeInDown.delay(400).duration(1000).springify()}
               >
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Home")}
+                  onPress={() => navigation.navigate("Login")}
                   className="bg-[#3170E8] w-full p-3 rounded-2xl mb-3"
                 >
                   <Text
                     className="text-xl font-bold text-white text-center"
-                    onPress={() => navigation.push("Home")}
                   >
                     Sign Up
                   </Text>

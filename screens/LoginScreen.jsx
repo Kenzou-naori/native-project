@@ -18,8 +18,8 @@ import Animated, {
   FadeInUp,
 } from "react-native-reanimated";
 
-const LoginScreen = () => {
-  const navigation = useNavigation();
+function LoginScreen({navigation}) {
+  // const navigation = useNavigation();
 
   const [email, setEMail] = useState("");
   const [username, setUsername] = useState("");
@@ -94,7 +94,6 @@ const LoginScreen = () => {
                 >
                   <Text
                     className="text-xl font-bold text-white text-center"
-                    onPress={() => navigation.push("Signup")}
                   >
                     Login
                   </Text>
