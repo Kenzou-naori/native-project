@@ -40,19 +40,7 @@ const ProfileScreen = ({
               />
             </View>
             <View className="mt-4">
-              <Text style={styles.label}>Username</Text>
-              <TextInput
-                style={styles.input}
-                value={value}
-                onChangeText={onChangeText}
-                placeholder={"naufalmuhammadzahran"}
-                autoCapitalize={autoCapitalize}
-                keyboardType={keyboardType}
-                secureTextEntry={secureTextEntry}
-              />
-            </View>
-            <View className="mt-4">
-              <Text style={styles.label}>Displayname</Text>
+              <Text style={styles.label}>Full Name</Text>
               <TextInput
                 style={styles.input}
                 value={value}

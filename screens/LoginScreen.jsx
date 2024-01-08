@@ -22,7 +22,6 @@ function LoginScreen({navigation}) {
   // const navigation = useNavigation();
 
   const [email, setEMail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   return (
@@ -59,17 +58,6 @@ function LoginScreen({navigation}) {
                   onChangeText={(text) => setEMail(text)}
                   placeholderTextColor={"gray"}
                   keyboardType="email-address"
-                />
-              </Animated.View>
-              <Animated.View
-                entering={FadeInDown.duration(1000).springify()}
-                className="bg-white p-5 rounded-2xl w-full"
-              >
-                <TextInput
-                  placeholder="Username"
-                  value={username}
-                  onChangeText={(text) => setUsername(text)}
-                  placeholderTextColor={"gray"}
                 />
               </Animated.View>
               <Animated.View
