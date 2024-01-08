@@ -15,7 +15,7 @@ import ScheduleScreen from "../screens/ScheduleScreen";
 import SettingsScreen from "../screens/HistoryScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 
-const homeName = "Home";
+const homeName = "Rumah";
 const scheduleName = "Schedule";
 const settingsName = "History";
 const profileName = "Profile";
@@ -27,7 +27,7 @@ function FirstScreen() {
   return(
 
   <Tab.Navigator
-    initialRouteName="Home"
+    initialRouteName={homeName}
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
@@ -52,7 +52,7 @@ function FirstScreen() {
     })}
   >
     <Tab.Screen
-      name="Home"
+      name={homeName}
       component={HomeScreen}
       options={{
         headerShown: false,

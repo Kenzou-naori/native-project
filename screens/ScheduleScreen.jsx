@@ -125,8 +125,8 @@ const DetailScreen = ({
           <FontAwesomeIcon icon={faCaretRight} color="white" size={24} />
         </TouchableOpacity>
       </View>
-        {renderModal()}
       <View className="bg-white rounded-t-3xl h-full mt-6 p-5 -mb-56">
+        {renderModal()}
         <View className="flex-row justify-between my-5">
           <Text className="text-2xl font-bold">Tugas hari ini</Text>
           <TouchableOpacity onPress={() => setOpenModal(true)}>
@@ -150,7 +150,7 @@ const DetailScreen = ({
     return(
 
       <Modal visible={openModal} animationType="fade" transparent={true}>
-      <View className="bg-white rounded-t-3xl h-full mt-[105] p-5 -mb-56">
+      <View className="bg-white rounded-t-3xl mt-[125] h-screen p-5 -mb-56">
         <View className="flex-row justify-between my-5">
           <Text className="text-2xl font-bold">Tambah Tugas</Text>
           <TouchableOpacity onPress={() => setOpenModal(false)}>
