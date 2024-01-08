@@ -23,8 +23,7 @@ const SignupScreen = () => {
 
   const [email, setEMail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [displayname, setDisplayname] = useState("");
+  const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
 
   return (
@@ -81,20 +80,9 @@ const SignupScreen = () => {
                 className="bg-white p-5 rounded-2xl w-full"
               >
                 <TextInput
-                  placeholder="Username"
-                  value={username}
-                  onChangeText={(text) => setUsername(text)}
-                  placeholderTextColor={"gray"}
-                />
-              </Animated.View>
-              <Animated.View
-                entering={FadeInDown.duration(1000).springify()}
-                className="bg-white p-5 rounded-2xl w-full"
-              >
-                <TextInput
-                  placeholder="Display Name"
-                  value={displayname}
-                  onChangeText={(text) => setDisplayname(text)}
+                  placeholder="Full Name"
+                  value={fullName}
+                  onChangeText={(text) => setFullName(text)}
                   placeholderTextColor={"gray"}
                 />
               </Animated.View>
