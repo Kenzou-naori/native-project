@@ -1,6 +1,4 @@
 import {
-  Image,
-  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -9,20 +7,29 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { useNavigation } from "@react-navigation/native";
 import Animated, {
   FadeInDown,
-  FadeInLeft,
   FadeInUp,
 } from "react-native-reanimated";
+import { SignIn } from "../api/auth";
+import storage from "../utils/storage";
 
-function LoginScreen({navigation}) {
-  // const navigation = useNavigation();
-
+function LoginScreen({ navigation }: { navigation: any }) {
   const [email, setEMail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    storage
+      .load({ key: "user" })
+      .then((res) => {
+        navigation.navigate("Home");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <View className="bg-white h-full w-full">
@@ -77,7 +84,7 @@ function LoginScreen({navigation}) {
                 entering={FadeInDown.delay(400).duration(1000).springify()}
               >
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Home")}
+                  onPress={() => SignIn(email, password, navigation)}
                   className="bg-[#3170E8] w-full p-3 rounded-2xl mb-3"
                 >
                   <Text
@@ -86,6 +93,19 @@ function LoginScreen({navigation}) {
                     Login
                   </Text>
                 </TouchableOpacity>
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(600).duration(1000).springify()}
+              >
+                <Text className="text-white text-center">
+                  Don't have an account?{" "}
+                  <Text
+                    onPress={() => navigation.navigate("Signup")}
+                    className="text-[#3170E8]"
+                  >
+                    Sign Up
+                  </Text>
+                </Text>
               </Animated.View>
             </View>
           </View>
@@ -96,5 +116,3 @@ function LoginScreen({navigation}) {
 };
 
 export default LoginScreen;
-
-const styles = StyleSheet.create({});

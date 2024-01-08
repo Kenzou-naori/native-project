@@ -1,6 +1,4 @@
 import {
-  Image,
-  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -11,16 +9,13 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { useNavigation } from "@react-navigation/native";
 import Animated, {
   FadeInDown,
-  FadeInLeft,
   FadeInUp,
 } from "react-native-reanimated";
+import { SignUp } from "../api/auth";
 
-const SignupScreen = () => {
-  const navigation = useNavigation();
-
+const SignupScreen = ({ navigation }: { navigation: any }) => {
   const [email, setEMail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -104,7 +99,7 @@ const SignupScreen = () => {
                 entering={FadeInDown.delay(400).duration(1000).springify()}
               >
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Login")}
+                  onPress={() => SignUp(email, password, fullName, phone, navigation)}
                   className="bg-[#3170E8] w-full p-3 rounded-2xl mb-3"
                 >
                   <Text
@@ -113,6 +108,19 @@ const SignupScreen = () => {
                     Sign Up
                   </Text>
                 </TouchableOpacity>
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(600).duration(1000).springify()}
+              >
+                <Text className="text-white text-center">
+                  Already have an account?{" "}
+                  <Text
+                    onPress={() => navigation.navigate("Login")}
+                    className="text-[#3170E8]"
+                  >
+                    Login
+                  </Text>
+                </Text>
               </Animated.View>
             </View>
           </View>
@@ -123,5 +131,3 @@ const SignupScreen = () => {
 };
 
 export default SignupScreen;
-
-const styles = StyleSheet.create({});

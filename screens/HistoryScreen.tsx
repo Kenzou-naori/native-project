@@ -1,13 +1,12 @@
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 
-export default function HistoryScreen({ navigation }) {
+export default function HistoryScreen() {
   const [data, setData] = useState([
     {
       id: 1,
@@ -98,5 +97,16 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 16,
+  },
+  card: {
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
   },
 });

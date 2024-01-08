@@ -1,22 +1,46 @@
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   TextInput,
   View,
   ScrollView,
   Image,
-  Pressable,
+  TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import storage from "../utils/storage";
 
-const ProfileScreen = ({
+interface ProfileScreenProps {
+  navigation: any;
+  value: string;
+  onChangeText: (text: string) => void;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad';
+  secureTextEntry?: boolean;
+}
+
+const ProfileScreen: React.FC<ProfileScreenProps> = ({
+  navigation,
   value,
   onChangeText,
-  autoCapitalize = "none",
-  keyboardType = "default",
+  autoCapitalize = 'none',
+  keyboardType = 'default',
   secureTextEntry = false,
 }) => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEMail] = useState("");
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const dataString = await storage.load({ key: "user" });
+      const data = JSON.parse(dataString);
+      setEMail(data.email);
+      setFullName(data.fullName);
+    }
+
+    getUserData();
+  }, []);
+
   return (
     <View className="mt-6 bg-[#5A9CFF]">
       <View className="bg-white rounded-t-3xl h-full mt-6 p-5 -mb-6">
@@ -33,7 +57,7 @@ const ProfileScreen = ({
                 style={styles.input}
                 value={value}
                 onChangeText={onChangeText}
-                placeholder={"abdulnaufalmz@gmail.com"}
+                placeholder={email}
                 autoCapitalize={autoCapitalize}
                 keyboardType="email-address"
                 secureTextEntry={secureTextEntry}
@@ -45,12 +69,25 @@ const ProfileScreen = ({
                 style={styles.input}
                 value={value}
                 onChangeText={onChangeText}
-                placeholder={"Naufal Muhammad Zahran"}
+                placeholder={fullName}
                 autoCapitalize={autoCapitalize}
                 keyboardType={keyboardType}
                 secureTextEntry={secureTextEntry}
               />
             </View>
+          </View>
+          <View className="flex justify-center items-center">
+            <TouchableOpacity
+              onPress={async () => {
+                await storage.clearMap();
+                navigation.navigate("Login");
+              }}
+              className="bg-[#3170E8] w-full p-3 rounded-2xl mb-3"
+            >
+              <Text className="text-xl font-bold text-white text-center">
+                Logout
+              </Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

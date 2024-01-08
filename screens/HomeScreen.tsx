@@ -1,8 +1,6 @@
-import { Image, StyleSheet, Text, View, Pressable } from "react-native";
-import { React, useState, useEffect } from "react";
+import { StyleSheet, Text, View, Pressable } from "react-native";
+import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faClock } from "@fortawesome/free-regular-svg-icons/faClock";
 
 export default function HomeScreen() {
   const [currentDate, setCurrentDate] = useState("");
@@ -113,8 +111,3 @@ export default function HomeScreen() {
 }
 
 const Separator = () => <View className="h-[1px] w-full bg-black"></View>;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
