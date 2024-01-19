@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { StatusBar } from "expo-status-bar";
 import { faCaretRight, faPlusSquare, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import constant from "../constant/date";
+import storage from "../utils/storage";
+import { getSchedule, postSchedule } from "../api/schedule";
 
 const transparent = "rgba(0,0,0,0.5)";
 
@@ -22,85 +25,54 @@ const DetailScreen = ({
 	keyboardType = "default",
 	secureTextEntry = false
 }: DetailScreenProps) => {
-	const [openModal, setOpenModal] = React.useState(false);
-
-	const [data, setData] = useState([
-		{
-			id: 1,
-			time: "12:00",
-			name: "Card Title",
-			content: "Card Content"
-		},
-		{
-			id: 2,
-			time: "12:00",
-			name: "Card Title",
-			content: "Card Content"
-		},
-		{
-			id: 3,
-			time: "12:00",
-			name: "Card Title",
-			content: "Card Content"
-		},
-		{
-			id: 4,
-			time: "12:00",
-			name: "Card Title",
-			content: "Card Content"
-		},
-		{
-			id: 5,
-			time: "12:00",
-			name: "Card Title",
-			content: "Card Content"
-		},
-		{
-			id: 6,
-			time: "12:00",
-			name: "Card Title",
-			content: "Card Content"
-		},
-		{
-			id: 7,
-			time: "12:00",
-			name: "Card Title",
-			content: "Card Content"
-		},
-		{
-			id: 8,
-			time: "12:00",
-			name: "Card Title",
-			content: "Card Content"
-		}
-	]);
-
+	const [title, setTitle] = useState("");
+	const [startTime, setStartTime] = useState("");
+	const [endTime, setEndTime] = useState("");
+	const [day, setDay] = useState("");
 	const [currentDate, setCurrentDate] = useState("");
-	const weekday = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-	const moon = [
-		"Januari",
-		"Februari",
-		"Maret",
-		"April",
-		"Mei",
-		"Juni",
-		"Juli",
-		"Agustus",
-		"September",
-		"Oktober",
-		"November",
-		"Desember"
-	];
+	const [openModal, setOpenModal] = useState(false);
 
-	const d = new Date();
-	let day = weekday[d.getDay()];
-	// Get current date and time
+	const [data, setData] = useState<ISchedule[]>([]);
+
 	useEffect(() => {
-		var date = new Date().getDate(); //Current Date
 		const d = new Date();
-		let month = moon[d.getMonth()];
-		var year = new Date().getFullYear(); //Current Year
-		setCurrentDate(date + " " + month + " " + year);
+		let date = d.getDate().toString(); //Current Date
+		let month = (d.getMonth() + 1).toString(); //Current Month
+		let year = d.getFullYear().toString(); //Current Year
+
+		async function loadDate() {
+			let day = constant.weekdays[d.getDay()];
+			let month = constant.months[d.getMonth()];
+
+			setDay(day);
+			setCurrentDate(date + " " + month + " " + year);
+		}
+
+		async function loadData() {
+			date = date.padStart(2, "0");
+			month = month.padStart(2, "0");
+			year = year.padStart(2, "0");
+
+			await getSchedule(date + "-" + month + "-" + year);
+			const schedule = await storage.load({ key: "schedule" });
+			if (schedule === null) return;
+			try {
+				const scheduleData = JSON.parse(schedule);
+				setData(scheduleData);
+			} catch (error) {
+				console.error("Invalid JSON string:", schedule);
+			}
+		}
+
+		loadDate();
+		loadData();
+
+		setInterval(() => {
+			loadDate();
+		}, 1000);
+		setInterval(() => {
+			loadData();
+		}, 1000 * 60);
 	}, []);
 
 	return (
@@ -111,7 +83,6 @@ const DetailScreen = ({
 						<Text className="text-white font-bold text-2xl">{day}</Text>
 						<Text className="text-white font-bold text-2xl">{currentDate}</Text>
 					</View>
-					<FontAwesomeIcon icon={faCaretRight} color="white" size={24} />
 				</TouchableOpacity>
 			</View>
 			<View className="bg-white rounded-t-3xl h-full mt-6 p-5 -mb-56">
@@ -125,9 +96,7 @@ const DetailScreen = ({
 				<ScrollView showsVerticalScrollIndicator={false}>
 					{data.map((item, index) => (
 						<View style={styles.card} key={item.id}>
-							<Text className="text-sm font-semibold">{item.time}</Text>
-							<Text style={styles.title}>{item.name}</Text>
-							<Text style={styles.content}>{item.content}</Text>
+							<Text style={styles.title}>{item.title}</Text>
 						</View>
 					))}
 				</ScrollView>
@@ -150,7 +119,12 @@ const DetailScreen = ({
 							{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
 							<View className="mt-4">
 								<Text style={styles.label}>Nama Kegiatan</Text>
-								<TextInput style={styles.input} placeholder={"Membuat tampilan login"} keyboardType="default" />
+								<TextInput
+									style={styles.input}
+									placeholder={"Membuat tampilan login"}
+									keyboardType="default"
+									onChangeText={text => setTitle(text)}
+								/>
 							</View>
 							<View className="mt-4">
 								<Text style={styles.label}>Mulai</Text>
@@ -159,6 +133,7 @@ const DetailScreen = ({
 									value={value}
 									placeholder={"mulai dari kapan"}
 									keyboardType="default"
+									onChangeText={text => setStartTime(text)}
 								/>
 							</View>
 							<View className="mt-4">
@@ -168,8 +143,31 @@ const DetailScreen = ({
 									value={value}
 									placeholder={"Selesai kapan"}
 									keyboardType="default"
+									onChangeText={text => setEndTime(text)}
 								/>
 							</View>
+							<TouchableOpacity
+								onPress={async () => {
+									setOpenModal(false);
+
+									const data: IScheduleData = {
+										title: title,
+										date: currentDate,
+										startTime: startTime,
+										endTime: endTime
+									};
+
+									await postSchedule(data);
+
+									const schedule = await storage.load({ key: "schedule" });
+									const scheduleData = JSON.parse(schedule);
+
+									setData(scheduleData);
+								}}>
+								<View className="bg-[#5A9CFF] rounded-lg mt-6 p-2">
+									<Text className="text-white text-center font-semibold text-lg">Tambah</Text>
+								</View>
+							</TouchableOpacity>
 						</View>
 					</ScrollView>
 				</View>
