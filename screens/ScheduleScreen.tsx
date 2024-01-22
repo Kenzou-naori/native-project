@@ -67,12 +67,17 @@ const DetailScreen = ({
 		loadDate();
 		loadData();
 
-		setInterval(() => {
+		const intervalDate = setInterval(() => {
 			loadDate();
 		}, 1000);
-		setInterval(() => {
+		const intervalData = setInterval(() => {
 			loadData();
 		}, 1000 * 60);
+
+		return () => {
+			clearInterval(intervalDate);
+			clearInterval(intervalData);
+		};
 	}, []);
 
 	return (

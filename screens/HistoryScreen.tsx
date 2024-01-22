@@ -21,7 +21,11 @@ export default function HistoryScreen() {
 			setAttendances(attendancesData);
 		}
 
-		loadAttendances();
+		const interval = setInterval(() => {
+			loadAttendances();
+		}, 1000 * 30);
+
+		return () => clearInterval(interval);
 	}, []);
 
 	return (

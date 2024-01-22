@@ -57,12 +57,12 @@ export default function HomeScreen() {
 			setAttendance(attendanceData);
 		}
 
-		setInterval(() => {
+		const intervalTD = setInterval(() => {
 			loadTime();
 			loadDate();
 		}, 1000);
 
-		setInterval(() => {
+		const intervalAC = setInterval(() => {
 			loadAttendance();
 			loadCompany();
 		}, 1000 * 60);
@@ -71,6 +71,11 @@ export default function HomeScreen() {
 		loadTime();
 		loadCompany();
 		loadAttendance();
+
+		return () => {
+			clearInterval(intervalTD);
+			clearInterval(intervalAC);
+		};
 	}, []);
 
 	return (
