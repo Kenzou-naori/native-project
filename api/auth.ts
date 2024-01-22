@@ -1,6 +1,19 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import Toast from 'react-native-toast-message';
+
 import storage from "../utils/storage";
 import { baseUrl, errorResponse } from "./util";
+
+const showToast = () => {
+    Toast.show({
+      type: 'error',
+      text1: 'Warning',
+	  'onShow': () => console.log("toast visible") ,
+	  'onHide': () => console.log("toast hide") ,
+	  visibilityTime : 5000	,
+      text2: 'Email dan Password harus di isi'
+    });
+  }
 
 export async function SignUp(email: string, password: string, fullName: string, phone: string, navigation: any) {
 	axios
@@ -45,6 +58,8 @@ export async function SignIn(email: string, password: string, navigation: any) {
 			}
 		})
 		.catch((error: AxiosError) => {
-			return errorResponse(error);
+			showToast(); // Call the toast function here
+            return error;
+
 		});
 }

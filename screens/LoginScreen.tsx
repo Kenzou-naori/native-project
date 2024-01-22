@@ -8,11 +8,10 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import Toast from 'react-native-toast-message';
+
 import { StatusBar } from "expo-status-bar";
-import Animated, {
-  FadeInDown,
-  FadeInUp,
-} from "react-native-reanimated";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { SignIn } from "../api/auth";
 import storage from "../utils/storage";
 
@@ -31,10 +30,12 @@ function LoginScreen({ navigation }: { navigation: any }) {
       });
   }, []);
 
+
   return (
     <View className="bg-white h-full w-full">
       <StatusBar backgroundColor="#5A9CFF" style="light" />
-      <SafeAreaView className="bg-[#5A9CFF] h-[93%] p-5 rounded-b-[70]">
+      <SafeAreaView className="bg-[#5A9CFF] h-[93%] p-5 rounded-b-3xl">
+        <Toast />
         <ScrollView className="mt-6" showsVerticalScrollIndicator={false}>
           <View className="flex items-center">
             <Animated.Text
@@ -84,12 +85,12 @@ function LoginScreen({ navigation }: { navigation: any }) {
                 entering={FadeInDown.delay(400).duration(1000).springify()}
               >
                 <TouchableOpacity
-                  onPress={() => SignIn(email, password, navigation)}
+                  onPress={() => {
+                    SignIn(email, password, navigation);
+                  }}
                   className="bg-[#3170E8] w-full p-3 rounded-2xl mb-3"
                 >
-                  <Text
-                    className="text-xl font-bold text-white text-center"
-                  >
+                  <Text className="text-xl font-bold text-white text-center">
                     Login
                   </Text>
                 </TouchableOpacity>
@@ -113,6 +114,6 @@ function LoginScreen({ navigation }: { navigation: any }) {
       </SafeAreaView>
     </View>
   );
-};
+}
 
 export default LoginScreen;

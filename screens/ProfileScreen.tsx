@@ -46,6 +46,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <TextInput
 								style={styles.input}
 								value={email}
+								
 								onChangeText={onChangeText}
 								placeholder={email}
 								autoCapitalize={autoCapitalize}
@@ -63,6 +64,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
 								placeholder={phone}
 								autoCapitalize={autoCapitalize}
 								keyboardType="phone-pad"
+								editable={false}
+
 								secureTextEntry={secureTextEntry}
 							/>
 						</View>
@@ -74,6 +77,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
 								onChangeText={onChangeText}
 								placeholder={fullName}
 								autoCapitalize={autoCapitalize}
+								editable={false}
+
 								keyboardType={keyboardType}
 								secureTextEntry={secureTextEntry}
 							/>

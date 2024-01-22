@@ -34,7 +34,6 @@ export default function HistoryScreen() {
 					{attendances.map((item, index) =>
 						item.checkOut ? (
 							<View
-								style={styles.card}
 								key={item.id}
 								className=" rounded-xl border border-[#ccc] p-[20] mb-[20] bg-white flex justify-between items-center flex-row">
 								{/* <FontAwesomeIcon icon={faHome} size={24} style={styles.icon} /> */}
@@ -66,15 +65,15 @@ const styles = StyleSheet.create({
 	content: {
 		fontSize: 16
 	},
-	card: {
-		borderRadius: 20,
-		padding: 20,
-		marginBottom: 20,
-		backgroundColor: "white",
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		borderWidth: 1,
-		borderColor: "#ccc"
-	}
+	// card: {
+	// 	borderRadius: 20,
+	// 	padding: 20,
+	// 	marginBottom: 20,
+	// 	backgroundColor: "white",
+	// 	flexDirection: "row",
+	// 	justifyContent: "space-between",
+	// 	alignItems: "center",
+	// 	borderWidth: 1,
+	// 	borderColor: "#ccc"
+	// }
 });

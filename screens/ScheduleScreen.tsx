@@ -95,7 +95,7 @@ const DetailScreen = ({
 				</View>
 				<ScrollView showsVerticalScrollIndicator={false}>
 					{data.map((item, index) => (
-						<View style={styles.card} key={item.id}>
+						<View className="border rounded-2xl border-gray-400 p-[20] mb-[20] flex flex-col" key={item.id}>
 							<Text style={styles.title}>{item.title}</Text>
 						</View>
 					))}
@@ -180,16 +180,16 @@ const styles = StyleSheet.create({
 	scrollView: {
 		marginHorizontal: 20
 	},
-	card: {
-		borderRadius: 10,
-		borderWidth: 1,
-		borderColor: "#ccc",
-		padding: 20,
-		marginBottom: 20,
-		backgroundColor: "#fff",
-		display: "flex",
-		flexDirection: "column"
-	},
+	// card: {
+	// 	borderRadius: 10,
+	// 	borderWidth: 1,
+	// 	borderColor: "#ccc",
+	// 	padding: 20,
+	// 	marginBottom: 20,
+	// 	backgroundColor: "#fff",
+	// 	display: "flex",
+	// 	flexDirection: "column"
+	// },
 	title: {
 		fontSize: 24,
 		fontWeight: "bold",

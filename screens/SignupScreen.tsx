@@ -24,7 +24,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
   return (
     <View className="bg-white h-full w-full">
       <StatusBar backgroundColor="#5A9CFF" style="light" />
-      <SafeAreaView className="bg-[#5A9CFF] h-[98%] p-5 rounded-b-[70]">
+      <SafeAreaView className="bg-[#5A9CFF] h-[98%] p-5 rounded-b-3xl">
         <ScrollView className="mt-6" showsVerticalScrollIndicator={false}>
           <View className="flex items-center">
             <Animated.Text
