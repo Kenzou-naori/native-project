@@ -87,7 +87,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
 					<View className="flex justify-center items-center">
 						<TouchableOpacity
 							onPress={async () => {
-								await storage.clearMap();
+								await storage.remove({ key: "user" });
+								await storage.remove({ key: "token" })
+								await storage.save({ key: "isLoggedin", data: false });
+
 								navigation.navigate("Login");
 							}}
 							className="bg-[#3170E8] w-full p-3 rounded-2xl mb-3">
