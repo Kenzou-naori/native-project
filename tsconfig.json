@@ -1,6 +1,6 @@
 {
   "extends": "expo/tsconfig.base",
-  "include": ["nativewindapp.d.ts", "./**/*"],
+  "include": ["nativewindapp.d.ts", "./**/*", ".navigation"],
   "compilerOptions": {
     "strict": true,
     "target": "esnext",

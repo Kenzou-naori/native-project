@@ -1,3 +1,8 @@
+interface IAPIErrorResponse {
+    success: boolean;
+    message: string;
+}
+
 interface IAPIResponseLogin {
     data: {
         token: string;
