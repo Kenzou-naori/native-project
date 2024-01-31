@@ -33,17 +33,12 @@ function LoginScreen({ navigation }: { navigation: any }) {
 
   return (
     <View className="bg-white h-full w-full">
-      <StatusBar backgroundColor="#5A9CFF" style="light" />
-      <SafeAreaView className="bg-[#5A9CFF] h-[93%] p-5 rounded-b-3xl">
+      <StatusBar backgroundColor="#DEE9FD" style="light" />
+      <SafeAreaView className="bg-[#DEE9FD] h-[93%] p-5 rounded-b-[70px] shadow-md shadow-gray-500">
         <Toast />
         <ScrollView className="mt-6" showsVerticalScrollIndicator={false}>
           <View className="flex items-center">
-            <Animated.Text
-              entering={FadeInUp.duration(1000).springify()}
-              className="text-white font-bold tracking-wide text-3xl"
-            >
-              Login
-            </Animated.Text>
+           
             <Animated.Image
               className="h-96 w-96"
               entering={FadeInUp.duration(1000).springify()}
@@ -98,7 +93,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
               <Animated.View
                 entering={FadeInDown.delay(600).duration(1000).springify()}
               >
-                <Text className="text-white text-center">
+                <Text className="text-gray-600 text-center">
                   Don't have an account?{" "}
                   <Text
                     onPress={() => navigation.navigate("Signup")}

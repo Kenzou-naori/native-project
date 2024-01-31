@@ -1,4 +1,5 @@
 import {
+  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -23,16 +24,9 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
 
   return (
     <View className="bg-white h-full w-full">
-      <StatusBar backgroundColor="#5A9CFF" style="light" />
-      <SafeAreaView className="bg-[#5A9CFF] h-[98%] p-5 rounded-b-3xl">
-        <ScrollView className="mt-6" showsVerticalScrollIndicator={false}>
+      <SafeAreaView className="bg-[#DEE9FD] h-[89%] p-5 rounded-b-[70px]">
+        <ScrollView className="mt-6">
           <View className="flex items-center">
-            <Animated.Text
-              entering={FadeInUp.duration(1000).springify()}
-              className="text-white font-bold tracking-wide text-3xl"
-            >
-              Sign Up
-            </Animated.Text>
             <Animated.Image
               className="h-80 w-80"
               entering={FadeInUp.duration(1000).springify()}
@@ -81,18 +75,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
                   placeholderTextColor={"gray"}
                 />
               </Animated.View>
-              <Animated.View
-                entering={FadeInDown.duration(1000).springify()}
-                className="bg-white p-5 rounded-2xl w-full"
-              >
-                <TextInput
-                  placeholder="Phone"
-                  value={phone}
-                  onChangeText={(text) => setPhone(text)}
-                  placeholderTextColor={"gray"}
-                  keyboardType="numeric"
-                />
-              </Animated.View>
+             
              
               <Animated.View
                 className="w-full"
@@ -112,7 +95,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
               <Animated.View
                 entering={FadeInDown.delay(600).duration(1000).springify()}
               >
-                <Text className="text-white text-center">
+                <Text className="text-gray-600 text-center">
                   Already have an account?{" "}
                   <Text
                     onPress={() => navigation.navigate("Login")}
@@ -124,7 +107,7 @@ const SignupScreen = ({ navigation }: { navigation: any }) => {
               </Animated.View>
             </View>
           </View>
-        </ScrollView>
+          </ScrollView>
       </SafeAreaView>
     </View>
   );

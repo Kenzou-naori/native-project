@@ -1,10 +1,20 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getAttendances } from "../api/attendance";
 import storage from "../utils/storage";
 import { capitalizeFirstLetter, formatDate } from "../api/util";
 
 export default function HistoryScreen() {
+
+	const [refreshing, setRefreshing] = React.useState(false);
+
+	const onRefresh = React.useCallback(() => {
+	  setRefreshing(true);
+	  setTimeout(() => {
+		setRefreshing(false);
+	  }, 2000);
+	}, []);
+
 	const [attendances, setAttendances] = useState<IAttendance[]>([]);
 
 	useEffect(() => {
@@ -29,20 +39,23 @@ export default function HistoryScreen() {
 	}, []);
 
 	return (
-		<View className="mt-6 bg-[#5A9CFF]">
-			<View className="bg-white rounded-t-3xl h-full mt-6 p-5 -mb-6">
+		<View className="mt-6 bg-[#DEE9FD]">
+			<View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-6 p-5">
 				<View className="flex-row justify-between my-5">
 					<Text className="text-2xl font-bold">Riwayat Presensi</Text>
 				</View>
-				<ScrollView showsVerticalScrollIndicator={false}>
+				<ScrollView showsVerticalScrollIndicator={false}
+				   refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				  }>
+				
 					{attendances.map((item, index) =>
 						item.checkOut ? (
 							<View
 								key={item.id}
-								className=" rounded-xl border border-[#ccc] p-[20] mb-[20] bg-white flex justify-between items-center flex-row">
-								{/* <FontAwesomeIcon icon={faHome} size={24} style={styles.icon} /> */}
+								className=" rounded-xl border border-[#ccc] p-[20] mb-[20] bg-[#DEE9FD] flex justify-between items-center flex-row">
 								<View>
-									<Text style={styles.title}>{capitalizeFirstLetter(item.status)}</Text>
+									<Text className="text-2xl text-gray-600 font-bold">{capitalizeFirstLetter(item.status)}</Text>
 									<Text style={styles.content}>{formatDate(item.date)}</Text>
 								</View>
 								<Text className="text-sm font-semibold">
@@ -68,16 +81,5 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		fontSize: 16
-	},
-	// card: {
-	// 	borderRadius: 20,
-	// 	padding: 20,
-	// 	marginBottom: 20,
-	// 	backgroundColor: "white",
-	// 	flexDirection: "row",
-	// 	justifyContent: "space-between",
-	// 	alignItems: "center",
-	// 	borderWidth: 1,
-	// 	borderColor: "#ccc"
-	// }
+	}
 });

@@ -15,7 +15,7 @@ import ScheduleScreen from "../screens/ScheduleScreen";
 import SettingsScreen from "../screens/HistoryScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 
-const homeName = "Rumah";
+const homeName = "Dashboard";
 const scheduleName = "Schedule";
 const settingsName = "History";
 const profileName = "Profile";
@@ -24,72 +24,81 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function FirstScreen() {
-  return(
+  return (
+    <Tab.Navigator
+      initialRouteName={homeName}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          let rn = route.name;
 
-  <Tab.Navigator
-    initialRouteName={homeName}
-    screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
-        let rn = route.name;
+          if (rn === homeName) {
+            iconName = focused ? "home" : "home-outline";
+          } else if (rn === scheduleName) {
+            iconName = focused ? "calendar" : "calendar-outline";
+          } else if (rn === settingsName) {
+            iconName = focused ? "reorder-four" : "reorder-four-outline";
+          } else if (rn === profileName) {
+            iconName = focused ? "person-circle" : "person-circle-outline";
+          }
 
-        if (rn === homeName) {
-          iconName = focused ? "home" : "home-outline";
-        } else if (rn === scheduleName) {
-          iconName = focused ? "calendar" : "calendar-outline";
-        } else if (rn === settingsName) {
-          iconName = focused ? "reorder-four" : "reorder-four-outline";
-        } else if (rn === profileName) {
-          iconName = focused ? "person-circle" : "person-circle-outline";
-        }
-
-        return <Ionicons  size={size} color={color} name={iconName} />;
-      },
-      activeTintColor: "#5686E1",
-      inactiveTintColor: "grey",
-      labelStyle: { paddingBottom: 5, fontSize: 10 },
-      style: { padding: 30, height: 80 },
-    })}
-  >
-    <Tab.Screen
-      name={homeName}
-      component={HomeScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <Tab.Screen
-      name={scheduleName}
-      component={ScheduleScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <Tab.Screen
-      name={settingsName}
-      component={SettingsScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <Tab.Screen
-      name={profileName}
-      component={ProfileScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
-  </Tab.Navigator>
-  )
-
+          return <Ionicons size={size} color={color} name={iconName} />;
+        },
+        tabBarStyle: {
+          backgroundColor: "#cedfff",
+          width: 370,
+          marginHorizontal: 20,
+          marginBottom: 14,
+          borderRadius: 50,
+          position: "absolute",
+          shadowColor: "black",
+          shadowOpacity: 1,
+          elevation: 2,
+          
+          // activeTintColor: "#80acff",
+          // inactiveTintColor: "black",
+        },
+        tabBarShowLabel : false
+      })}
+    
+    >
+      <Tab.Screen
+        name={homeName}
+        component={HomeScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name={scheduleName}
+        component={ScheduleScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name={settingsName}
+        component={SettingsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name={profileName}
+        component={ProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Tab.Navigator>
+  );
 }
-
 
 function Auth() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Login" component={LoginScreen}  />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Home" component={FirstScreen} />
       </Stack.Navigator>

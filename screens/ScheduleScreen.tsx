@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { StatusBar } from "expo-status-bar";
 import { faCaretRight, faPlusSquare, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import DateTimePicker from 'react-native-ui-datepicker';
 import constant from "../constant/date";
 import storage from "../utils/storage";
 import { getSchedule, postSchedule } from "../api/schedule";
@@ -20,10 +21,6 @@ interface DetailScreenProps {
 
 const DetailScreen = ({
 	value,
-	onChangeText,
-	autoCapitalize = "none",
-	keyboardType = "default",
-	secureTextEntry = false
 }: DetailScreenProps) => {
 	const [title, setTitle] = useState("");
 	const [startTime, setStartTime] = useState("");
@@ -81,27 +78,30 @@ const DetailScreen = ({
 	}, []);
 
 	return (
-		<View className="mt-6 bg-[#5A9CFF]">
+		<View className="mt-6 bg-[#DEE9FD]">
 			<View className="p-5">
-				<TouchableOpacity className="flex-row items-center">
-					<View className="flex-col mr-2">
-						<Text className="text-white font-bold text-2xl">{day}</Text>
-						<Text className="text-white font-bold text-2xl">{currentDate}</Text>
+					<View className="p-3 mt-3 flex flex-row items-center justify-center bg-[#DEE9FD] rounded-full shadow-xl shadow-gray-800">
+						<Text className="text-gray-800 font-bold text-2xl mr-3">{day}</Text>
+						<Text className="text-gray-800 font-bold text-2xl">{currentDate}</Text>
 					</View>
-				</TouchableOpacity>
 			</View>
-			<View className="bg-white rounded-t-3xl h-full mt-6 p-5 -mb-56">
+			<View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-6 p-5 -mb-56">
 				{renderModal()}
 				<View className="flex-row justify-between my-5">
-					<Text className="text-2xl font-bold">Tugas hari ini</Text>
+					<Text className="text-gray-700 text-2xl font-bold">Tugas hari ini</Text>
 					<TouchableOpacity onPress={() => setOpenModal(true)}>
-						<FontAwesomeIcon icon={faPlusSquare} size={25} color="#5A9CFF" />
+						<FontAwesomeIcon icon={faPlusSquare} size={25} color="#53a0ff" />
 					</TouchableOpacity>
 				</View>
 				<ScrollView showsVerticalScrollIndicator={false}>
 					{data.map((item, index) => (
-						<View className="border rounded-2xl border-gray-400 p-[20] mb-[20] flex flex-col" key={item.id}>
-							<Text style={styles.title}>{item.title}</Text>
+						<View className="border rounded-2xl border-gray-400 p-[20] mb-[20] flex flex-col bg-[#DEE9FD]" key={item.id}>
+							<Text className="text-2xl text-gray-600 font-bold">{item.title}</Text>
+							<View className="flex-row mt-5 justify-end items-center">
+							<Text className="text-xl text-gray-600 font-semibold">{item.startTime}</Text>
+							<Text>—</Text>
+							<Text className="text-xl text-gray-600 font-semibold">{item.endTime}</Text>
+							</View>
 						</View>
 					))}
 				</ScrollView>
@@ -112,9 +112,9 @@ const DetailScreen = ({
 	function renderModal() {
 		return (
 			<Modal visible={openModal} animationType="fade" transparent={true}>
-				<View className="bg-white rounded-t-3xl mt-[125] h-screen p-5 -mb-56">
-					<View className="flex-row justify-between my-5">
-						<Text className="text-2xl font-bold">Tambah Tugas</Text>
+				<View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-[156] p-5 -mb-56">
+					<View className="flex-row justify-between ">
+						<Text className="text-gray-600 text-2xl font-bold">Tambah Tugas</Text>
 						<TouchableOpacity onPress={() => setOpenModal(false)}>
 							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 						</TouchableOpacity>
@@ -122,35 +122,33 @@ const DetailScreen = ({
 					<ScrollView showsVerticalScrollIndicator={false}>
 						<View className="flex-col justify-center items-center my-5">
 							{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
-							<View className="mt-4">
-								<Text style={styles.label}>Nama Kegiatan</Text>
+							<View className="mt-4 w-full">
+							<Text className="text-md text-gray-600 font-bold">Nama Kegiatan</Text>
 								<TextInput
-									style={styles.input}
-									placeholder={"Membuat tampilan login"}
+									className="border-b-2 border-b-gray-500 text-lg py-3"
 									keyboardType="default"
 									onChangeText={text => setTitle(text)}
 								/>
 							</View>
-							<View className="mt-4">
-								<Text style={styles.label}>Mulai</Text>
+							<View className="mt-4 w-full">
+							<Text className="text-md text-gray-600 font-bold">Mulai</Text>
 								<TextInput
-									style={styles.input}
+									className="border-b-2 border-b-gray-500 text-lg py-3"
 									value={value}
-									placeholder={"mulai dari kapan"}
 									keyboardType="default"
 									onChangeText={text => setStartTime(text)}
 								/>
 							</View>
-							<View className="mt-4">
-								<Text style={styles.label}>Selesai</Text>
+							<View className="mt-4 w-full">
+								<Text className="text-md text-gray-600 font-bold">Selesai</Text>
 								<TextInput
-									style={styles.input}
+									className="border-b-2 border-b-gray-500 text-lg py-3"
 									value={value}
-									placeholder={"Selesai kapan"}
 									keyboardType="default"
 									onChangeText={text => setEndTime(text)}
 								/>
 							</View>
+						</View>
 							<TouchableOpacity
 								onPress={async () => {
 									setOpenModal(false);
@@ -169,16 +167,17 @@ const DetailScreen = ({
 
 									setData(scheduleData);
 								}}>
-								<View className="bg-[#5A9CFF] rounded-lg mt-6 p-2">
-									<Text className="text-white text-center font-semibold text-lg">Tambah</Text>
+								<View className="bg-[#DEE9FD] rounded-full mt-6">
+									<Text className="text-gray-600 px-3 py-2 font-semibold text-center text-xl">Tambah</Text>
 								</View>
 							</TouchableOpacity>
-						</View>
 					</ScrollView>
 				</View>
 			</Modal>
 		);
 	}
+
+	
 };
 
 const styles = StyleSheet.create({
