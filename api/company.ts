@@ -1,11 +1,11 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { baseUrl, errorResponse } from "./util";
 import storage from "../utils/storage";
 
-export async function getCompany() {
+export async function getCompany(): Promise<AxiosResponse<IAPIResponseGetCompany, any> | AxiosError<IAPIErrorResponse, any>>{
 	const token = await storage.load({ key: "token" });
 
-	axios.get(baseUrl + "/v1/company", {
+	return axios.get(baseUrl + "/v1/company", {
 		headers: {
 			Authorization: `Bearer ${token}`
 
@@ -17,9 +17,10 @@ export async function getCompany() {
 				data: JSON.stringify(response.data.data.company)
 			});
 
-			return response.data.data.company;
+			return response;
 		})
 		.catch(error => {
-			return errorResponse(error);
+			errorResponse(error);
+			return error;
 		});
 };

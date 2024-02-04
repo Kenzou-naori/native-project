@@ -85,20 +85,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
 								secureTextEntry={secureTextEntry}
 							/> */}
 						</View>
-						
-					</View>
-					<View className="flex justify-center items-center">
-						<TouchableOpacity
-							onPress={async () => {
-								await storage.remove({ key: "user" });
-								await storage.remove({ key: "token" })
-								await storage.save({ key: "isLoggedin", data: false });
-
-								navigation.navigate("Login");
-							}}
-							className="bg-[#DEE9FD] w-full p-3 rounded-2xl mb-3">
-							<Text className="text-xl font-bold text-gray-600 text-center">Logout</Text>
-						</TouchableOpacity>
 					</View>
 				</ScrollView>
 			</View>

@@ -12,7 +12,6 @@ import { MD2LightTheme, PaperProvider, useTheme } from "react-native-paper";
 
 
 import LoginScreen from "../screens/LoginScreen";
-import SignupScreen from "../screens/SignupScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ScheduleScreen from "../screens/ScheduleScreen";
 import SettingsScreen from "../screens/HistoryScreen";
@@ -140,7 +139,6 @@ function Auth() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen}  />
-        <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Home" component={FirstScreen} />
         <Stack.Screen name="Admin" component={MyDrawer}  />
       </Stack.Navigator>

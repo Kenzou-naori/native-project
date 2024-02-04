@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import Toast from "react-native-toast-message";
 
 export const baseUrl = "https://api.tira.my.id";
 
@@ -31,3 +32,14 @@ export function formatDate(date: string): string {
 
 	return formatter.format(formattedDate);
 }
+
+export function showToast(message: string) {
+	Toast.show({
+		type: "error",
+		text1: "Warning",
+		onShow: () => console.log("toast visible"),
+		onHide: () => console.log("toast hide"),
+		visibilityTime: 5000,
+		text2: message
+	});
+};

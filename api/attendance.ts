@@ -1,11 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import storage from "../utils/storage";
-import { baseUrl, errorResponse } from "./util";
+import { baseUrl, capitalizeFirstLetter, errorResponse, showToast } from "./util";
 
-export async function getAttendances(date: string) {
+export async function getAttendances(date: string): Promise<AxiosResponse<IAPIResponseGetAttendances, any> | AxiosError<IAPIErrorResponse, any>>{
 	const token = await storage.load({ key: "token" });
 
-	axios
+	return axios
 		.get(baseUrl + "/v1/users/@me/attendances", {
 			headers: {
 				"Authorization": `Bearer ${token}`
@@ -28,9 +28,9 @@ export async function getAttendances(date: string) {
 			};
 
 			response.data.data.attendances.sort((a, b) => {
-				if (a.date > b.date) {
+				if (a.created_at > b.created_at) {
 					return -1;
-				} else if (a.date < b.date) {
+				} else if (a.created_at < b.created_at) {
 					return 1;
 				} else {
 					return 0;
@@ -42,10 +42,11 @@ export async function getAttendances(date: string) {
 				data: JSON.stringify(response.data.data.attendances),
 			});
 
-			return response.data.data.attendances;
+			return response;
 		})
 		.catch(error => {
-			return errorResponse(error);
+			errorResponse(error);
+			return error;
 		});
 }
 
@@ -72,8 +73,22 @@ export async function postAttendance(status: IAttendanceStatus) {
 
 			return response.data.data.attendance;
 		})
-		.catch((error: AxiosError) => {
-			return errorResponse(error);
+		.catch((error: AxiosError<IAPIErrorResponse, any>) => {
+			const errMessage: string[] = error.response?.data.message!.split(";")!;
+			let message: string = "";
+			if (errMessage.length > 1) {
+				for (let i = 0; i < errMessage.length; i++) {
+					if (i === 0) {
+						message += errMessage[i].replace("tidak boleh kosong", "");
+					} else {
+						message += "dan" + errMessage[i];
+					}
+				}
+			} else {
+				message = error.response?.data.message!.replace(":", "")!;
+			}
+
+			return showToast(capitalizeFirstLetter(message.replaceAll(":", "")));
 		});
 
 	return data;
