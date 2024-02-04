@@ -7,6 +7,9 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { MD2LightTheme, PaperProvider, useTheme } from "react-native-paper";
+
 
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
@@ -14,14 +17,52 @@ import HomeScreen from "../screens/HomeScreen";
 import ScheduleScreen from "../screens/ScheduleScreen";
 import SettingsScreen from "../screens/HistoryScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-
+import WebAdmin from "../screens/WebAdmin";
+import KelolaKaryawan from "../screens/KelolaKaryawan"
+import CutiKaryawan from "../screens/CutiKaryawan"
 const homeName = "Dashboard";
 const scheduleName = "Schedule";
 const settingsName = "History";
 const profileName = "Profile";
+const WebAdminName = "Admin Dashboard";
+const KelolaKaryawanName = "Kelola Karyawan";
+const CutiKaryawanName = "Cuti Karyawan";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+
+const theme = {
+  // Extend Material Design 2 theme
+
+  ...MD2LightTheme, // or MD2DarkTheme
+
+  // Specify a custom property
+  myOwnProperty: true,
+
+  // Specify a custom nested property
+  colors: {
+    ...MD2LightTheme.colors,
+    myOwnColor: "#BADA55",
+  },
+};
+
+export type AppTheme = typeof theme;
+
+export const useAppTheme = () => useTheme<AppTheme>();
+function MyDrawer() {
+  return (
+    <PaperProvider theme={theme}>
+
+    <Drawer.Navigator>
+      <Drawer.Screen name={WebAdminName} component={WebAdmin} />
+      <Drawer.Screen name={KelolaKaryawanName} component={KelolaKaryawan} />
+      <Drawer.Screen name={CutiKaryawanName} component={CutiKaryawan} />
+    </Drawer.Navigator>
+    </PaperProvider>
+  );
+}
 
 function FirstScreen() {
   return (
@@ -37,7 +78,7 @@ function FirstScreen() {
           } else if (rn === scheduleName) {
             iconName = focused ? "calendar" : "calendar-outline";
           } else if (rn === settingsName) {
-            iconName = focused ? "reorder-four" : "reorder-four-outline";
+            iconName = focused ? "reader-outline" : "reader-outline";
           } else if (rn === profileName) {
             iconName = focused ? "person-circle" : "person-circle-outline";
           }
@@ -46,7 +87,7 @@ function FirstScreen() {
         },
         tabBarStyle: {
           backgroundColor: "#cedfff",
-          width: 370,
+          // width: 370,
           marginHorizontal: 20,
           marginBottom: 14,
           borderRadius: 50,
@@ -69,13 +110,13 @@ function FirstScreen() {
           headerShown: false,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={scheduleName}
         component={ScheduleScreen}
         options={{
           headerShown: false,
         }}
-      />
+      /> */}
       <Tab.Screen
         name={settingsName}
         component={SettingsScreen}
@@ -101,6 +142,7 @@ function Auth() {
         <Stack.Screen name="Login" component={LoginScreen}  />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Home" component={FirstScreen} />
+        <Stack.Screen name="Admin" component={MyDrawer}  />
       </Stack.Navigator>
     </NavigationContainer>
   );

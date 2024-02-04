@@ -1,11 +1,15 @@
 import Auth from "./auth/Auth"
 import Toast from 'react-native-toast-message';
+import { NativeWindStyleSheet } from "nativewind";
 
-export default function App() {
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
+
+
+export default function App() { 
   return(
-    <>
-
     <Auth />
-    </>
   )
 }
