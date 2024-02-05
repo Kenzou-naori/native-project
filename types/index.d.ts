@@ -19,6 +19,13 @@ interface IAPIResponseCreateUser {
 	success: boolean;
 }
 
+interface IAPIResponseUpdateUser {
+	data: {
+		user: IUser;
+	};
+	success: boolean;
+}
+
 interface IUser {
 	id: string;
 	email: string;

@@ -70,6 +70,16 @@ const WebAdmin = () => {
 							<DataTable.Title>Aksi</DataTable.Title>
 						</DataTable.Header>
 
+						{cuti.length === 0 && (
+							<DataTable.Row>
+								<DataTable.Cell>No data</DataTable.Cell>
+								<DataTable.Cell>No data</DataTable.Cell>
+								<DataTable.Cell>No data</DataTable.Cell>
+								<DataTable.Cell>No data</DataTable.Cell>
+								<DataTable.Cell>No data</DataTable.Cell>
+							</DataTable.Row>
+						)}
+
 						{cuti.slice(from, to).map(cutit => (
 							<DataTable.Row key={cutit.id} className="py-2 lg:py-4">
 								<DataTable.Cell>{cutit.user.fullName}</DataTable.Cell>

@@ -1,4 +1,4 @@
-import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, Modal, TouchableOpacity, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Calendar } from "react-native-calendars";
@@ -10,13 +10,14 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import storage from "../utils/storage";
 import { GetAttendances, GetPaidLeaves, GetUser, GetUsers } from "../api/admin";
 import { AxiosError } from "axios";
-import { capitalizeFirstLetter } from "../api/util";
+import { capitalizeFirstLetter, formatDate } from "../api/util";
 
 const Drawer = createDrawerNavigator();
 
 const WebAdmin = (navigation: any) => {
 	const [loading, setLoading] = useState(true);
 	const [showModal, setShowModal] = useState(false);
+	const [showDetail, setShowDetail] = useState(false);
 	const [selected, setSelected] = useState("");
 	const [state, setState] = useState({
 		fromDate: "",
@@ -24,6 +25,24 @@ const WebAdmin = (navigation: any) => {
 		dateError: "hghg"
 	});
 	const [attendances, setAttendances] = useState<IAttendanceWithUser[]>([]);
+	const [attendance, setAttendance] = useState<IAttendanceWithUser>({
+		id: "",
+		user: {
+			id: "",
+			fullName: "",
+			email: "",
+			phone: "",
+			accessLevel: 0,
+		},
+		date: "01-01-2021",
+		userId: "",
+		ipAddress: "",
+		checkIn: "",
+		checkOut: "",
+		status: "hadir",
+		created_at: "",
+		updated_at: ""
+	});
 	const [karyawan, setKaryawan] = useState<IUser[]>([]);
 	const [cuti, setCuti] = useState<IPaidLeave[]>([]);
 
@@ -155,11 +174,16 @@ const WebAdmin = (navigation: any) => {
 						)}
 
 						{attendances.slice(from, to).map(attendance => (
-							<DataTable.Row key={attendance.id}>
+							<DataTable.Row
+								key={attendance.id}
+								onPress={() => {
+									setAttendance(attendance);
+									setShowDetail(true);
+								}}>
 								<DataTable.Cell>{attendance.user.fullName}</DataTable.Cell>
 								<DataTable.Cell>{attendance.user.email}</DataTable.Cell>
 								<DataTable.Cell>{attendance.user.phone}</DataTable.Cell>
-								<DataTable.Cell>{attendance.date}</DataTable.Cell>
+								<DataTable.Cell>{formatDate(attendance.date)}</DataTable.Cell>
 								<DataTable.Cell>{capitalizeFirstLetter(attendance.status)}</DataTable.Cell>
 							</DataTable.Row>
 						))}
@@ -178,6 +202,8 @@ const WebAdmin = (navigation: any) => {
 					</DataTable>
 				</View>
 			</View>
+
+			{renderDetail()}
 
 			<View className="flex flex-row">
 				{/* refresh */}
@@ -216,6 +242,59 @@ const WebAdmin = (navigation: any) => {
 			</View>
 		</ScrollView>
 	);
+
+	function renderDetail() {
+		return (
+			<Modal animationType="fade" transparent={true} visible={showDetail}>
+				<View className="items-center h-full justify-center">
+					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%] p-5">
+						<View className="flex-row justify-between">
+							<Text className="text-gray-600 text-2xl font-bold">Detail Presensi</Text>
+							<TouchableOpacity onPress={() => setShowDetail(false)}>
+								<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
+							</TouchableOpacity>
+						</View>
+						{/* <View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-[156] p-5 -mb-56"> */}
+						{/* <View className="flex-row justify-between ">
+						<Text className="text-gray-600 text-2xl font-bold">Tambah Tugas</Text>
+						<TouchableOpacity onPress={() => setShowModal(false)}>
+							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
+						</TouchableOpacity>
+					</View> */}
+						<ScrollView showsVerticalScrollIndicator={false}>
+							<View className="flex-col justify-center items-center my-5">
+								{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
+								<View className="mt-4 w-full">
+									<Text className="text-md text-gray-600 font-bold">Nama Lengkap</Text>
+									<Text className="border-b-2 border-b-gray-500 text-lg py-3">{attendance.user.fullName}</Text>
+								</View>
+								<View className="mt-4 w-full">
+									<Text className="text-md text-gray-600 font-bold">Email</Text>
+									<Text className="border-b-2 border-b-gray-500 text-lg py-3">{attendance.user.email}</Text>
+								</View>
+								<View className="mt-4 w-full">
+									<Text className="text-md text-gray-600 font-bold">No. HP</Text>
+									<Text className="border-b-2 border-b-gray-500 text-lg py-3">{attendance.user.phone}</Text>
+								</View>
+								<View className="mt-4 w-full">
+									<Text className="text-md text-gray-600 font-bold">Presensi</Text>
+									<Text className="border-b-2 border-b-gray-500 text-lg py-3">
+										{formatDate(attendance.date)}
+									</Text>
+								</View>
+								<View className="mt-4 w-full">
+									<Text className="text-md text-gray-600 font-bold">Status</Text>
+									<Text className="border-b-2 border-b-gray-500 text-lg py-3">
+										{capitalizeFirstLetter(attendance.status)}
+									</Text>
+								</View>
+							</View>
+						</ScrollView>
+					</View>
+				</View>
+			</Modal>
+		);
+	}
 
 	function renderCalendar() {
 		return (

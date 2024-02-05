@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import { DataTable } from "react-native-paper";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { CreateUser, GetUsers } from "../api/admin";
+import { CreateUser, GetUsers, UpdateUser } from "../api/admin";
 import { AxiosError } from "axios";
 import storage from "../utils/storage";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -16,10 +16,12 @@ import Spinner from "react-native-loading-spinner-overlay";
 const WebAdmin = () => {
 	const [loading, setLoading] = useState(true);
 	const [showModal, setShowModal] = useState(false);
+	const [showUpdateModal, setShowUpdateModal] = useState(false);
 	const [karyawan, setKaryawan] = useState<IUser[]>([]);
 	const [page, setPage] = React.useState<number>(0);
 	const [numberOfItemsPerPageList] = React.useState([10, 20, 30]);
 	const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
+	const [karyawanId, setKaryawanId] = useState("");
 	const [fullName, setFullName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
@@ -99,7 +101,14 @@ const WebAdmin = () => {
 											<Text className="text-gray-600">Hapus</Text>
 										</TouchableOpacity>
 										<TouchableOpacity
-											//   onPress={() => setShowCek(true)}
+											onPress={() => {
+												setKaryawanId(karyawan.id);
+												setFullName(karyawan.fullName);
+												setEmail(karyawan.email);
+												setPhone(karyawan.phone);
+
+												setShowUpdateModal(true);
+											}}
 											className=" border border-gray-600 bg-blue-200 p-3 rounded-md">
 											<Text className="text-gray-600">Edit</Text>
 										</TouchableOpacity>
@@ -107,6 +116,7 @@ const WebAdmin = () => {
 								</DataTable.Cell>
 							</DataTable.Row>
 						))}
+						{renderUpdateForm()}
 
 						<DataTable.Pagination
 							page={page}
@@ -236,6 +246,86 @@ const WebAdmin = () => {
 					</View>
 				</View>
 				{/* </View> */}
+			</Modal>
+		);
+	}
+	function renderUpdateForm() {
+		return (
+			<Modal animationType="fade" transparent={true} visible={showUpdateModal}>
+				<View className="items-center h-full justify-center">
+					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%] p-5">
+						<View className="flex-row justify-between">
+							<Text className="text-gray-600 text-2xl font-bold">Edit Karyawan</Text>
+							<TouchableOpacity onPress={() => setShowUpdateModal(false)}>
+								<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
+							</TouchableOpacity>
+						</View>
+						<ScrollView showsVerticalScrollIndicator={false}>
+							<View className="flex-col justify-center items-center my-5">
+								{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
+								<View className="mt-4 w-full">
+									<Text className="text-md text-gray-600 font-bold">Nama Lengkap</Text>
+									<TextInput
+										defaultValue={fullName}
+										className="border-b-2 border-b-gray-500 text-lg py-3"
+										keyboardType="default"
+										onChangeText={text => setFullName(text)}
+									/>
+								</View>
+								<View className="mt-4 w-full">
+									<Text className="text-md text-gray-600 font-bold">Email</Text>
+									<TextInput
+										className="border-b-2 border-b-gray-500 text-lg py-3"
+										// value={value}
+										// keyboardType="default"
+										defaultValue={email}
+										onChangeText={text => setEmail(text)}
+									/>
+								</View>
+								<View className="mt-4 w-full">
+									<Text className="text-md text-gray-600 font-bold">No. HP</Text>
+									<TextInput
+										className="border-b-2 border-b-gray-500 text-lg py-3"
+										// value={value}
+										// keyboardType="default"
+										defaultValue={phone}
+										onChangeText={text => setPhone(text)}
+									/>
+								</View>
+							</View>
+							<TouchableOpacity
+								onPress={async () => {
+									setShowUpdateModal(false);
+									const data: IUserData = {
+										fullName: fullName,
+										email: email,
+										phone: phone,
+										password: password
+									};
+
+									const updatedKaryawan = await UpdateUser(karyawanId, data);
+
+									if (updatedKaryawan instanceof AxiosError) {
+										console.log(updatedKaryawan);
+									} else {
+										const index = karyawan.findIndex(k => k.id === updatedKaryawan.data.data.user.id);
+										karyawan[index] = updatedKaryawan.data.data.user;
+
+										setKaryawan(karyawan);
+
+										await storage.save({
+											key: "karyawan",
+											data: karyawan
+										});
+									}
+								}}>
+								<View className="bg-[#DEE9FD] rounded-full mt-6">
+									<Text className="text-gray-600 px-3 py-2 font-semibold text-center text-xl">Submit</Text>
+								</View>
+							</TouchableOpacity>
+						</ScrollView>
+					</View>
+				</View>
 			</Modal>
 		);
 	}
