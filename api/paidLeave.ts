@@ -15,21 +15,12 @@ export async function GetPaidLeave(): Promise<AxiosResponse<IAPIResponseGetPaidL
 			return response;
 		})
 		.catch(async (error: AxiosError<IAPIErrorResponse, any>) => {
-			const errMessage: string[] = error.response?.data.message!.split(";")!;
-			let message: string = "";
-			if (errMessage.length > 1) {
-				for (let i = 0; i < errMessage.length; i++) {
-					if (i === 0) {
-						message += errMessage[i].replace("tidak boleh kosong", "");
-					} else {
-						message += "dan" + errMessage[i];
-					}
-				}
-			} else {
-				message = error.response?.data.message!.replace(":", "")!;
+			const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+			let message: string;
+			if (errMessage?.message) {
+				message = errMessage.message;
+				showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			}
-
-			showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			return error;
 		});
 }

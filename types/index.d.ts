@@ -26,6 +26,13 @@ interface IAPIResponseUpdateUser {
 	success: boolean;
 }
 
+interface IAPIResponseDeleteUser {
+	data: {
+		users: IUser[];
+	};
+	success: boolean;
+}
+
 interface IUser {
 	id: string;
 	email: string;

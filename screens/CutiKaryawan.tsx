@@ -89,33 +89,27 @@ const WebAdmin = () => {
 									{cutit.status === 0 ? "Pending" : cutit.status === 1 ? "Diterima" : "Ditolak"}
 								</DataTable.Cell>
 								<DataTable.Cell>
-									{/* <TouchableOpacity
-										onPress={() => setShowCek(true)}
-										className=" border border-gray-600 bg-yellow-200 p-3 rounded-md">
-										<Text className="text-gray-600">Cek Perizinan</Text>
-									</TouchableOpacity> */}
-									<TouchableOpacity
-										onPress={() =>
-											SetPaidLeaveStatus(cutit.id, "1").then(() => {
+									{cutit.status < 1 ?
+									<><TouchableOpacity
+											onPress={() => SetPaidLeaveStatus(cutit.id, "1").then(() => {
 												const newCuti = cutit;
 												newCuti.status = 1;
 												setCuti(cuti.map(c => (c.id === cutit.id ? newCuti : c)));
-											})
-										}
-										className="border border-gray-600 bg-green-200 p-3 rounded-md mr-1">
-										<Text className="text-gray-600">Terima</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										onPress={async () =>
-											await SetPaidLeaveStatus(cutit.id, "2").then(() => {
+											})}
+											className="border border-gray-600 bg-green-200 p-3 rounded-md mr-1">
+											<Text className="text-gray-600">Terima</Text>
+										</TouchableOpacity><TouchableOpacity
+											onPress={async () => await SetPaidLeaveStatus(cutit.id, "2").then(() => {
 												const newCuti = cutit;
 												newCuti.status = 2;
 												setCuti(cuti.map(c => (c.id === cutit.id ? newCuti : c)));
-											})
-										}
-										className="border border-gray-600 bg-red-200 p-3 rounded-md ml-1">
-										<Text className="text-gray-600">Tolak</Text>
-									</TouchableOpacity>
+											})}
+											className="border border-gray-600 bg-red-200 p-3 rounded-md ml-1">
+												<Text className="text-gray-600">Tolak</Text>
+											</TouchableOpacity></>
+									: <>
+										<Text className="border border-gray-600 bg-gray-200 p-3 rounded-md mr-1">Sudah dikonfirmasi</Text>
+									</>}
 								</DataTable.Cell>
 							</DataTable.Row>
 						))}

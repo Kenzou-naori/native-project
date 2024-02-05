@@ -20,7 +20,6 @@ export async function getAttendances(date: string): Promise<AxiosResponse<IAPIRe
 					data: JSON.stringify(todayData[0]),
 				});
 			} else {
-				await storage.remove({ key: "attendance" });
 				await storage.save({
 					key: "attendance",
 					data: null,
@@ -45,7 +44,12 @@ export async function getAttendances(date: string): Promise<AxiosResponse<IAPIRe
 			return response;
 		})
 		.catch(error => {
-			errorResponse(error);
+			const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+			let message: string;
+			if (errMessage?.message) {
+				message = errMessage.message;
+				showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
+			}
 			return error;
 		});
 }

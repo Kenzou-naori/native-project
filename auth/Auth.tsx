@@ -3,7 +3,6 @@
 import * as React from "react";
 import { View, Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -82,7 +81,7 @@ function FirstScreen() {
             iconName = focused ? "person-circle" : "person-circle-outline";
           }
 
-          return <Ionicons size={size} color={color} name={iconName} />;
+          return <Ionicons size={size} color={color} name={iconName!} />;
         },
         tabBarStyle: {
           backgroundColor: "#cedfff",

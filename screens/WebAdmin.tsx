@@ -24,6 +24,7 @@ const WebAdmin = (navigation: any) => {
 		toDate: "",
 		dateError: "hghg"
 	});
+  const [user,  setUser] = useState<IUser>()
 	const [attendances, setAttendances] = useState<IAttendanceWithUser[]>([]);
 	const [attendance, setAttendance] = useState<IAttendanceWithUser>({
 		id: "",
@@ -97,9 +98,16 @@ const WebAdmin = (navigation: any) => {
 			});
 		}
 
+    async function loadUser() {
+      const user = await storage.load({ key: "user" });
+      const userData = JSON.parse(user);
+      setUser(userData);
+    }
+
 		loadAttendances();
 		loadUsers();
 		loadCuti();
+    loadUser();
 	}, [itemsPerPage]);
 
 	return (
@@ -110,7 +118,8 @@ const WebAdmin = (navigation: any) => {
           </View> */}
 			<View className="p-6 lg:px-60  py-6">
 				<View>
-					<Text className="text-3xl mb-3 font-bold">Halo, Naufal</Text>
+					<Text className="text-3xl mb-3 font-bold">Halo, {user?.fullName}</Text>
+          
 				</View>
 				<View className="flex-row flex-wrap gap-4 ">
 					<View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
@@ -127,13 +136,13 @@ const WebAdmin = (navigation: any) => {
 							<Text className="text-xl text-gray-600 font-semibold">Presensi</Text>
 						</View>
 					</View>
-					<View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
+					{/* <View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
 						<Ionicons size={32} color="black" name="hand-left-outline" />
 						<View className="flex-col ml-4">
 							<Text className="text-2xl text-gray-600 font-bold">0</Text>
 							<Text className="text-xl text-gray-600 font-semibold">Izin</Text>
 						</View>
-					</View>
+					</View> */}
 					<View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
 						<Ionicons size={32} color="black" name="walk-outline" />
 						<View className="flex-col ml-4">
@@ -142,15 +151,50 @@ const WebAdmin = (navigation: any) => {
 						</View>
 					</View>
 				</View>
+        <View className="flex-row gap-3">
+				{/* refresh */}
+				<TouchableOpacity
+					onPress={async () => {
+						setLoading(true);
+						await GetAttendances();
+						await GetUsers();
+						await GetPaidLeaves();
+						const attendances = await storage.load({ key: "attendances" });
+						const attendancesData: IAttendanceWithUser[] = JSON.parse(attendances);
+						const karyawan = await storage.load({ key: "karyawan" });
+						const karyawanData: IUser[] = JSON.parse(karyawan);
+						const cuti = await storage.load({ key: "cuti" });
+						const cutiData: IPaidLeave[] = JSON.parse(cuti);
+						setAttendances(attendancesData);
+						setKaryawan(karyawanData);
+						setCuti(cutiData);
+						setLoading(false);
+					}}
+					className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
+					<Text className="text-white text-center">Refresh</Text>
+				</TouchableOpacity>
+				{/* logout */}
+				<TouchableOpacity
+					onPress={async () => {
+						await storage.remove({ key: "user" });
+						await storage.remove({ key: "token" });
+						await storage.save({ key: "isLoggedin", data: false });
+
+						navigation.navigate("Login");
+					}}
+					className="bg-red-500 p-3 rounded-md w-32 my-4 ">
+					<Text className="text-white text-center">Logout</Text>
+				</TouchableOpacity>
+			</View>
 				<View className="bg-[#f1f6ff] rounded-md shadow-lg">
 					<View className="p-8 ">
 						<View className="flex-row items-center justify-between">
 							<Text className=" font-semibold">Presensi Kehadiran</Text>
-							<TouchableOpacity
+							{/* <TouchableOpacity
 								onPress={() => setShowModal(true)}
 								className="border border-gray-600 rounded-md p-1">
 								<Text className="text-gray-600 font-semibold">Pilih Tanggal</Text>
-							</TouchableOpacity>
+							</TouchableOpacity> */}
 							{renderCalendar()}
 						</View>
 					</View>
@@ -205,41 +249,7 @@ const WebAdmin = (navigation: any) => {
 
 			{renderDetail()}
 
-			<View className="flex flex-row">
-				{/* refresh */}
-				<TouchableOpacity
-					onPress={async () => {
-						setLoading(true);
-						await GetAttendances();
-						await GetUsers();
-						await GetPaidLeaves();
-						const attendances = await storage.load({ key: "attendances" });
-						const attendancesData: IAttendanceWithUser[] = JSON.parse(attendances);
-						const karyawan = await storage.load({ key: "karyawan" });
-						const karyawanData: IUser[] = JSON.parse(karyawan);
-						const cuti = await storage.load({ key: "cuti" });
-						const cutiData: IPaidLeave[] = JSON.parse(cuti);
-						setAttendances(attendancesData);
-						setKaryawan(karyawanData);
-						setCuti(cutiData);
-						setLoading(false);
-					}}
-					className="bg-blue-500 p-3 rounded-md w-32 mt-4 mx-auto">
-					<Text className="text-white text-center">Refresh</Text>
-				</TouchableOpacity>
-				{/* logout */}
-				<TouchableOpacity
-					onPress={async () => {
-						await storage.remove({ key: "user" });
-						await storage.remove({ key: "token" });
-						await storage.save({ key: "isLoggedin", data: false });
-
-						navigation.navigate("Login");
-					}}
-					className="bg-red-500 p-3 rounded-md w-32 mt-4 mx-auto">
-					<Text className="text-white text-center">Logout</Text>
-				</TouchableOpacity>
-			</View>
+		
 		</ScrollView>
 	);
 
@@ -300,7 +310,7 @@ const WebAdmin = (navigation: any) => {
 		return (
 			<Modal animationType="fade" transparent={true} visible={showModal}>
 				<View className="items-center h-full justify-center">
-					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%]p-5">
+					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%] p-5">
 						<View className="flex-row justify-between">
 							<Text className="text-gray-600 text-2xl font-bold">Pilih Tanggal</Text>
 							<TouchableOpacity onPress={() => setShowModal(false)}>
@@ -346,17 +356,6 @@ const WebAdmin = (navigation: any) => {
 									disableTouchEvent: true,
 									selectedColor: "blue",
 									selectedTextColor: "white"
-								},
-								"2024-02-22": {
-									startingDay: true,
-									color: "blue",
-									textColor: "white"
-								},
-								"2024-02-23": {
-									selected: true,
-									endingDay: true,
-									color: "blue",
-									textColor: "white"
 								}
 							}}
 						/>

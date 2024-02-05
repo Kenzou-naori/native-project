@@ -24,6 +24,7 @@ import { AxiosError } from "axios";
 import { GetPaidLeave, SendPaidLeave } from "../api/paidLeave";
 import { showToast } from "../api/util";
 import Toast from "react-native-toast-message";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function HomeScreen({ navigation }: any) {
 	const [day, setDay] = useState("");
@@ -45,11 +46,11 @@ export default function HomeScreen({ navigation }: any) {
 		const d = new Date();
 
 		setDayDate(d.getDate());
-		setMonthDate(d.getMonth());
+		setMonthDate(d.getMonth() + 1);
 		setYearDate(d.getFullYear());
 
 		let date = d.getDate().toString(); //Current Date
-		let month = d.getMonth().toString(); //Current Month
+		let month = (d.getMonth() + 1).toString(); //Current Month
 		let year = d.getFullYear().toString(); //Current Year
 
 		date = date.padStart(2, "0");
@@ -58,24 +59,24 @@ export default function HomeScreen({ navigation }: any) {
 
 		await getAttendances(date + "-" + month + "-" + year).then(async res => {
 			if (res instanceof AxiosError) {
-				console.log(res);
+				console.log(res.response);
 			} else {
 				await storage.load({ key: "attendance" }).then(async res => {
 					const attendancesData = JSON.parse(res);
 					setAttendance(attendancesData);
-					setRefreshing(false);
-
+					
 					await getCompany().then(async res => {
 						if (res instanceof AxiosError) {
 							console.log(res);
 						} else {
 							setCompany(res.data.data.company);
-
+							
 							await GetPaidLeave().then(res => {
 								if (res instanceof AxiosError) {
-									console.log(res);
+									console.log(res.response?.data.message)
 								} else {
 									setActivePaidLeave(res.data.data.paidLeave);
+									setRefreshing(false);
 								}
 							});
 						}
@@ -92,7 +93,7 @@ export default function HomeScreen({ navigation }: any) {
 		let year = d.getFullYear().toString(); //Current Year
 
 		setDayDate(d.getDate());
-		setMonthDate(d.getMonth());
+		setMonthDate(d.getMonth() + 1);
 		setYearDate(d.getFullYear());
 
 		async function loadDate() {
@@ -122,7 +123,7 @@ export default function HomeScreen({ navigation }: any) {
 
 		async function loadAttendance() {
 			date = date.padStart(2, "0");
-			month = month.padStart(2, "0");
+			month = (d.getMonth() + 1).toString().padStart(2, "0");
 			year = year.padStart(2, "0");
 
 			await getAttendances(date + "-" + month + "-" + year);
@@ -182,16 +183,20 @@ export default function HomeScreen({ navigation }: any) {
 					</Text>
 				</View>
 				{/* logout */}
-				<View className="p-2 w-20 mx-auto mt-5 flex flex-row justify-center items-center bg-[#DEE9FD] rounded-full shadow-xl shadow-gray-800">
+				<View className="p-2 w-16 mx-auto mt-5 flex flex-row justify-center items-center bg-[#DEE9FD] rounded-full shadow-xl shadow-gray-800">
 					<TouchableOpacity
+          
 						onPress={async () => {
 							await storage.remove({ key: "user" });
 							await storage.remove({ key: "token" });
+							await storage.remove({ key: "attendance" });
+							await storage.remove({ key: "attendances" });
+							await storage.remove({ key: "paidLeaves" });
 							await storage.save({ key: "isLoggedin", data: false });
 
 							navigation.navigate("Login");
 						}}>
-						<Image source={require("../assets/images/logout.png")} className="w-8 h-8" />
+            <Ionicons size={32} color="red" name="log-out-outline" />
 					</TouchableOpacity>
 				</View>
 			</View>

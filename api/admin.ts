@@ -31,21 +31,12 @@ export async function GetUsers(): Promise<AxiosResponse<IAPIResponseGetUsers, an
 			return response;
 		})
 		.catch((error: AxiosError<IAPIErrorResponse, any>) => {
-			const errMessage: string[] = error.response?.data.message!.split(";")!;
-			let message: string = "";
-			if (errMessage.length > 1) {
-				for (let i = 0; i < errMessage.length; i++) {
-					if (i === 0) {
-						message += errMessage[i].replace("tidak boleh kosong", "");
-					} else {
-						message += "dan" + errMessage[i];
-					}
-				}
-			} else {
-				message = error.response?.data.message!.replace(":", "")!;
+			const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+			let message: string;
+			if (errMessage?.message) {
+				message = errMessage.message;
+				showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			}
-
-			showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			return error;
 		});
 }
@@ -108,21 +99,12 @@ export async function GetAttendances(): Promise<
 			return response;
 		})
 		.catch((error: AxiosError<IAPIErrorResponse, any>) => {
-			const errMessage: string[] = error.response?.data.message!.split(";")!;
-			let message: string = "";
-			if (errMessage.length > 1) {
-				for (let i = 0; i < errMessage.length; i++) {
-					if (i === 0) {
-						message += errMessage[i].replace("tidak boleh kosong", "");
-					} else {
-						message += "dan" + errMessage[i];
-					}
-				}
-			} else {
-				message = error.response?.data.message!.replace(":", "")!;
+			const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+			let message: string;
+			if (errMessage?.message) {
+				message = errMessage.message;
+				showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			}
-
-			showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			return error;
 		});
 }
@@ -192,6 +174,34 @@ export async function UpdateUser(
 		});
 }
 
+export async function DeleteUser(
+	id: string
+): Promise<AxiosResponse<IAPIResponseDeleteUser, any> | AxiosError<IAPIErrorResponse, any>> {
+	return axios
+		.delete(baseUrl + `/v1/admin/users/${id}`, {
+			headers: {
+				Authorization: `Bearer ${await storage.load({ key: "token" })}`
+			}
+		})
+		.then(async (response: AxiosResponse<IAPIResponseDeleteUser, any>) => {
+			await storage.save({
+				key: "karyawan",
+				data: JSON.stringify(response.data.data.users)
+			});
+
+			return response;
+		})
+		.catch((error: AxiosError<IAPIErrorResponse, any>) => {
+			const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+			let message: string;
+			if (errMessage?.message) {
+				message = errMessage.message;
+				showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
+			}
+			return error;
+		});
+}
+
 export async function GetPaidLeaves(): Promise<
 	AxiosResponse<IAPIResponseGetPaidLeaves, any> | AxiosError<IAPIErrorResponse, any>
 > {
@@ -210,21 +220,12 @@ export async function GetPaidLeaves(): Promise<
 			return response;
 		})
 		.catch((error: AxiosError<IAPIErrorResponse, any>) => {
-			const errMessage: string[] = error.response?.data.message!.split(";")!;
-			let message: string = "";
-			if (errMessage.length > 1) {
-				for (let i = 0; i < errMessage.length; i++) {
-					if (i === 0) {
-						message += errMessage[i].replace("tidak boleh kosong", "");
-					} else {
-						message += "dan" + errMessage[i];
-					}
-				}
-			} else {
-				message = error.response?.data.message!.replace(":", "")!;
+			const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+			let message: string;
+			if (errMessage?.message) {
+				message = errMessage.message;
+				showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			}
-
-			showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			return error;
 		});
 }
@@ -247,23 +248,12 @@ export async function SetPaidLeaveStatus(
 			return response;
 		})
 		.catch((error: AxiosError<IAPIErrorResponse, any>) => {
-			console.log(error.response?.data.message);
-
-			const errMessage: string[] = error.response?.data.message!.split(";")!;
-			let message: string = "";
-			if (errMessage.length > 1) {
-				for (let i = 0; i < errMessage.length; i++) {
-					if (i === 0) {
-						message += errMessage[i].replace("tidak boleh kosong", "");
-					} else {
-						message += "dan" + errMessage[i];
-					}
-				}
-			} else {
-				message = error.response?.data.message!.replace(":", "")!;
+			const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+			let message: string;
+			if (errMessage?.message) {
+				message = errMessage.message;
+				showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			}
-
-			showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
 			return error;
 		});
 }

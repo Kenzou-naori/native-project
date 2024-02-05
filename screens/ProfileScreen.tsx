@@ -2,23 +2,7 @@ import { StyleSheet, Text, TextInput, View, ScrollView, Image, TouchableOpacity 
 import React, { useEffect, useState } from "react";
 import storage from "../utils/storage";
 
-interface ProfileScreenProps {
-	navigation: any;
-	value: string;
-	onChangeText: (text: string) => void;
-	autoCapitalize?: "none" | "sentences" | "words" | "characters";
-	keyboardType?: "default" | "number-pad" | "decimal-pad" | "numeric" | "email-address" | "phone-pad";
-	secureTextEntry?: boolean;
-}
-
-const ProfileScreen: React.FC<ProfileScreenProps> = ({
-	navigation,
-	value,
-	onChangeText,
-	autoCapitalize = "none",
-	keyboardType = "default",
-	secureTextEntry = false
-}) => {
+const ProfileScreen = () => {
 	const [fullName, setFullName] = useState("");
 	const [email, setEMail] = useState("");
 	const [phone, setPhone] = useState("");
