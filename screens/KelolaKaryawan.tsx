@@ -171,10 +171,10 @@ const WebAdmin = () => {
               onPageChange={(page) => setPage(page)}
               label={`${from + 1}-${to} of ${karyawan.length}`}
               showFastPaginationControls
-              numberOfItemsPerPageList={numberOfItemsPerPageList}
-              numberOfItemsPerPage={itemsPerPage}
-              onItemsPerPageChange={onItemsPerPageChange}
-              selectPageDropdownLabel={"Rows per page"}
+							numberOfItemsPerPageList={numberOfItemsPerPageList}
+							numberOfItemsPerPage={itemsPerPage}
+							onItemsPerPageChange={onItemsPerPageChange}
+							selectPageDropdownLabel={"Rows per page"}
             />
             {/* </ScrollView> */}
           </DataTable>
