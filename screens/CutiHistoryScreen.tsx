@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, ScrollView, RefreshControl, FlatList, ActivityIndicator, FlatListComponent } from "react-native";
+import { StyleSheet, Text, View, RefreshControl, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getAttendances } from "../api/attendance";
 import storage from "../utils/storage";
-import { capitalizeFirstLetter, formatDate } from "../api/util";
+import { formatDate } from "../api/util";
+import { GetPaidLeaves } from "../api/paidLeave";
 
 export default function HistoryScreen() {
-	const [attendances, setAttendances] = useState<IAttendance[]>([]);
+	const [paidLeaves, setPaidLeaves] = useState<IPaidLeave[]>([]);
 	const [refreshing, setRefreshing] = useState(false);
 
 	const onRefresh = React.useCallback(async () => {
@@ -19,42 +19,36 @@ export default function HistoryScreen() {
 		month = month.padStart(2, "0");
 		year = year.padStart(2, "0");
 
-		await storage.load({ key: "attendances" }).then(res => {
-			setAttendances(JSON.parse(res));
+		await GetPaidLeaves();
+		await storage.load({ key: "paidLeaves" }).then(res => {
+			setPaidLeaves(JSON.parse(res));
 			setRefreshing(false);
 		});
 	}, []);
 
 	useEffect(() => {
-		const d = new Date();
-		let date = d.getDate().toString().padStart(2, "0"); //Current Date
-		let month = (d.getMonth() + 1).toString().padStart(2, "0"); //Current Month
-		let year = d.getFullYear().toString().padStart(2, "0"); //Current Year
-
-		async function loadAttendances() {
+		async function loadPaidLeaves() {
 			setRefreshing(true);
-			await getAttendances(date + "-" + month + "-" + year);
-			const attendances = await storage.load({ key: "attendances" });
-			const attendancesData = JSON.parse(attendances);
-
-			setAttendances(attendancesData);
-			setRefreshing(false);
+			await storage.load({ key: "paidLeaves" }).then(res => {
+				setPaidLeaves(JSON.parse(res));
+				setRefreshing(false);
+			});
 		}
 
-		loadAttendances();
+		loadPaidLeaves();
 	}, []);
 
 	return (
 		<View className="mt-6 bg-[#DEE9FD]">
 			<View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-6 p-5">
 				<View className="flex-row justify-between my-5">
-					<Text className="text-2xl font-bold">Riwayat Presensi</Text>
+					<Text className="text-2xl font-bold">Riwayat Pengajuan Cuti</Text>
 				</View>
 				<View
 					//   showsVerticalScrollIndicator={false}
 					className="h-screen pb-52">
 					<FlatList
-						data={attendances}
+						data={paidLeaves}
 						renderItem={({ item }) => {
 							return (
 								<View
@@ -62,18 +56,18 @@ export default function HistoryScreen() {
 									className=" rounded-xl border border-[#ccc] p-[20] mb-2 bg-[#DEE9FD] flex justify-between items-center flex-row">
 									<View>
 										<Text className="text-2xl text-gray-600 font-bold">
-											{capitalizeFirstLetter(item.status)}
+											{item.status === 0 ? "Pending" : item.status === 1 ? "Diterima" : "Ditolak"}
 										</Text>
-										<Text style={styles.content}>{formatDate(item.date)}</Text>
+										<Text style={styles.content}>{formatDate(item.startDate)}</Text>
 									</View>
 									<Text className="text-sm font-semibold">
-										{item.checkIn} - {item.checkOut}
+										{item.days} Hari
 									</Text>
 								</View>
 							);
 						}}
 						ItemSeparatorComponent={() => <View className=" h-4" />}
-						ListEmptyComponent={<Text>Kamu belum melakukan presensi</Text>}
+						ListEmptyComponent={<Text>Kamu belum pernah melakukan pengajuan cuti</Text>}
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					/>
 					{/* {attendances.map((item, index) =>

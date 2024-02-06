@@ -14,6 +14,7 @@ import LoginScreen from "../screens/LoginScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ScheduleScreen from "../screens/ScheduleScreen";
 import SettingsScreen from "../screens/HistoryScreen";
+import CutiScreen from "../screens/CutiHistoryScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import WebAdmin from "../screens/WebAdmin";
 import KelolaKaryawan from "../screens/KelolaKaryawan"
@@ -22,6 +23,7 @@ const homeName = "Dashboard";
 const scheduleName = "Schedule";
 const settingsName = "History";
 const profileName = "Profile";
+const cutiName = "Pengajuan Cuti";
 const WebAdminName = "Admin Dashboard";
 const KelolaKaryawanName = "Kelola Karyawan";
 const CutiKaryawanName = "Cuti Karyawan";
@@ -77,6 +79,8 @@ function FirstScreen() {
             iconName = focused ? "calendar" : "calendar-outline";
           } else if (rn === settingsName) {
             iconName = focused ? "reader-outline" : "reader-outline";
+          } else if (rn === cutiName) {
+            iconName = focused ? "document-text" : "document-text-outline";
           } else if (rn === profileName) {
             iconName = focused ? "person-circle" : "person-circle-outline";
           }
@@ -118,6 +122,13 @@ function FirstScreen() {
       <Tab.Screen
         name={settingsName}
         component={SettingsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name={cutiName}
+        component={CutiScreen}
         options={{
           headerShown: false,
         }}

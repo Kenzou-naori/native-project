@@ -187,6 +187,13 @@ interface IAPIResponseGetPaidLeave {
 
 interface IAPIResponseGetPaidLeaves {
 	data: {
+		paidLeaves: IPaidLeave[];
+	};
+	success: boolean;
+}
+
+interface IAPIResponseGetPaidLeavesWithUser {
+	data: {
 		paidLeaves: IPaidLeaveWithuser[];
 	};
 	success: boolean;

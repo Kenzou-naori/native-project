@@ -203,7 +203,7 @@ export async function DeleteUser(
 }
 
 export async function GetPaidLeaves(): Promise<
-	AxiosResponse<IAPIResponseGetPaidLeaves, any> | AxiosError<IAPIErrorResponse, any>
+	AxiosResponse<IAPIResponseGetPaidLeavesWithUser, any> | AxiosError<IAPIErrorResponse, any>
 > {
 	return axios
 		.get(baseUrl + "/v1/admin/paidLeaves", {
@@ -211,7 +211,7 @@ export async function GetPaidLeaves(): Promise<
 				Authorization: `Bearer ${await storage.load({ key: "token" })}`
 			}
 		})
-		.then(async (response: AxiosResponse<IAPIResponseGetPaidLeaves, any>) => {
+		.then(async (response: AxiosResponse<IAPIResponseGetPaidLeavesWithUser, any>) => {
 			await storage.save({
 				key: "paidLeaves",
 				data: JSON.stringify(response.data.data.paidLeaves)
@@ -233,7 +233,7 @@ export async function GetPaidLeaves(): Promise<
 export async function SetPaidLeaveStatus(
 	pdId: string,
 	status: string
-): Promise<AxiosResponse<IAPIResponseGetPaidLeaves, any> | AxiosError<IAPIErrorResponse, any>> {
+): Promise<AxiosResponse<IAPIResponseGetPaidLeavesWithUser, any> | AxiosError<IAPIErrorResponse, any>> {
 	return axios
 		.patch(
 			baseUrl + `/v1/admin/paidLeaves/${pdId}`,
@@ -244,7 +244,7 @@ export async function SetPaidLeaveStatus(
 				}
 			}
 		)
-		.then(async (response: AxiosResponse<IAPIResponseGetPaidLeaves, any>) => {
+		.then(async (response: AxiosResponse<IAPIResponseGetPaidLeavesWithUser, any>) => {
 			return response;
 		})
 		.catch((error: AxiosError<IAPIErrorResponse, any>) => {

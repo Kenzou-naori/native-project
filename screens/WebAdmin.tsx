@@ -199,6 +199,17 @@ const WebAdmin = (navigation: any) => {
 						</View>
 					</View>
 					<DataTable>
+					<DataTable.Pagination
+							page={page}
+							numberOfPages={Math.ceil(cuti.length / itemsPerPage)}
+							onPageChange={page => setPage(page)}
+							label={`${from + 1}-${to} of ${cuti.length}`}
+							numberOfItemsPerPageList={numberOfItemsPerPageList}
+							numberOfItemsPerPage={itemsPerPage}
+							onItemsPerPageChange={onItemsPerPageChange}
+							showFastPaginationControls
+							selectPageDropdownLabel={"Rows per page"}
+						/>
 						<DataTable.Header>
 							<DataTable.Title>Nama</DataTable.Title>
 							<DataTable.Title>Email</DataTable.Title>

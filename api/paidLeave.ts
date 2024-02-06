@@ -10,7 +10,30 @@ export async function GetPaidLeave(): Promise<AxiosResponse<IAPIResponseGetPaidL
 			}
 		})
 		.then(async (response: AxiosResponse<IAPIResponseGetPaidLeave, any>) => {
-			await storage.save({ key: "paidLeaves", data: response.data.data.paidLeave });
+			await storage.save({ key: "paidLeave", data: response.data.data.paidLeave });
+
+			return response;
+		})
+		.catch(async (error: AxiosError<IAPIErrorResponse, any>) => {
+			const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+			let message: string;
+			if (errMessage?.message) {
+				message = errMessage.message;
+				showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
+			}
+			return error;
+		});
+}
+
+export async function GetPaidLeaves(): Promise<AxiosResponse<IAPIResponseGetPaidLeaves, any> | AxiosError<IAPIErrorResponse, any>> {
+	return axios
+		.get(baseUrl + "/v1/users/@me/paidLeaves", {
+			headers: {
+				Authorization: `Bearer ${await storage.load({ key: "token" })}`
+			}
+		})
+		.then(async (response: AxiosResponse<IAPIResponseGetPaidLeaves, any>) => {
+			await storage.save({ key: "paidLeaves", data: JSON.stringify(response.data.data.paidLeaves) });
 
 			return response;
 		})

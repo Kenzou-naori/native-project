@@ -8,6 +8,8 @@ import { DataTable } from "react-native-paper";
 import { GetPaidLeaves, SetPaidLeaveStatus } from "../api/admin";
 import { AxiosError } from "axios";
 import Spinner from "react-native-loading-spinner-overlay";
+import { formatDate } from "../api/util";
+import storage from "../utils/storage";
 
 const WebAdmin = () => {
 	const [loading, setLoading] = useState(true);
@@ -22,19 +24,14 @@ const WebAdmin = () => {
 	React.useEffect(() => {
 		setPage(0);
 
-		const fetchCuti = async () => {
-			await GetPaidLeaves().then(res => {
-				if (res instanceof AxiosError) {
-					console.log(res);
-					setLoading(false);
-				} else {
-					setCuti(res.data.data.paidLeaves);
-					setLoading(false);
-				}
-			});
-		};
+		async function loadCuti() {
+			const cuti = await storage.load({ key: "cuti" });
+			const cutiData = JSON.parse(cuti);
+			setCuti(cutiData);
+			setLoading(false);
+		}
 
-		fetchCuti();
+		loadCuti();
 	}, [itemsPerPage]);
 
 	return (
@@ -66,12 +63,16 @@ const WebAdmin = () => {
 							<DataTable.Title>Nama</DataTable.Title>
 							<DataTable.Title>Email</DataTable.Title>
 							<DataTable.Title>Alasan</DataTable.Title>
+							<DataTable.Title>Tanggal Mulai</DataTable.Title>
+							<DataTable.Title>Lama Cuti</DataTable.Title>
 							<DataTable.Title>Status</DataTable.Title>
 							<DataTable.Title>Aksi</DataTable.Title>
 						</DataTable.Header>
 
 						{cuti.length === 0 && (
 							<DataTable.Row>
+								<DataTable.Cell>No data</DataTable.Cell>
+								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
@@ -85,31 +86,44 @@ const WebAdmin = () => {
 								<DataTable.Cell>{cutit.user.fullName}</DataTable.Cell>
 								<DataTable.Cell>{cutit.user.email}</DataTable.Cell>
 								<DataTable.Cell>{cutit.reason}</DataTable.Cell>
+								<DataTable.Cell>{formatDate(cutit.startDate)}</DataTable.Cell>
+								<DataTable.Cell>{cutit.days} Hari</DataTable.Cell>
 								<DataTable.Cell>
 									{cutit.status === 0 ? "Pending" : cutit.status === 1 ? "Diterima" : "Ditolak"}
 								</DataTable.Cell>
 								<DataTable.Cell>
-									{cutit.status < 1 ?
-									<><TouchableOpacity
-											onPress={() => SetPaidLeaveStatus(cutit.id, "1").then(() => {
-												const newCuti = cutit;
-												newCuti.status = 1;
-												setCuti(cuti.map(c => (c.id === cutit.id ? newCuti : c)));
-											})}
-											className="border border-gray-600 bg-green-200 p-3 rounded-md mr-1">
-											<Text className="text-gray-600">Terima</Text>
-										</TouchableOpacity><TouchableOpacity
-											onPress={async () => await SetPaidLeaveStatus(cutit.id, "2").then(() => {
-												const newCuti = cutit;
-												newCuti.status = 2;
-												setCuti(cuti.map(c => (c.id === cutit.id ? newCuti : c)));
-											})}
-											className="border border-gray-600 bg-red-200 p-3 rounded-md ml-1">
+									{cutit.status < 1 ? (
+										<>
+											<TouchableOpacity
+												onPress={() =>
+													SetPaidLeaveStatus(cutit.id, "1").then(() => {
+														const newCuti = cutit;
+														newCuti.status = 1;
+														setCuti(cuti.map(c => (c.id === cutit.id ? newCuti : c)));
+													})
+												}
+												className="border border-gray-600 bg-green-200 p-3 rounded-md mr-1">
+												<Text className="text-gray-600">Terima</Text>
+											</TouchableOpacity>
+											<TouchableOpacity
+												onPress={async () =>
+													await SetPaidLeaveStatus(cutit.id, "2").then(() => {
+														const newCuti = cutit;
+														newCuti.status = 2;
+														setCuti(cuti.map(c => (c.id === cutit.id ? newCuti : c)));
+													})
+												}
+												className="border border-gray-600 bg-red-200 p-3 rounded-md ml-1">
 												<Text className="text-gray-600">Tolak</Text>
-											</TouchableOpacity></>
-									: <>
-										<Text className="border border-gray-600 bg-gray-200 p-3 rounded-md mr-1">Sudah dikonfirmasi</Text>
-									</>}
+											</TouchableOpacity>
+										</>
+									) : (
+										<>
+											<Text className="border border-gray-600 bg-gray-200 p-3 rounded-md mr-1">
+												Sudah dikonfirmasi
+											</Text>
+										</>
+									)}
 								</DataTable.Cell>
 							</DataTable.Row>
 						))}
@@ -137,7 +151,7 @@ const WebAdmin = () => {
 						const res = await GetPaidLeaves();
 						if (!(res instanceof AxiosError)) {
 							setCuti(res.data.data.paidLeaves);
-              setLoading(false);
+							setLoading(false);
 						}
 						setLoading(false);
 					}}

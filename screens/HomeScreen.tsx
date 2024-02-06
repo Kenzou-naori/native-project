@@ -21,7 +21,7 @@ import { getAttendances, postAttendance, updateAttendance } from "../api/attenda
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { AxiosError } from "axios";
-import { GetPaidLeave, SendPaidLeave } from "../api/paidLeave";
+import { GetPaidLeave, GetPaidLeaves, SendPaidLeave } from "../api/paidLeave";
 import { showToast } from "../api/util";
 import Toast from "react-native-toast-message";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -40,6 +40,7 @@ export default function HomeScreen({ navigation }: any) {
 	const [attendance, setAttendance] = useState<IAttendance | null>(null);
 	const [refreshing, setRefreshing] = useState(false);
 	const [activePaidLeave, setActivePaidLeave] = useState<IPaidLeave | null>(null);
+	const [paidLeaves, setPaidLeaves] = useState<IPaidLeave[]>([]);
 
 	const onRefresh = React.useCallback(async () => {
 		setRefreshing(true);
@@ -71,12 +72,20 @@ export default function HomeScreen({ navigation }: any) {
 						} else {
 							setCompany(res.data.data.company);
 							
-							await GetPaidLeave().then(res => {
+							await GetPaidLeave().then(async res => {
 								if (res instanceof AxiosError) {
 									console.log(res.response?.data.message)
 								} else {
 									setActivePaidLeave(res.data.data.paidLeave);
-									setRefreshing(false);
+									
+									await GetPaidLeaves().then(res => {
+										if (res instanceof AxiosError) {
+											console.log(res.response?.data.message)
+										} else {
+											setPaidLeaves(res.data.data.paidLeaves);
+											setRefreshing(false);
+										}
+									});
 								}
 							});
 						}
@@ -113,32 +122,41 @@ export default function HomeScreen({ navigation }: any) {
 			setCurrentTime(hours + ":" + minutes + ":" + seconds);
 		}
 
-		async function loadCompany() {
-			await getCompany();
-			const company = await storage.load({ key: "company" });
-			const companyData = JSON.parse(company);
-
-			setCompany(companyData);
-		}
-
-		async function loadAttendance() {
-			date = date.padStart(2, "0");
-			month = (d.getMonth() + 1).toString().padStart(2, "0");
-			year = year.padStart(2, "0");
-
-			await getAttendances(date + "-" + month + "-" + year);
-			const attendance = await storage.load({ key: "attendance" });
-			const attendanceData = JSON.parse(attendance);
-
-			setAttendance(attendanceData);
-		}
-
-		async function loadPaidLeave() {
-			await GetPaidLeave().then(res => {
+		async function loadDatas() {
+			setRefreshing(true);
+			await getAttendances(date + "-" + month + "-" + year).then(async res => {
 				if (res instanceof AxiosError) {
-					console.log(res);
+					console.log(res.response);
 				} else {
-					setActivePaidLeave(res.data.data.paidLeave);
+					await storage.load({ key: "attendance" }).then(async res => {
+						const attendancesData = JSON.parse(res);
+						setAttendance(attendancesData);
+						
+						await getCompany().then(async res => {
+							if (res instanceof AxiosError) {
+								console.log(res);
+							} else {
+								setCompany(res.data.data.company);
+								
+								await GetPaidLeave().then(async res => {
+									if (res instanceof AxiosError) {
+										console.log(res.response?.data.message)
+									} else {
+										setActivePaidLeave(res.data.data.paidLeave);
+										
+										await GetPaidLeaves().then(res => {
+											if (res instanceof AxiosError) {
+												console.log(res.response?.data.message)
+											} else {
+												setPaidLeaves(res.data.data.paidLeaves);
+												setRefreshing(false);
+											}
+										});
+									}
+								});
+							}
+						});
+					});
 				}
 			});
 		}
@@ -150,9 +168,7 @@ export default function HomeScreen({ navigation }: any) {
 
 		loadDate();
 		loadTime();
-		loadCompany();
-		loadAttendance();
-		loadPaidLeave();
+		loadDatas();
 
 		return () => {
 			clearInterval(intervalTD);
@@ -312,17 +328,6 @@ export default function HomeScreen({ navigation }: any) {
 							</View>
 							<Separator />
 							<View className="flex-row pt-4 justify-around">
-								{/* <Pressable
-                  className={
-                    day === "Sabtu" || day === "Minggu"
-                      ? "bg-[#e3e3e3] px-8 py-2 rounded-[30px]"
-                      : attendance?.checkIn
-                      ? "bg-[#e3e3e3] px-8 py-2 rounded-[30px]"
-                      : "bg-[#53a0ff] px-8 py-2 rounded-[30px]"
-                  }
-                >
-                  <Text className="text-gray-600 text-lg font-semibold px-5">Sakit</Text>
-                </Pressable> */}
 								<Pressable
 									className={
 										day === "Sabtu" || day === "Minggu"
