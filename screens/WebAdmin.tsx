@@ -12,9 +12,7 @@ import { GetAttendances, GetPaidLeaves, GetUser, GetUsers } from "../api/admin";
 import { AxiosError } from "axios";
 import { capitalizeFirstLetter, formatDate } from "../api/util";
 
-const Drawer = createDrawerNavigator();
-
-const WebAdmin = (navigation: any) => {
+const WebAdmin = ({ navigation }: any) => {
 	const [loading, setLoading] = useState(true);
 	const [showModal, setShowModal] = useState(false);
 	const [showDetail, setShowDetail] = useState(false);
@@ -24,7 +22,7 @@ const WebAdmin = (navigation: any) => {
 		toDate: "",
 		dateError: "hghg"
 	});
-  const [user,  setUser] = useState<IUser>()
+	const [user, setUser] = useState<IUser>();
 	const [attendances, setAttendances] = useState<IAttendanceWithUser[]>([]);
 	const [attendance, setAttendance] = useState<IAttendanceWithUser>({
 		id: "",
@@ -33,7 +31,7 @@ const WebAdmin = (navigation: any) => {
 			fullName: "",
 			email: "",
 			phone: "",
-			accessLevel: 0,
+			accessLevel: 0
 		},
 		date: "01-01-2021",
 		userId: "",
@@ -98,16 +96,16 @@ const WebAdmin = (navigation: any) => {
 			});
 		}
 
-    async function loadUser() {
-      const user = await storage.load({ key: "user" });
-      const userData = JSON.parse(user);
-      setUser(userData);
-    }
+		async function loadUser() {
+			const user = await storage.load({ key: "user" });
+			const userData = JSON.parse(user);
+			setUser(userData);
+		}
 
 		loadAttendances();
 		loadUsers();
 		loadCuti();
-    loadUser();
+		loadUser();
 	}, [itemsPerPage]);
 
 	return (
@@ -119,7 +117,6 @@ const WebAdmin = (navigation: any) => {
 			<View className="p-6 lg:px-60  py-6">
 				<View>
 					<Text className="text-3xl mb-3 font-bold">Halo, {user?.fullName}</Text>
-          
 				</View>
 				<View className="flex-row flex-wrap gap-4 ">
 					<View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
@@ -151,41 +148,41 @@ const WebAdmin = (navigation: any) => {
 						</View>
 					</View>
 				</View>
-        <View className="flex-row gap-3">
-				{/* refresh */}
-				<TouchableOpacity
-					onPress={async () => {
-						setLoading(true);
-						await GetAttendances();
-						await GetUsers();
-						await GetPaidLeaves();
-						const attendances = await storage.load({ key: "attendances" });
-						const attendancesData: IAttendanceWithUser[] = JSON.parse(attendances);
-						const karyawan = await storage.load({ key: "karyawan" });
-						const karyawanData: IUser[] = JSON.parse(karyawan);
-						const cuti = await storage.load({ key: "cuti" });
-						const cutiData: IPaidLeave[] = JSON.parse(cuti);
-						setAttendances(attendancesData);
-						setKaryawan(karyawanData);
-						setCuti(cutiData);
-						setLoading(false);
-					}}
-					className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
-					<Text className="text-white text-center">Refresh</Text>
-				</TouchableOpacity>
-				{/* logout */}
-				<TouchableOpacity
-					onPress={async () => {
-						await storage.remove({ key: "user" });
-						await storage.remove({ key: "token" });
-						await storage.save({ key: "isLoggedin", data: false });
+				<View className="flex-row gap-3">
+					{/* refresh */}
+					<TouchableOpacity
+						onPress={async () => {
+							setLoading(true);
+							await GetAttendances();
+							await GetUsers();
+							await GetPaidLeaves();
+							const attendances = await storage.load({ key: "attendances" });
+							const attendancesData: IAttendanceWithUser[] = JSON.parse(attendances);
+							const karyawan = await storage.load({ key: "karyawan" });
+							const karyawanData: IUser[] = JSON.parse(karyawan);
+							const cuti = await storage.load({ key: "cuti" });
+							const cutiData: IPaidLeave[] = JSON.parse(cuti);
+							setAttendances(attendancesData);
+							setKaryawan(karyawanData);
+							setCuti(cutiData);
+							setLoading(false);
+						}}
+						className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
+						<Text className="text-white text-center">Refresh</Text>
+					</TouchableOpacity>
+					{/* logout */}
+					<TouchableOpacity
+						onPress={async () => {
+							await storage.remove({ key: "user" });
+							await storage.remove({ key: "token" });
+							await storage.save({ key: "isLoggedin", data: false });
 
-						navigation.navigate("Login");
-					}}
-					className="bg-red-500 p-3 rounded-md w-32 my-4 ">
-					<Text className="text-white text-center">Logout</Text>
-				</TouchableOpacity>
-			</View>
+							navigation.navigate("Login");
+						}}
+						className="bg-red-500 p-3 rounded-md w-32 my-4 ">
+						<Text className="text-white text-center">Logout</Text>
+					</TouchableOpacity>
+				</View>
 				<View className="bg-[#f1f6ff] rounded-md shadow-lg">
 					<View className="p-8 ">
 						<View className="flex-row items-center justify-between">
@@ -245,8 +242,6 @@ const WebAdmin = (navigation: any) => {
 			</View>
 
 			{renderDetail()}
-
-		
 		</ScrollView>
 	);
 

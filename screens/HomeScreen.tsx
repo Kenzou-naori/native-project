@@ -40,7 +40,7 @@ export default function HomeScreen({ navigation }: any) {
 	const [attendance, setAttendance] = useState<IAttendance | null>(null);
 	const [refreshing, setRefreshing] = useState(false);
 	const [activePaidLeave, setActivePaidLeave] = useState<IPaidLeave | null>(null);
-	const [paidLeaves, setPaidLeaves] = useState<IPaidLeave[]>([]);
+	const [_, setPaidLeaves] = useState<IPaidLeave[]>([]);
 
 	const onRefresh = React.useCallback(async () => {
 		setRefreshing(true);
@@ -65,22 +65,22 @@ export default function HomeScreen({ navigation }: any) {
 				await storage.load({ key: "attendance" }).then(async res => {
 					const attendancesData = JSON.parse(res);
 					setAttendance(attendancesData);
-					
+
 					await getCompany().then(async res => {
 						if (res instanceof AxiosError) {
 							console.log(res);
 						} else {
 							setCompany(res.data.data.company);
-							
+
 							await GetPaidLeave().then(async res => {
 								if (res instanceof AxiosError) {
-									console.log(res.response?.data.message)
+									console.log(res.response?.data.message);
 								} else {
 									setActivePaidLeave(res.data.data.paidLeave);
-									
+
 									await GetPaidLeaves().then(res => {
 										if (res instanceof AxiosError) {
-											console.log(res.response?.data.message)
+											console.log(res.response?.data.message);
 										} else {
 											setPaidLeaves(res.data.data.paidLeaves);
 											setRefreshing(false);
@@ -123,6 +123,10 @@ export default function HomeScreen({ navigation }: any) {
 		}
 
 		async function loadDatas() {
+			date = date.padStart(2, "0");
+			month = (parseInt(month) + 1).toString().padStart(2, "0");
+			year = year.padStart(2, "0");
+
 			setRefreshing(true);
 			await getAttendances(date + "-" + month + "-" + year).then(async res => {
 				if (res instanceof AxiosError) {
@@ -131,22 +135,22 @@ export default function HomeScreen({ navigation }: any) {
 					await storage.load({ key: "attendance" }).then(async res => {
 						const attendancesData = JSON.parse(res);
 						setAttendance(attendancesData);
-						
+
 						await getCompany().then(async res => {
 							if (res instanceof AxiosError) {
 								console.log(res);
 							} else {
 								setCompany(res.data.data.company);
-								
+
 								await GetPaidLeave().then(async res => {
 									if (res instanceof AxiosError) {
-										console.log(res.response?.data.message)
+										console.log(res.response?.data.message);
 									} else {
 										setActivePaidLeave(res.data.data.paidLeave);
-										
+
 										await GetPaidLeaves().then(res => {
 											if (res instanceof AxiosError) {
-												console.log(res.response?.data.message)
+												console.log(res.response?.data.message);
 											} else {
 												setPaidLeaves(res.data.data.paidLeaves);
 												setRefreshing(false);
@@ -201,7 +205,6 @@ export default function HomeScreen({ navigation }: any) {
 				{/* logout */}
 				<View className="p-2 w-16 mx-auto mt-5 flex flex-row justify-center items-center bg-[#DEE9FD] rounded-full shadow-xl shadow-gray-800">
 					<TouchableOpacity
-          
 						onPress={async () => {
 							await storage.remove({ key: "user" });
 							await storage.remove({ key: "token" });
@@ -212,7 +215,7 @@ export default function HomeScreen({ navigation }: any) {
 
 							navigation.navigate("Login");
 						}}>
-            <Ionicons size={32} color="red" name="log-out-outline" />
+						<Ionicons size={32} color="red" name="log-out-outline" />
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -450,8 +453,17 @@ export default function HomeScreen({ navigation }: any) {
 									"-" +
 									yearDate.toString().padStart(2, "0");
 
-								if (date < currentDate) {
-									showToast("Tanggal tidak valid");
+								if (title === "") {
+									showToast("Alasan tidak boleh kosong");
+									return;
+								} else if (date === "--") {
+									showToast("Tanggal tidak boleh kosong");
+									return;
+								} else if (endTime === 0) {
+									showToast("Lama cuti tidak boleh kosong");
+									return;
+								} else if (currentDate > date) {
+									showToast("Tanggal tidak boleh kurang dari hari ini");
 									return;
 								}
 

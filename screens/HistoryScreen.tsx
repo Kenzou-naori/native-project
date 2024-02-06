@@ -19,21 +19,19 @@ export default function HistoryScreen() {
 		month = month.padStart(2, "0");
 		year = year.padStart(2, "0");
 
-		await storage.load({ key: "attendances" }).then(res => {
-			setAttendances(JSON.parse(res));
+		await getAttendances(date + "-" + month + "-" + year);
+		await storage.load({ key: "attendances" }).then((attendances) => {
+			setRefreshing(true);
+			const attendancesData = JSON.parse(attendances);
+			setAttendances(attendancesData);
 			setRefreshing(false);
 		});
+		setRefreshing(false);
 	}, []);
 
 	useEffect(() => {
-		const d = new Date();
-		let date = d.getDate().toString().padStart(2, "0"); //Current Date
-		let month = (d.getMonth() + 1).toString().padStart(2, "0"); //Current Month
-		let year = d.getFullYear().toString().padStart(2, "0"); //Current Year
-
 		async function loadAttendances() {
 			setRefreshing(true);
-			await getAttendances(date + "-" + month + "-" + year);
 			const attendances = await storage.load({ key: "attendances" });
 			const attendancesData = JSON.parse(attendances);
 
