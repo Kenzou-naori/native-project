@@ -42,4 +42,4 @@ export function showToast(message: string) {
 		visibilityTime: 5000,
 		text2: message
 	});
-};
+}

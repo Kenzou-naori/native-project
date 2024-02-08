@@ -2,14 +2,16 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import storage from "../utils/storage";
 import { baseUrl, capitalizeFirstLetter, errorResponse, showToast } from "./util";
 
-export async function getAttendances(date: string): Promise<AxiosResponse<IAPIResponseGetAttendances, any> | AxiosError<IAPIErrorResponse, any>>{
+export async function getAttendances(
+	date: string
+): Promise<AxiosResponse<IAPIResponseGetAttendances, any> | AxiosError<IAPIErrorResponse, any>> {
 	const token = await storage.load({ key: "token" });
 
 	return axios
 		.get(baseUrl + "/v1/users/@me/attendances", {
 			headers: {
-				"Authorization": `Bearer ${token}`
-			},
+				Authorization: `Bearer ${token}`
+			}
 		})
 		.then(async (response: AxiosResponse<IAPIResponseGetAttendances, any>) => {
 			const todayData = response.data.data.attendances.filter(attendance => attendance.date === date);
@@ -17,14 +19,14 @@ export async function getAttendances(date: string): Promise<AxiosResponse<IAPIRe
 			if (todayData.length > 0) {
 				await storage.save({
 					key: "attendance",
-					data: JSON.stringify(todayData[0]),
+					data: JSON.stringify(todayData[0])
 				});
 			} else {
 				await storage.save({
 					key: "attendance",
-					data: null,
+					data: null
 				});
-			};
+			}
 
 			response.data.data.attendances.sort((a, b) => {
 				if (a.created_at > b.created_at) {
@@ -38,7 +40,7 @@ export async function getAttendances(date: string): Promise<AxiosResponse<IAPIRe
 
 			await storage.save({
 				key: "attendances",
-				data: JSON.stringify(response.data.data.attendances),
+				data: JSON.stringify(response.data.data.attendances)
 			});
 
 			return response;

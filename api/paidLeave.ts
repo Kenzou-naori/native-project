@@ -25,7 +25,9 @@ export async function GetPaidLeave(): Promise<AxiosResponse<IAPIResponseGetPaidL
 		});
 }
 
-export async function GetPaidLeaves(): Promise<AxiosResponse<IAPIResponseGetPaidLeaves, any> | AxiosError<IAPIErrorResponse, any>> {
+export async function GetPaidLeaves(): Promise<
+	AxiosResponse<IAPIResponseGetPaidLeaves, any> | AxiosError<IAPIErrorResponse, any>
+> {
 	return axios
 		.get(baseUrl + "/v1/users/@me/paidLeaves", {
 			headers: {
@@ -62,7 +64,7 @@ export async function SendPaidLeave(
 
 			return response;
 		})
-		.catch((error: AxiosError<IAPIErrorResponse, any>) => {            
+		.catch((error: AxiosError<IAPIErrorResponse, any>) => {
 			const errMessage: string[] = error.response?.data.message!.split(";")!;
 			let message: string = "";
 			if (errMessage.length > 1) {

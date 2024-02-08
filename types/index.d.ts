@@ -41,7 +41,6 @@ interface IUser {
 	accessLevel: number;
 }
 
-
 interface IUserData {
 	email: string;
 	fullName: string;
@@ -72,7 +71,6 @@ interface IAPIResponseGetAttendances {
 	};
 	success: boolean;
 }
-
 
 interface IAPIResponseGetAttendancesWithUser {
 	data: {

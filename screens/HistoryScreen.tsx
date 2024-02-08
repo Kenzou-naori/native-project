@@ -20,7 +20,7 @@ export default function HistoryScreen() {
 		year = year.padStart(2, "0");
 
 		await getAttendances(date + "-" + month + "-" + year);
-		await storage.load({ key: "attendances" }).then((attendances) => {
+		await storage.load({ key: "attendances" }).then(attendances => {
 			setRefreshing(true);
 			const attendancesData = JSON.parse(attendances);
 			setAttendances(attendancesData);

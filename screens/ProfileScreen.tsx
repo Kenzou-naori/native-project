@@ -43,7 +43,7 @@ const ProfileScreen = () => {
 							<Text className="text-md text-gray-500">Alamat Email</Text>
 							<Text className="text-xl border-b-2 border-b-gray-500 py-2">{email}</Text>
 
-              {/* <TextInput
+							{/* <TextInput
 								value={email}
 								
 								onChangeText={onChangeText}
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
 		fontWeight: "600",
 		color: "#333",
 		marginBottom: 8
-	},
+	}
 });
 
 export default ProfileScreen;

@@ -42,25 +42,26 @@ const WebAdmin = () => {
 	return (
 		<ScrollView className="w-full bg-[#DEE9FD]">
 			<Spinner visible={loading} textContent={"Loading..."} />
-				{/* refresh */}
+			{/* refresh */}
 			<View className="px-3 lg:px-60 py-6">
 				<View className="flex-row">
-				<TouchableOpacity
-					onPress={async () => {
-						setLoading(true);
-						const res = await GetPaidLeaves(page + 1);
-						if (!(res instanceof AxiosError)) {
-							setCuti(res.data.data.paidLeaves);
+					<TouchableOpacity
+						onPress={async () => {
+							setLoading(true);
+							const res = await GetPaidLeaves(page + 1);
+							if (!(res instanceof AxiosError)) {
+								setCuti(res.data.data.paidLeaves);
+								setLoading(false);
+							}
 							setLoading(false);
-						}
-						setLoading(false);
-					}}
-					className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
-						  <Text className="text-white text-center">
-			<Ionicons color="white" name="refresh-circle-outline" size={17}/>
-				Refresh</Text>
-				</TouchableOpacity>
-			</View>
+						}}
+						className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
+						<Text className="text-white text-center">
+							<Ionicons color="white" name="refresh-circle-outline" size={17} />
+							Refresh
+						</Text>
+					</TouchableOpacity>
+				</View>
 				<View className="bg-[#f1f6ff] mb-6 rounded-md shadow-lg">
 					<View className="p-4">
 						<View className="flex-row items-center justify-between">
@@ -160,7 +161,6 @@ const WebAdmin = () => {
 					</DataTable>
 				</View>
 			</View>
-		
 		</ScrollView>
 	);
 	function renderCek() {

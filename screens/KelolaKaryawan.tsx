@@ -35,7 +35,7 @@ const WebAdmin = () => {
 			const karyawan = await storage.load({ key: "karyawan" });
 			const karyawanData = JSON.parse(karyawan);
 			const totalKaryawan = await storage.load({ key: "totalKaryawan" });
-			
+
 			setTotalKaryawan(parseInt(totalKaryawan));
 			setKaryawan(karyawanData);
 			setLoading(false);

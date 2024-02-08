@@ -60,9 +60,7 @@ export default function HistoryScreen() {
 										</Text>
 										<Text style={styles.content}>{formatDate(item.startDate)}</Text>
 									</View>
-									<Text className="text-sm font-semibold">
-										{item.days} Hari
-									</Text>
+									<Text className="text-sm font-semibold">{item.days} Hari</Text>
 								</View>
 							);
 						}}

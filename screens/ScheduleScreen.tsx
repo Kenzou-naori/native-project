@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { StatusBar } from "expo-status-bar";
 import { faCaretRight, faPlusSquare, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import DateTimePicker from 'react-native-ui-datepicker';
+import DateTimePicker from "react-native-ui-datepicker";
 import constant from "../constant/date";
 import storage from "../utils/storage";
 import { getSchedule, postSchedule } from "../api/schedule";
@@ -19,9 +19,7 @@ interface DetailScreenProps {
 	secureTextEntry?: boolean;
 }
 
-const DetailScreen = ({
-	value,
-}: DetailScreenProps) => {
+const DetailScreen = ({ value }: DetailScreenProps) => {
 	const [title, setTitle] = useState("");
 	const [startTime, setStartTime] = useState("");
 	const [endTime, setEndTime] = useState("");
@@ -80,10 +78,10 @@ const DetailScreen = ({
 	return (
 		<View className="mt-6 bg-[#DEE9FD]">
 			<View className="p-5">
-					<View className="p-3 mt-3 flex flex-row items-center justify-center bg-[#DEE9FD] rounded-full shadow-xl shadow-gray-800">
-						<Text className="text-gray-800 font-bold text-2xl mr-3">{day}</Text>
-						<Text className="text-gray-800 font-bold text-2xl">{currentDate}</Text>
-					</View>
+				<View className="p-3 mt-3 flex flex-row items-center justify-center bg-[#DEE9FD] rounded-full shadow-xl shadow-gray-800">
+					<Text className="text-gray-800 font-bold text-2xl mr-3">{day}</Text>
+					<Text className="text-gray-800 font-bold text-2xl">{currentDate}</Text>
+				</View>
 			</View>
 			<View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-6 p-5 -mb-56">
 				{renderModal()}
@@ -95,12 +93,14 @@ const DetailScreen = ({
 				</View>
 				<ScrollView showsVerticalScrollIndicator={false}>
 					{data.map((item, index) => (
-						<View className="border rounded-2xl border-gray-400 p-[20] mb-[20] flex flex-col bg-[#DEE9FD]" key={item.id}>
+						<View
+							className="border rounded-2xl border-gray-400 p-[20] mb-[20] flex flex-col bg-[#DEE9FD]"
+							key={item.id}>
 							<Text className="text-2xl text-gray-600 font-bold">{item.title}</Text>
 							<View className="flex-row mt-5 justify-end items-center">
-							<Text className="text-xl text-gray-600 font-semibold">{item.startTime}</Text>
-							<Text>—</Text>
-							<Text className="text-xl text-gray-600 font-semibold">{item.endTime}</Text>
+								<Text className="text-xl text-gray-600 font-semibold">{item.startTime}</Text>
+								<Text>—</Text>
+								<Text className="text-xl text-gray-600 font-semibold">{item.endTime}</Text>
 							</View>
 						</View>
 					))}
@@ -123,7 +123,7 @@ const DetailScreen = ({
 						<View className="flex-col justify-center items-center my-5">
 							{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
 							<View className="mt-4 w-full">
-							<Text className="text-md text-gray-600 font-bold">Nama Kegiatan</Text>
+								<Text className="text-md text-gray-600 font-bold">Nama Kegiatan</Text>
 								<TextInput
 									className="border-b-2 border-b-gray-500 text-lg py-3"
 									keyboardType="default"
@@ -131,7 +131,7 @@ const DetailScreen = ({
 								/>
 							</View>
 							<View className="mt-4 w-full">
-							<Text className="text-md text-gray-600 font-bold">Mulai</Text>
+								<Text className="text-md text-gray-600 font-bold">Mulai</Text>
 								<TextInput
 									className="border-b-2 border-b-gray-500 text-lg py-3"
 									value={value}
@@ -149,35 +149,33 @@ const DetailScreen = ({
 								/>
 							</View>
 						</View>
-							<TouchableOpacity
-								onPress={async () => {
-									setOpenModal(false);
+						<TouchableOpacity
+							onPress={async () => {
+								setOpenModal(false);
 
-									const data: IScheduleData = {
-										title: title,
-										date: currentDate,
-										startTime: startTime,
-										endTime: endTime
-									};
+								const data: IScheduleData = {
+									title: title,
+									date: currentDate,
+									startTime: startTime,
+									endTime: endTime
+								};
 
-									await postSchedule(data);
+								await postSchedule(data);
 
-									const schedule = await storage.load({ key: "schedule" });
-									const scheduleData = JSON.parse(schedule);
+								const schedule = await storage.load({ key: "schedule" });
+								const scheduleData = JSON.parse(schedule);
 
-									setData(scheduleData);
-								}}>
-								<View className="bg-[#DEE9FD] rounded-full mt-6">
-									<Text className="text-gray-600 px-3 py-2 font-semibold text-center text-xl">Tambah</Text>
-								</View>
-							</TouchableOpacity>
+								setData(scheduleData);
+							}}>
+							<View className="bg-[#DEE9FD] rounded-full mt-6">
+								<Text className="text-gray-600 px-3 py-2 font-semibold text-center text-xl">Tambah</Text>
+							</View>
+						</TouchableOpacity>
 					</ScrollView>
 				</View>
 			</Modal>
 		);
 	}
-
-	
 };
 
 const styles = StyleSheet.create({
