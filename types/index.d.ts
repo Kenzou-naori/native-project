@@ -73,9 +73,11 @@ interface IAPIResponseGetAttendances {
 	success: boolean;
 }
 
+
 interface IAPIResponseGetAttendancesWithUser {
 	data: {
 		attendances: IAttendanceWithUser[];
+		total: number;
 	};
 	success: boolean;
 }
@@ -145,6 +147,7 @@ interface IAPIResponseGetUser {
 interface IAPIResponseGetUsers {
 	data: {
 		users: IUser[];
+		total: number;
 	};
 	success: boolean;
 }
@@ -195,6 +198,7 @@ interface IAPIResponseGetPaidLeaves {
 interface IAPIResponseGetPaidLeavesWithUser {
 	data: {
 		paidLeaves: IPaidLeaveWithuser[];
+		total: number;
 	};
 	success: boolean;
 }

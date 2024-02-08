@@ -15,9 +15,9 @@ const showToast = (message: string) => {
 	});
 };
 
-export async function GetUsers(): Promise<AxiosResponse<IAPIResponseGetUsers, any> | AxiosError<IAPIErrorResponse, any>> {
+export async function GetUsers(page: number = 1): Promise<AxiosResponse<IAPIResponseGetUsers, any> | AxiosError<IAPIErrorResponse, any>> {
 	return axios
-		.get(baseUrl + "/v1/admin/users", {
+		.get(baseUrl + "/v1/admin/users?page=" + page, {
 			headers: {
 				Authorization: `Bearer ${await storage.load({ key: "token" })}`
 			}
@@ -26,6 +26,10 @@ export async function GetUsers(): Promise<AxiosResponse<IAPIResponseGetUsers, an
 			await storage.save({
 				key: "karyawan",
 				data: JSON.stringify(response.data.data.users)
+			});
+			await storage.save({
+				key: "totalKaryawan",
+				data: String(response.data.data.total)
 			});
 
 			return response;
@@ -71,17 +75,17 @@ export async function GetUser(id: string): Promise<AxiosResponse<IAPIResponseGet
 		});
 }
 
-export async function GetAttendances(): Promise<
-	AxiosResponse<IAPIResponseGetAttendances, any> | AxiosError<IAPIErrorResponse, any>
+export async function GetAttendances(page: number = 1): Promise<
+	AxiosResponse<IAPIResponseGetAttendancesWithUser, any> | AxiosError<IAPIErrorResponse, any>
 > {
 	return axios
-		.get(baseUrl + "/v1/admin/attendances", {
+		.get(baseUrl + "/v1/admin/attendances?page="+page, {
 			headers: {
 				Authorization: `Bearer ${await storage.load({ key: "token" })}`
 			}
 		})
 		.then(async (response: AxiosResponse<IAPIResponseGetAttendancesWithUser, any>) => {
-			response.data.data.attendances.sort((a: IAttendance, b: IAttendance) => {
+			response.data.data.attendances.sort((a: IAttendanceWithUser, b: IAttendanceWithUser) => {
 				if (a.created_at > b.created_at) {
 					return -1;
 				} else if (a.created_at < b.created_at) {
@@ -94,6 +98,11 @@ export async function GetAttendances(): Promise<
 			await storage.save({
 				key: "attendances",
 				data: JSON.stringify(response.data.data.attendances)
+			});
+
+			await storage.save({
+				key: "totalAttendances",
+				data: JSON.stringify(response.data.data.total)
 			});
 
 			return response;
@@ -202,11 +211,11 @@ export async function DeleteUser(
 		});
 }
 
-export async function GetPaidLeaves(): Promise<
+export async function GetPaidLeaves(page: number = 1): Promise<
 	AxiosResponse<IAPIResponseGetPaidLeavesWithUser, any> | AxiosError<IAPIErrorResponse, any>
 > {
 	return axios
-		.get(baseUrl + "/v1/admin/paidLeaves", {
+		.get(baseUrl + "/v1/admin/paidLeaves?page=" + page, {
 			headers: {
 				Authorization: `Bearer ${await storage.load({ key: "token" })}`
 			}
@@ -215,6 +224,10 @@ export async function GetPaidLeaves(): Promise<
 			await storage.save({
 				key: "paidLeaves",
 				data: JSON.stringify(response.data.data.paidLeaves)
+			});
+			await storage.save({
+				key: "totalPaidLeaves",
+				data: String(response.data.data.total)
 			});
 
 			return response;

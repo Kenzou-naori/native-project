@@ -12,34 +12,37 @@ import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const WebAdmin = () => {
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [showDeleteConfrim, setShowDeleteConfrim] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const [showUpdateModal, setShowUpdateModal] = useState(false);
 	const [karyawan, setKaryawan] = useState<IUser[]>([]);
-	const [page, setPage] = React.useState<number>(0);
-	const [numberOfItemsPerPageList] = React.useState([10, 20, 30]);
-	const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
+	const [totalKaryawan, setTotalKaryawan] = useState(0);
+	const [page, setPage] = useState(0);
 	const [karyawanId, setKaryawanId] = useState("");
 	const [fullName, setFullName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
 	const [password, setPassword] = useState("");
-	const from = page * itemsPerPage;
-	const to = Math.min((page + 1) * itemsPerPage, karyawan.length);
+	const from = page * 25;
+	const to = Math.min((page + 1) * 25, totalKaryawan);
 
 	React.useEffect(() => {
 		setPage(0);
 
 		async function loadKaryawan() {
+			setLoading(true);
 			const karyawan = await storage.load({ key: "karyawan" });
 			const karyawanData = JSON.parse(karyawan);
+			const totalKaryawan = await storage.load({ key: "totalKaryawan" });
+			
+			setTotalKaryawan(parseInt(totalKaryawan));
 			setKaryawan(karyawanData);
 			setLoading(false);
 		}
 
 		loadKaryawan();
-	}, [itemsPerPage]);
+	}, []);
 
 	return (
 		<ScrollView className="w-full bg-[#DEE9FD]">
@@ -49,11 +52,12 @@ const WebAdmin = () => {
 					<TouchableOpacity
 						onPress={async () => {
 							setLoading(true);
-							const karyawan = await GetUsers();
+							const karyawan = await GetUsers(page + 1);
 							if (karyawan instanceof AxiosError) {
 								console.log(karyawan);
 							} else {
 								setKaryawan(karyawan.data.data.users);
+								setTotalKaryawan(karyawan.data.data.total);
 								await storage.save({
 									key: "karyawan",
 									data: karyawan.data.data.users
@@ -62,9 +66,10 @@ const WebAdmin = () => {
 							setLoading(false);
 						}}
 						className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
-						  <Text className="text-white text-center">
-			<Ionicons color="white" name="refresh-circle-outline" size={17}/>
-				Refresh</Text>
+						<Text className="text-white text-center">
+							<Ionicons color="white" name="refresh-circle-outline" size={17} />
+							Refresh
+						</Text>
 					</TouchableOpacity>
 				</View>
 				<View className="bg-[#f1f6ff] mb-6 rounded-md shadow-lg">
@@ -81,16 +86,6 @@ const WebAdmin = () => {
 					</View>
 
 					<DataTable>
-						{/* <ScrollView horizontal contentContainerStyle={{ flexDirection: 'column' }}> */}
-
-						<DataTable.Pagination
-							page={page}
-							numberOfPages={Math.ceil(karyawan.length / itemsPerPage)}
-							onPageChange={page => setPage(page)}
-							label={`${from + 1}-${to} of ${karyawan.length}`}
-							showFastPaginationControls
-							numberOfItemsPerPage={25}
-						/>
 						<DataTable.Header>
 							<DataTable.Title>Nama</DataTable.Title>
 							<DataTable.Title>Email</DataTable.Title>
@@ -107,7 +102,7 @@ const WebAdmin = () => {
 							</DataTable.Row>
 						)}
 
-						{karyawan.slice(from, to).map(karyawan => (
+						{karyawan.map(karyawan => (
 							<DataTable.Row key={karyawan.id} className="py-2 lg:py-4">
 								<DataTable.Cell>{karyawan.fullName}</DataTable.Cell>
 								<DataTable.Cell>{karyawan.email}</DataTable.Cell>
@@ -144,21 +139,25 @@ const WebAdmin = () => {
 
 						<DataTable.Pagination
 							page={page}
-							numberOfPages={Math.ceil(karyawan.length / itemsPerPage)}
-							onPageChange={page => setPage(page)}
-							label={`${from + 1}-${to} of ${karyawan.length}`}
+							numberOfPages={Math.ceil(totalKaryawan / 25)}
+							onPageChange={async page => {
+								setLoading(true);
+								setPage(page);
+								await GetUsers(page + 1);
+								const karyawan = await storage.load({ key: "karyawan" });
+								const karyawanData: IUser[] = JSON.parse(karyawan);
+								const totalKaryawan = await storage.load({ key: "totalKaryawan" });
+								setTotalKaryawan(parseInt(totalKaryawan));
+								setKaryawan(karyawanData);
+								setLoading(false);
+							}}
+							label={`${from + 1}-${to} of ${totalKaryawan}`}
 							showFastPaginationControls
-							numberOfItemsPerPageList={numberOfItemsPerPageList}
-							numberOfItemsPerPage={itemsPerPage}
-							onItemsPerPageChange={onItemsPerPageChange}
-							selectPageDropdownLabel={"Rows per page"}
+							numberOfItemsPerPage={25}
 						/>
-						{/* </ScrollView> */}
 					</DataTable>
 				</View>
 			</View>
-
-			{/* refresh */}
 		</ScrollView>
 	);
 	function renderForm() {

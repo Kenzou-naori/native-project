@@ -16,6 +16,7 @@ const WebAdmin = () => {
 	const [loading, setLoading] = useState(true);
 	const [showCek, setShowCek] = useState(false);
 	const [cuti, setCuti] = useState<IPaidLeaveWithuser[]>([]);
+	const [totalCuti, setTotalCuti] = useState<number>(0);
 	const [page, setPage] = React.useState<number>(0);
 	const [numberOfItemsPerPageList] = React.useState([10, 20, 30]);
 	const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
@@ -28,6 +29,9 @@ const WebAdmin = () => {
 		async function loadCuti() {
 			const cuti = await storage.load({ key: "cuti" });
 			const cutiData = JSON.parse(cuti);
+			const totalCuti = await storage.load({ key: "totalCuti" });
+
+			setTotalCuti(parseInt(totalCuti));
 			setCuti(cutiData);
 			setLoading(false);
 		}
@@ -44,7 +48,7 @@ const WebAdmin = () => {
 				<TouchableOpacity
 					onPress={async () => {
 						setLoading(true);
-						const res = await GetPaidLeaves();
+						const res = await GetPaidLeaves(page + 1);
 						if (!(res instanceof AxiosError)) {
 							setCuti(res.data.data.paidLeaves);
 							setLoading(false);
@@ -66,18 +70,6 @@ const WebAdmin = () => {
 						</View>
 					</View>
 					<DataTable>
-						{/* <ScrollView horizontal contentContainerStyle={{ flexDirection: 'column' }}> */}
-						<DataTable.Pagination
-							page={page}
-							numberOfPages={Math.ceil(cuti.length / itemsPerPage)}
-							onPageChange={page => setPage(page)}
-							label={`${from + 1}-${to} of ${cuti.length}`}
-							numberOfItemsPerPageList={numberOfItemsPerPageList}
-							numberOfItemsPerPage={itemsPerPage}
-							onItemsPerPageChange={onItemsPerPageChange}
-							showFastPaginationControls
-							selectPageDropdownLabel={"Rows per page"}
-						/>
 						<DataTable.Header>
 							<DataTable.Title>Nama</DataTable.Title>
 							<DataTable.Title>Email</DataTable.Title>
@@ -100,7 +92,7 @@ const WebAdmin = () => {
 							</DataTable.Row>
 						)}
 
-						{cuti.slice(from, to).map(cutit => (
+						{cuti.map(cutit => (
 							<DataTable.Row key={cutit.id} className="py-2 lg:py-4">
 								<DataTable.Cell>{cutit.user.fullName}</DataTable.Cell>
 								<DataTable.Cell>{cutit.user.email}</DataTable.Cell>
@@ -149,13 +141,22 @@ const WebAdmin = () => {
 
 						<DataTable.Pagination
 							page={page}
-							numberOfPages={Math.ceil(cuti.length / itemsPerPage)}
-							onPageChange={page => setPage(page)}
-							label={`${from + 1}-${to} of ${cuti.length}`}
+							numberOfPages={Math.ceil(totalCuti / 25)}
+							onPageChange={async page => {
+								setLoading(true);
+								setPage(page);
+								await GetPaidLeaves(page + 1);
+								const paidLeaves = await storage.load({ key: "paidLeaves" });
+								const paidLeavesData: IPaidLeaveWithuser[] = JSON.parse(paidLeaves);
+								const totalCuti = await storage.load({ key: "totalPaidLeaves" });
+								setTotalCuti(parseInt(totalCuti));
+								setCuti(paidLeavesData);
+								setLoading(false);
+							}}
+							label={`${from + 1}-${to} of ${totalCuti}`}
 							showFastPaginationControls
 							numberOfItemsPerPage={25}
 						/>
-						{/* </ScrollView> */}
 					</DataTable>
 				</View>
 			</View>
