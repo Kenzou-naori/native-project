@@ -9,6 +9,7 @@ import { CreateUser, DeleteUser, GetUsers, UpdateUser } from "../api/admin";
 import { AxiosError } from "axios";
 import storage from "../utils/storage";
 import Spinner from "react-native-loading-spinner-overlay";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const WebAdmin = () => {
 	const [loading, setLoading] = useState(true);
@@ -44,7 +45,7 @@ const WebAdmin = () => {
 		<ScrollView className="w-full bg-[#DEE9FD]">
 			<Spinner visible={loading} textContent={"Loading..."} />
 			<View className="px-3 lg:px-60 py-6">
-				<View className="flex row">
+				<View className="flex-row">
 					<TouchableOpacity
 						onPress={async () => {
 							setLoading(true);
@@ -61,7 +62,9 @@ const WebAdmin = () => {
 							setLoading(false);
 						}}
 						className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
-						<Text className="text-white text-center">Refresh</Text>
+						  <Text className="text-white text-center">
+			<Ionicons color="white" name="refresh-circle-outline" size={17}/>
+				Refresh</Text>
 					</TouchableOpacity>
 				</View>
 				<View className="bg-[#f1f6ff] mb-6 rounded-md shadow-lg">

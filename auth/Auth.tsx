@@ -1,7 +1,7 @@
 // In App.js in a new project
 
 import * as React from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -9,7 +9,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { MD2LightTheme, PaperProvider, useTheme } from "react-native-paper";
 
-
+import CustomDrawer from  '../layout/CustomDrawer';
 import LoginScreen from "../screens/LoginScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ScheduleScreen from "../screens/ScheduleScreen";
@@ -55,7 +55,13 @@ function MyDrawer() {
   return (
     <PaperProvider theme={theme}>
 
-    <Drawer.Navigator>
+    <Drawer.Navigator
+    screenOptions={{ 
+      drawerStyle: styles.drawerStyle,
+      headerStyle : styles.topbar
+     }}
+     drawerContent={(props) => <CustomDrawer {...props} />}
+    >
       <Drawer.Screen name={WebAdminName} component={WebAdmin} />
       <Drawer.Screen name={KelolaKaryawanName} component={KelolaKaryawan} />
       <Drawer.Screen name={CutiKaryawanName} component={CutiKaryawan} />
@@ -80,7 +86,7 @@ function FirstScreen() {
           } else if (rn === settingsName) {
             iconName = focused ? "reader-outline" : "reader-outline";
           } else if (rn === cutiName) {
-            iconName = focused ? "document-text" : "document-text-outline";
+            iconName = focused ? "walk-outline" : "walk-outline";
           } else if (rn === profileName) {
             iconName = focused ? "person-circle" : "person-circle-outline";
           }
@@ -156,4 +162,15 @@ function Auth() {
   );
 }
 
+
+const styles = StyleSheet.create({
+	drawerStyle : {
+    width : 260,
+    backgroundColor: 'transparent'
+  },
+  topbar: {
+    backgroundColor : '#f1f6ff'
+  }
+});
 export default Auth;
+

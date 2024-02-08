@@ -41,7 +41,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
 	}, []);
 
 	return (
-		<View className="bg-white h-full w-full items-center">
+		<View className="bg-white h-full w-full items-center lg:bg-[#DEE9FD]">
 			<StatusBar backgroundColor="#DEE9FD" style="light" />
 			<SafeAreaView className="bg-[#DEE9FD] h-[93%] p-5 w-full lg:w-6/12 items-center rounded-b-[70px] shadow-md shadow-gray-500">
 				<Toast />
