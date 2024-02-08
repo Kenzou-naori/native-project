@@ -50,7 +50,7 @@ export default function HistoryScreen() {
 				</View>
 				<View
 					//   showsVerticalScrollIndicator={false}
-					className="h-screen pb-52">
+					className="pb-52 h-screen">
 					<FlatList
 						data={attendances}
 						renderItem={({ item }) => {
@@ -59,7 +59,7 @@ export default function HistoryScreen() {
 									key={item.id}
 									className=" rounded-xl border border-[#ccc] p-[20] mb-2 bg-[#DEE9FD] flex justify-between items-center flex-row">
 									<View>
-										<Text className="text-2xl text-gray-600 font-bold">
+										<Text className="text-2xl font-bold text-gray-600">
 											{capitalizeFirstLetter(item.status)}
 										</Text>
 										<Text style={styles.content}>{formatDate(item.date)}</Text>
@@ -70,7 +70,7 @@ export default function HistoryScreen() {
 								</View>
 							);
 						}}
-						ItemSeparatorComponent={() => <View className=" h-4" />}
+						ItemSeparatorComponent={() => <View className="h-4" />}
 						ListEmptyComponent={<Text>Kamu belum melakukan presensi</Text>}
 						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 					/>
@@ -80,7 +80,7 @@ export default function HistoryScreen() {
 								key={item.id}
 								className=" rounded-xl border border-[#ccc] p-[20] mb-[20] bg-[#DEE9FD] flex justify-between items-center flex-row">
 								<View>
-									<Text className="text-2xl text-gray-600 font-bold">{capitalizeFirstLetter(item.status)}</Text>
+									<Text className="text-2xl font-bold text-gray-600">{capitalizeFirstLetter(item.status)}</Text>
 									<Text style={styles.content}>{formatDate(item.date)}</Text>
 								</View>
 								<Text className="text-sm font-semibold">

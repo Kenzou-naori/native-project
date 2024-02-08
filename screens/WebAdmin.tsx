@@ -124,37 +124,37 @@ const WebAdmin = () => {
 	return (
 		<ScrollView className="w-full bg-[#DEE9FD]">
 			<Spinner visible={loading} textContent={"Loading..."} />
-			{/* <View className=" absolute w-48 h-96 bg-white p-3 my-36">
+			{/* <View className="absolute p-3 my-36 w-48 h-96 bg-white">
             <Text>hllo</Text>
           </View> */}
-			<View className="p-6 lg:px-60  py-6">
-				<View className="flex-row flex-wrap gap-4 ">
+			<View className="p-6 py-6 lg:px-60">
+				<View className="flex-row flex-wrap gap-4">
 					<View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
 						<Ionicons size={32} color="black" name="people-outline" />
 						<View className="flex-col ml-4">
-							<Text className="text-2xl text-gray-600 font-bold">{totalKaryawan}</Text>
-							<Text className="text-xl text-gray-600 font-semibold">Karyawan</Text>
+							<Text className="text-2xl font-bold text-gray-600">{totalKaryawan}</Text>
+							<Text className="text-xl font-semibold text-gray-600">Karyawan</Text>
 						</View>
 					</View>
 					<View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
 						<Ionicons size={32} color="black" name="location-outline" />
 						<View className="flex-col ml-4">
-							<Text className="text-2xl text-gray-600 font-bold">{totalAttendances}</Text>
-							<Text className="text-xl text-gray-600 font-semibold">Presensi</Text>
+							<Text className="text-2xl font-bold text-gray-600">{totalAttendances}</Text>
+							<Text className="text-xl font-semibold text-gray-600">Presensi</Text>
 						</View>
 					</View>
 					{/* <View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
 						<Ionicons size={32} color="black" name="hand-left-outline" />
 						<View className="flex-col ml-4">
-							<Text className="text-2xl text-gray-600 font-bold">0</Text>
-							<Text className="text-xl text-gray-600 font-semibold">Izin</Text>
+							<Text className="text-2xl font-bold text-gray-600">0</Text>
+							<Text className="text-xl font-semibold text-gray-600">Izin</Text>
 						</View>
 					</View> */}
 					<View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
 						<Ionicons size={32} color="black" name="walk-outline" />
 						<View className="flex-col ml-4">
-							<Text className="text-2xl text-gray-600 font-bold">{totalCuti}</Text>
-							<Text className="text-xl text-gray-600 font-semibold">Cuti</Text>
+							<Text className="text-2xl font-bold text-gray-600">{totalCuti}</Text>
+							<Text className="text-xl font-semibold text-gray-600">Cuti</Text>
 						</View>
 					</View>
 				</View>
@@ -177,8 +177,8 @@ const WebAdmin = () => {
 							setCuti(cutiData);
 							setLoading(false);
 						}}
-						className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
-						<Text className="text-white text-center">
+						className="p-3 my-4 w-32 bg-blue-500 rounded-md">
+						<Text className="text-center text-white">
 							<Ionicons color="white" name="refresh-circle-outline" size={17} />
 							Refresh
 						</Text>
@@ -186,9 +186,9 @@ const WebAdmin = () => {
 					{/* logout */}
 				</View>
 				<View className="bg-[#f1f6ff] rounded-md shadow-lg">
-					<View className="p-8 ">
-						<View className="flex-row items-center justify-between">
-							<Text className=" font-semibold">Presensi Kehadiran</Text>
+					<View className="p-8">
+						<View className="flex-row justify-between items-center">
+							<Text className="font-semibold">Presensi Kehadiran</Text>
 							{renderCalendar()}
 						</View>
 					</View>
@@ -253,17 +253,17 @@ const WebAdmin = () => {
 	function renderDetail() {
 		return (
 			<Modal animationType="fade" transparent={true} visible={showDetail}>
-				<View className="items-center h-full justify-center">
+				<View className="justify-center items-center h-full">
 					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%] p-5">
 						<View className="flex-row justify-between">
-							<Text className="text-gray-600 text-2xl font-bold">Detail Presensi</Text>
+							<Text className="text-2xl font-bold text-gray-600">Detail Presensi</Text>
 							<TouchableOpacity onPress={() => setShowDetail(false)}>
 								<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 							</TouchableOpacity>
 						</View>
 						{/* <View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-[156] p-5 -mb-56"> */}
-						{/* <View className="flex-row justify-between ">
-						<Text className="text-gray-600 text-2xl font-bold">Tambah Tugas</Text>
+						{/* <View className="flex-row justify-between">
+						<Text className="text-2xl font-bold text-gray-600">Tambah Tugas</Text>
 						<TouchableOpacity onPress={() => setShowModal(false)}>
 							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 						</TouchableOpacity>
@@ -272,26 +272,26 @@ const WebAdmin = () => {
 							<View className="flex-col justify-center items-center my-5">
 								{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">Nama Lengkap</Text>
-									<Text className="border-b-2 border-b-gray-500 text-lg py-3">{attendance.user.fullName}</Text>
+									<Text className="font-bold text-gray-600 text-md">Nama Lengkap</Text>
+									<Text className="py-3 text-lg border-b-2 border-b-gray-500">{attendance.user.fullName}</Text>
 								</View>
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">Email</Text>
-									<Text className="border-b-2 border-b-gray-500 text-lg py-3">{attendance.user.email}</Text>
+									<Text className="font-bold text-gray-600 text-md">Email</Text>
+									<Text className="py-3 text-lg border-b-2 border-b-gray-500">{attendance.user.email}</Text>
 								</View>
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">No. HP</Text>
-									<Text className="border-b-2 border-b-gray-500 text-lg py-3">{attendance.user.phone}</Text>
+									<Text className="font-bold text-gray-600 text-md">No. HP</Text>
+									<Text className="py-3 text-lg border-b-2 border-b-gray-500">{attendance.user.phone}</Text>
 								</View>
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">Presensi</Text>
-									<Text className="border-b-2 border-b-gray-500 text-lg py-3">
+									<Text className="font-bold text-gray-600 text-md">Presensi</Text>
+									<Text className="py-3 text-lg border-b-2 border-b-gray-500">
 										{formatDate(attendance.date)}
 									</Text>
 								</View>
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">Status</Text>
-									<Text className="border-b-2 border-b-gray-500 text-lg py-3">
+									<Text className="font-bold text-gray-600 text-md">Status</Text>
+									<Text className="py-3 text-lg border-b-2 border-b-gray-500">
 										{capitalizeFirstLetter(attendance.status)}
 									</Text>
 								</View>
@@ -306,10 +306,10 @@ const WebAdmin = () => {
 	function renderCalendar() {
 		return (
 			<Modal animationType="fade" transparent={true} visible={showModal}>
-				<View className="items-center h-full justify-center">
+				<View className="justify-center items-center h-full">
 					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%] p-5">
 						<View className="flex-row justify-between">
-							<Text className="text-gray-600 text-2xl font-bold">Pilih Tanggal</Text>
+							<Text className="text-2xl font-bold text-gray-600">Pilih Tanggal</Text>
 							<TouchableOpacity onPress={() => setShowModal(false)}>
 								<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 							</TouchableOpacity>
@@ -357,11 +357,11 @@ const WebAdmin = () => {
 							}}
 						/>
 						<View className="flex-row gap-2 justify-end items-end">
-							<TouchableOpacity className=" bg-blue-500 rounded-full w-20 p-2 ">
-								<Text className="text-white text-center">Submit</Text>
+							<TouchableOpacity className="p-2 w-20 bg-blue-500 rounded-full">
+								<Text className="text-center text-white">Submit</Text>
 							</TouchableOpacity>
-							<TouchableOpacity className=" bg-gray-500 rounded-full w-20 p-2 ">
-								<Text className="text-white text-center">Reset</Text>
+							<TouchableOpacity className="p-2 w-20 bg-gray-500 rounded-full">
+								<Text className="text-center text-white">Reset</Text>
 							</TouchableOpacity>
 						</View>
 					</View>

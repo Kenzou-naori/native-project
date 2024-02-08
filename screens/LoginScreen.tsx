@@ -48,7 +48,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
 				<ScrollView className="mt-6" showsVerticalScrollIndicator={false}>
 					<View className="flex items-center">
 						<Animated.Image
-							className="h-96 w-96"
+							className="w-96 h-96"
 							entering={FadeInUp.duration(1000).springify()}
 							source={require("../assets/images/work.png")}
 						/>
@@ -56,12 +56,12 @@ function LoginScreen({ navigation }: { navigation: any }) {
 
 					{/* title and form */}
 
-					<View className="w-full flex justify-around">
+					<View className="flex justify-around w-full">
 						{/* Form */}
 						<View className="flex items-center mx-5 space-y-4">
 							<Animated.View
 								entering={FadeInDown.duration(1000).springify()}
-								className="bg-white p-5 rounded-2xl w-full">
+								className="p-5 w-full bg-white rounded-2xl">
 								<TextInput
 									placeholder="Email"
 									value={email}
@@ -72,7 +72,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
 							</Animated.View>
 							<Animated.View
 								entering={FadeInDown.delay(200).duration(1000).springify()}
-								className="bg-white p-5 rounded-2xl w-full">
+								className="p-5 w-full bg-white rounded-2xl">
 								<TextInput
 									placeholder="Password"
 									value={password}
@@ -87,7 +87,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
 										SignIn(email, password, navigation);
 									}}
 									className="bg-[#3170E8] w-full p-3 rounded-2xl mb-3">
-									<Text className="text-xl font-bold text-white text-center">Login</Text>
+									<Text className="text-xl font-bold text-center text-white">Login</Text>
 								</TouchableOpacity>
 							</Animated.View>
 						</View>

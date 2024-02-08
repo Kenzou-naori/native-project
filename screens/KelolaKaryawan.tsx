@@ -47,7 +47,7 @@ const WebAdmin = () => {
 	return (
 		<ScrollView className="w-full bg-[#DEE9FD]">
 			<Spinner visible={loading} textContent={"Loading..."} />
-			<View className="px-3 lg:px-60 py-6">
+			<View className="py-6 px-3 lg:px-60">
 				<View className="flex-row">
 					<TouchableOpacity
 						onPress={async () => {
@@ -65,8 +65,8 @@ const WebAdmin = () => {
 							}
 							setLoading(false);
 						}}
-						className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
-						<Text className="text-white text-center">
+						className="p-3 my-4 w-32 bg-blue-500 rounded-md">
+						<Text className="text-center text-white">
 							<Ionicons color="white" name="refresh-circle-outline" size={17} />
 							Refresh
 						</Text>
@@ -74,12 +74,12 @@ const WebAdmin = () => {
 				</View>
 				<View className="bg-[#f1f6ff] mb-6 rounded-md shadow-lg">
 					<View className="p-4">
-						<View className="flex-row items-center justify-between">
-							<Text className=" font-semibold">Daftar Karyawan</Text>
+						<View className="flex-row justify-between items-center">
+							<Text className="font-semibold">Daftar Karyawan</Text>
 							<TouchableOpacity
 								onPress={() => setShowModal(true)}
-								className="border border-gray-600 rounded-md p-1">
-								<Text className="text-gray-600 font-semibold">Tambah Karyawan</Text>
+								className="p-1 rounded-md border border-gray-600">
+								<Text className="font-semibold text-gray-600">Tambah Karyawan</Text>
 							</TouchableOpacity>
 							{renderForm()}
 						</View>
@@ -108,14 +108,14 @@ const WebAdmin = () => {
 								<DataTable.Cell>{karyawan.email}</DataTable.Cell>
 								<DataTable.Cell>{karyawan.phone}</DataTable.Cell>
 								<DataTable.Cell>
-									<View className="flex-col gap-1 lg:flex-row ">
+									<View className="flex-col gap-1 lg:flex-row">
 										<TouchableOpacity
 											onPress={() => {
 												setKaryawanId(karyawan.id);
 
 												setShowDeleteConfrim(true);
 											}}
-											className=" border border-gray-600 bg-red-200 p-3 rounded-md ">
+											className="p-3 bg-red-200 rounded-md border border-gray-600">
 											<Text className="text-gray-600">Hapus</Text>
 										</TouchableOpacity>
 										<TouchableOpacity
@@ -127,7 +127,7 @@ const WebAdmin = () => {
 
 												setShowUpdateModal(true);
 											}}
-											className=" border border-gray-600 bg-blue-200 p-3 rounded-md">
+											className="p-3 bg-blue-200 rounded-md border border-gray-600">
 											<Text className="text-gray-600">Edit</Text>
 										</TouchableOpacity>
 									</View>
@@ -163,17 +163,17 @@ const WebAdmin = () => {
 	function renderForm() {
 		return (
 			<Modal animationType="fade" transparent={true} visible={showModal}>
-				<View className="items-center h-full justify-center">
+				<View className="justify-center items-center h-full">
 					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%] p-5">
 						<View className="flex-row justify-between">
-							<Text className="text-gray-600 text-2xl font-bold">Tambah Karyawan</Text>
+							<Text className="text-2xl font-bold text-gray-600">Tambah Karyawan</Text>
 							<TouchableOpacity onPress={() => setShowModal(false)}>
 								<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 							</TouchableOpacity>
 						</View>
 						{/* <View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-[156] p-5 -mb-56"> */}
-						{/* <View className="flex-row justify-between ">
-						<Text className="text-gray-600 text-2xl font-bold">Tambah Tugas</Text>
+						{/* <View className="flex-row justify-between">
+						<Text className="text-2xl font-bold text-gray-600">Tambah Tugas</Text>
 						<TouchableOpacity onPress={() => setShowModal(false)}>
 							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 						</TouchableOpacity>
@@ -182,35 +182,35 @@ const WebAdmin = () => {
 							<View className="flex-col justify-center items-center my-5">
 								{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">Nama Lengkap</Text>
+									<Text className="font-bold text-gray-600 text-md">Nama Lengkap</Text>
 									<TextInput
-										className="border-b-2 border-b-gray-500 text-lg py-3"
+										className="py-3 text-lg border-b-2 border-b-gray-500"
 										keyboardType="default"
 										onChangeText={text => setFullName(text)}
 									/>
 								</View>
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">Password</Text>
+									<Text className="font-bold text-gray-600 text-md">Password</Text>
 									<TextInput
-										className="border-b-2 border-b-gray-500 text-lg py-3"
+										className="py-3 text-lg border-b-2 border-b-gray-500"
 										// value={value}
 										// keyboardType="default"
 										onChangeText={text => setPassword(text)}
 									/>
 								</View>
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">Email</Text>
+									<Text className="font-bold text-gray-600 text-md">Email</Text>
 									<TextInput
-										className="border-b-2 border-b-gray-500 text-lg py-3"
+										className="py-3 text-lg border-b-2 border-b-gray-500"
 										// value={value}
 										// keyboardType="default"
 										onChangeText={text => setEmail(text)}
 									/>
 								</View>
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">No. HP</Text>
+									<Text className="font-bold text-gray-600 text-md">No. HP</Text>
 									<TextInput
-										className="border-b-2 border-b-gray-500 text-lg py-3"
+										className="py-3 text-lg border-b-2 border-b-gray-500"
 										// value={value}
 										// keyboardType="default"
 										onChangeText={text => setPhone(text)}
@@ -242,7 +242,7 @@ const WebAdmin = () => {
 									}
 								}}>
 								<View className="bg-[#DEE9FD] rounded-full mt-6">
-									<Text className="text-gray-600 px-3 py-2 font-semibold text-center text-xl">Tambah</Text>
+									<Text className="py-2 px-3 text-xl font-semibold text-center text-gray-600">Tambah</Text>
 								</View>
 							</TouchableOpacity>
 						</ScrollView>
@@ -255,10 +255,10 @@ const WebAdmin = () => {
 	function renderUpdateForm() {
 		return (
 			<Modal animationType="fade" transparent={true} visible={showUpdateModal}>
-				<View className="items-center h-full justify-center">
+				<View className="justify-center items-center h-full">
 					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%] p-5">
 						<View className="flex-row justify-between">
-							<Text className="text-gray-600 text-2xl font-bold">Edit Karyawan</Text>
+							<Text className="text-2xl font-bold text-gray-600">Edit Karyawan</Text>
 							<TouchableOpacity onPress={() => setShowUpdateModal(false)}>
 								<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 							</TouchableOpacity>
@@ -267,18 +267,18 @@ const WebAdmin = () => {
 							<View className="flex-col justify-center items-center my-5">
 								{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">Nama Lengkap</Text>
+									<Text className="font-bold text-gray-600 text-md">Nama Lengkap</Text>
 									<TextInput
 										defaultValue={fullName}
-										className="border-b-2 border-b-gray-500 text-lg py-3"
+										className="py-3 text-lg border-b-2 border-b-gray-500"
 										keyboardType="default"
 										onChangeText={text => setFullName(text)}
 									/>
 								</View>
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">Email</Text>
+									<Text className="font-bold text-gray-600 text-md">Email</Text>
 									<TextInput
-										className="border-b-2 border-b-gray-500 text-lg py-3"
+										className="py-3 text-lg border-b-2 border-b-gray-500"
 										// value={value}
 										// keyboardType="default"
 										defaultValue={email}
@@ -286,9 +286,9 @@ const WebAdmin = () => {
 									/>
 								</View>
 								<View className="mt-4 w-full">
-									<Text className="text-md text-gray-600 font-bold">No. HP</Text>
+									<Text className="font-bold text-gray-600 text-md">No. HP</Text>
 									<TextInput
-										className="border-b-2 border-b-gray-500 text-lg py-3"
+										className="py-3 text-lg border-b-2 border-b-gray-500"
 										// value={value}
 										// keyboardType="default"
 										defaultValue={phone}
@@ -323,7 +323,7 @@ const WebAdmin = () => {
 									}
 								}}>
 								<View className="bg-[#DEE9FD] rounded-full mt-6">
-									<Text className="text-gray-600 px-3 py-2 font-semibold text-center text-xl">Submit</Text>
+									<Text className="py-2 px-3 text-xl font-semibold text-center text-gray-600">Submit</Text>
 								</View>
 							</TouchableOpacity>
 						</ScrollView>
@@ -335,10 +335,10 @@ const WebAdmin = () => {
 	function renderDeleteConfrim() {
 		return (
 			<Modal animationType="fade" transparent={true} visible={showDeleteConfrim}>
-				<View className="items-center h-full justify-center">
+				<View className="justify-center items-center h-full">
 					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%] p-5">
 						<View className="flex-row justify-between">
-							<Text className="text-gray-600 text-2xl font-bold">Apakah anda yakin?</Text>
+							<Text className="text-2xl font-bold text-gray-600">Apakah anda yakin?</Text>
 							<TouchableOpacity onPress={() => setShowDeleteConfrim(false)}>
 								<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 							</TouchableOpacity>
@@ -361,7 +361,7 @@ const WebAdmin = () => {
 									}
 								}}>
 								<View className="bg-[#fddede] rounded-full mt-6">
-									<Text className="text-gray-600 px-3 py-2 font-semibold text-center text-xl">Yakin</Text>
+									<Text className="py-2 px-3 text-xl font-semibold text-center text-gray-600">Yakin</Text>
 								</View>
 							</TouchableOpacity>
 						</View>

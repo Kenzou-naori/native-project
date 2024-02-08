@@ -24,10 +24,10 @@ const ProfileScreen = () => {
 			<View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-6 p-5 -mb-6">
 				<ScrollView showsVerticalScrollIndicator={false}>
 					<View className="flex-col justify-center my-5">
-						<Text className="text-2xl text-gray-600 text-center font-bold">Profile</Text>
+						<Text className="text-2xl font-bold text-center text-gray-600">Profile</Text>
 						<View className="mt-4">
-							<Text className="text-md text-gray-500">Nama Lengkap</Text>
-							<Text className="text-xl border-b-2 border-b-gray-500 py-2">{fullName}</Text>
+							<Text className="text-gray-500 text-md">Nama Lengkap</Text>
+							<Text className="py-2 text-xl border-b-2 border-b-gray-500">{fullName}</Text>
 							{/* <TextInput
 								value={value}
 								onChangeText={onChangeText}
@@ -40,8 +40,8 @@ const ProfileScreen = () => {
 							/> */}
 						</View>
 						<View className="mt-4">
-							<Text className="text-md text-gray-500">Alamat Email</Text>
-							<Text className="text-xl border-b-2 border-b-gray-500 py-2">{email}</Text>
+							<Text className="text-gray-500 text-md">Alamat Email</Text>
+							<Text className="py-2 text-xl border-b-2 border-b-gray-500">{email}</Text>
 
 							{/* <TextInput
 								value={email}
@@ -55,8 +55,8 @@ const ProfileScreen = () => {
 							/> */}
 						</View>
 						<View className="mt-4">
-							<Text className="text-md text-gray-500">Nomor Telepon</Text>
-							<Text className="text-xl border-b-2 border-b-gray-500 py-2">{phone}</Text>
+							<Text className="text-gray-500 text-md">Nomor Telepon</Text>
+							<Text className="py-2 text-xl border-b-2 border-b-gray-500">{phone}</Text>
 
 							{/* <TextInput
 								value={value}

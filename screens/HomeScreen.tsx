@@ -197,8 +197,8 @@ export default function HomeScreen({ navigation }: any) {
 			<StatusBar backgroundColor="#DEE9FD" style="dark" />
 			<View className="flex-row justify-between px-5">
 				<View className="p-2 w-60 mx-auto mt-5 flex flex-row justify-center items-center bg-[#DEE9FD] rounded-full shadow-xl shadow-gray-800">
-					<Image source={require("../assets/images/logo.png")} className=" w-6 h-8" />
-					<Text className=" text-gray-600 text-center  p-2 text-xl font-bold tracking-widest	">
+					<Image source={require("../assets/images/logo.png")} className="w-6 h-8" />
+					<Text className="p-2 text-xl font-bold tracking-widest text-center text-gray-600">
 						{company?.name ? company.name : ""}
 					</Text>
 				</View>
@@ -219,24 +219,24 @@ export default function HomeScreen({ navigation }: any) {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<View className=" px-10 mt-6 mb-2">
+			<View className="px-10 mt-6 mb-2">
 				<View className="rounded-full bg-[#cedfff] shadow shadow-gray-800 p-4">
-					<Text className="text-lg text-gray-600 font-semibold">Halo,</Text>
-					<Text className="text-xl text-gray-600 font-bold">{fullName}</Text>
+					<Text className="text-lg font-semibold text-gray-600">Halo,</Text>
+					<Text className="text-xl font-bold text-gray-600">{fullName}</Text>
 				</View>
 			</View>
 			<View className="p-5">
-				<View className=" rounded-[60px] px-5 ">
+				<View className="px-5 rounded-[60px]">
 					<View className="flex flex-col gap-8 justify-center">
 						<View className="bg-[#cedfff] rounded-[60px] shadow shadow-gray-800 p-4">
-							<View className=" items-center mb-4">
-								<Text className="text-3xl text-gray-600 font-bold">{day},</Text>
-								<Text className="text-2xl text-gray-600 font-bold">{currentDate}</Text>
+							<View className="items-center mb-4">
+								<Text className="text-3xl font-bold text-gray-600">{day},</Text>
+								<Text className="text-2xl font-bold text-gray-600">{currentDate}</Text>
 							</View>
 							<Separator />
 							<View className="flex-row justify-around">
-								<View className="mt-3 items-center">
-									<Text className="text-lg text-gray-600 font-bold">Masuk</Text>
+								<View className="items-center mt-3">
+									<Text className="text-lg font-bold text-gray-600">Masuk</Text>
 									<Text
 										className={
 											day === "Sabtu" || day === "Minggu"
@@ -252,9 +252,9 @@ export default function HomeScreen({ navigation }: any) {
 											: currentTime}
 									</Text>
 								</View>
-								<View className="mt-3 items-center">
-									<Text className="text-lg text-gray-600 font-bold">Keluar</Text>
-									<Text className="text-2xl text-gray-600 font-medium">
+								<View className="items-center mt-3">
+									<Text className="text-lg font-bold text-gray-600">Keluar</Text>
+									<Text className="text-2xl font-medium text-gray-600">
 										{day === "Sabtu" || day === "Minggu"
 											? "—"
 											: attendance?.checkIn && !attendance?.checkOut
@@ -269,10 +269,10 @@ export default function HomeScreen({ navigation }: any) {
 
 						<View className="bg-[#cedfff] rounded-[50px] shadow shadow-gray-800 px-4 py-6">
 							<View>
-								<Text className="text-md text-gray-600 font-semibold tracking-wide">Presensi Masuk/Keluar</Text>
+								<Text className="font-semibold tracking-wide text-gray-600 text-md">Presensi Masuk/Keluar</Text>
 							</View>
 							<Separator />
-							<View className="flex-row pt-4 justify-around">
+							<View className="flex-row justify-around pt-4">
 								<TouchableOpacity
 									className={
 										day === "Sabtu" || day === "Minggu"
@@ -292,7 +292,7 @@ export default function HomeScreen({ navigation }: any) {
 										const attData = JSON.parse(att);
 										setAttendance(attData);
 									}}>
-									<Text className="text-gray-600 text-lg font-semibold px-9">Masuk</Text>
+									<Text className="px-9 text-lg font-semibold text-gray-600">Masuk</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
 									className={
@@ -320,17 +320,17 @@ export default function HomeScreen({ navigation }: any) {
 										const attData = JSON.parse(att);
 										setAttendance(attData);
 									}}>
-									<Text className="text-black text-lg font-semibold px-9">Keluar</Text>
+									<Text className="px-9 text-lg font-semibold text-black">Keluar</Text>
 								</TouchableOpacity>
 							</View>
 						</View>
 						<View className="bg-[#cedfff] rounded-[50px] shadow shadow-gray-800 px-4 py-6">
 							{renderModal()}
 							<View>
-								<Text className="text-md text-gray-600 font-semibold tracking-wide">Pengajuan Izin Cuti</Text>
+								<Text className="font-semibold tracking-wide text-gray-600 text-md">Pengajuan Izin Cuti</Text>
 							</View>
 							<Separator />
-							<View className="flex-row pt-4 justify-around">
+							<View className="flex-row justify-around pt-4">
 								<Pressable
 									className={
 										day === "Sabtu" || day === "Minggu"
@@ -340,25 +340,25 @@ export default function HomeScreen({ navigation }: any) {
 											: "bg-[#90ee90] px-8 py-2 rounded-[30px]"
 									}
 									onPress={() => setOpenModal(true)}>
-									<Text className="text-gray-600 text-lg font-semibold px-5">Cuti</Text>
+									<Text className="px-5 text-lg font-semibold text-gray-600">Cuti</Text>
 								</Pressable>
 							</View>
-							<View className="flex-row pt-4 justify-around">
+							<View className="flex-row justify-around pt-4">
 								<View className="flex-col">
-									<Text className="text-md text-gray-600 font-bold">Alasan</Text>
-									<Text className="text-md text-gray-600 font-semibold">
+									<Text className="font-bold text-gray-600 text-md">Alasan</Text>
+									<Text className="font-semibold text-gray-600 text-md">
 										{activePaidLeave?.reason ? activePaidLeave.reason : "—"}
 									</Text>
 								</View>
 								<View className="flex-col">
-									<Text className="text-md text-gray-600 font-bold">Mulai</Text>
-									<Text className="text-md text-gray-600 font-semibold">
+									<Text className="font-bold text-gray-600 text-md">Mulai</Text>
+									<Text className="font-semibold text-gray-600 text-md">
 										{activePaidLeave?.startDate ? activePaidLeave.startDate : "—"}
 									</Text>
 								</View>
 								<View className="flex-col">
-									<Text className="text-md text-gray-600 font-bold">Selama</Text>
-									<Text className="text-md text-gray-600 font-semibold">
+									<Text className="font-bold text-gray-600 text-md">Selama</Text>
+									<Text className="font-semibold text-gray-600 text-md">
 										{activePaidLeave?.days ? activePaidLeave.days : "—"} Hari
 									</Text>
 								</View>
@@ -374,8 +374,8 @@ export default function HomeScreen({ navigation }: any) {
 		return (
 			<Modal visible={openModal} animationType="slide" transparent={true}>
 				<View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-[156] p-5 -mb-56">
-					<View className="flex-row justify-between ">
-						<Text className="text-gray-600 text-2xl font-bold">Pengajuan Cuti</Text>
+					<View className="flex-row justify-between">
+						<Text className="text-2xl font-bold text-gray-600">Pengajuan Cuti</Text>
 						<TouchableOpacity onPress={() => setOpenModal(false)}>
 							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 						</TouchableOpacity>
@@ -384,46 +384,46 @@ export default function HomeScreen({ navigation }: any) {
 						<View className="flex-col justify-center items-center my-5">
 							{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
 							<View className="mt-4 w-full">
-								<Text className="text-md text-gray-600 font-bold">Alasan</Text>
+								<Text className="font-bold text-gray-600 text-md">Alasan</Text>
 								<TextInput
-									className="border-b-2 border-b-gray-500 text-lg py-3 "
+									className="py-3 text-lg border-b-2 border-b-gray-500"
 									keyboardType="default"
 									onChangeText={text => setTitle(text)}
 								/>
 							</View>
 							<View className="mt-4 w-full">
-								{/* <Text className="text-md text-gray-600 font-bold">Mulai</Text>
+								{/* <Text className="font-bold text-gray-600 text-md">Mulai</Text>
 								<TextInput
-									className="border-b-2 border-b-gray-500 text-lg py-3"
+									className="py-3 text-lg border-b-2 border-b-gray-500"
 									// value={value}
 									keyboardType="default"
 									onChangeText={text => setStartTime(text)}
 								/> */}
-								<Text className="text-md text-gray-600 font-bold">Mulai Pada</Text>
+								<Text className="font-bold text-gray-600 text-md">Mulai Pada</Text>
 								{/* day/month/year section */}
 								<View className="flex-row justify-between">
 									<View className="flex-col">
-										<Text className="text-md text-gray-600 font-bold">Tanggal</Text>
+										<Text className="font-bold text-gray-600 text-md">Tanggal</Text>
 										<TextInput
-											className="border-b-2 border-b-gray-500 text-lg p-3"
+											className="p-3 text-lg border-b-2 border-b-gray-500"
 											// value={dayDate.toString()}
 											keyboardType="number-pad"
 											onChangeText={text => setDayDate(parseInt(text))}
 										/>
 									</View>
 									<View className="flex-col">
-										<Text className="text-md text-gray-600 font-bold">Bulan</Text>
+										<Text className="font-bold text-gray-600 text-md">Bulan</Text>
 										<TextInput
-											className="border-b-2 border-b-gray-500 text-lg p-3"
+											className="p-3 text-lg border-b-2 border-b-gray-500"
 											// value={value}
 											keyboardType="number-pad"
 											onChangeText={text => setMonthDate(parseInt(text))}
 										/>
 									</View>
 									<View className="flex-col">
-										<Text className="text-md text-gray-600 font-bold">Tahun</Text>
+										<Text className="font-bold text-gray-600 text-md">Tahun</Text>
 										<TextInput
-											className="border-b-2 border-b-gray-500 text-lg p-3"
+											className="p-3 text-lg border-b-2 border-b-gray-500"
 											// value={value}
 											keyboardType="number-pad"
 											onChangeText={text => setYearDate(parseInt(text))}
@@ -432,15 +432,15 @@ export default function HomeScreen({ navigation }: any) {
 								</View>
 							</View>
 							<View className="mt-4 w-full">
-								<Text className="text-md text-gray-600 font-bold">Selama</Text>
+								<Text className="font-bold text-gray-600 text-md">Selama</Text>
 								<View className="flex-row">
 									<TextInput
-										className="border-b-2 border-b-gray-500 text-lg p-3"
+										className="p-3 text-lg border-b-2 border-b-gray-500"
 										// value={value}
 										keyboardType="number-pad"
 										onChangeText={text => setEndTime(parseInt(text))}
 									/>
-									<Text className="text-md text-gray-600 font-bold mt-7">Hari</Text>
+									<Text className="mt-7 font-bold text-gray-600 text-md">Hari</Text>
 								</View>
 							</View>
 						</View>
@@ -481,7 +481,7 @@ export default function HomeScreen({ navigation }: any) {
 								});
 							}}>
 							<View className="bg-[#DEE9FD] rounded-full mt-6">
-								<Text className="text-gray-600 px-3 py-2 font-semibold text-center text-xl">Kirim</Text>
+								<Text className="py-2 px-3 text-xl font-semibold text-center text-gray-600">Kirim</Text>
 							</View>
 						</TouchableOpacity>
 					</ScrollView>
@@ -491,7 +491,7 @@ export default function HomeScreen({ navigation }: any) {
 	}
 }
 
-const Separator = () => <View className="h-[1px] w-full bg-black"></View>;
+const Separator = () => <View className="w-full bg-black h-[1px]"></View>;
 
 const styles = StyleSheet.create({
 	shadow: {

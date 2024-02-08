@@ -43,7 +43,7 @@ const WebAdmin = () => {
 		<ScrollView className="w-full bg-[#DEE9FD]">
 			<Spinner visible={loading} textContent={"Loading..."} />
 			{/* refresh */}
-			<View className="px-3 lg:px-60 py-6">
+			<View className="py-6 px-3 lg:px-60">
 				<View className="flex-row">
 					<TouchableOpacity
 						onPress={async () => {
@@ -55,8 +55,8 @@ const WebAdmin = () => {
 							}
 							setLoading(false);
 						}}
-						className="bg-blue-500 p-3 rounded-md w-32 my-4 ">
-						<Text className="text-white text-center">
+						className="p-3 my-4 w-32 bg-blue-500 rounded-md">
+						<Text className="text-center text-white">
 							<Ionicons color="white" name="refresh-circle-outline" size={17} />
 							Refresh
 						</Text>
@@ -64,8 +64,8 @@ const WebAdmin = () => {
 				</View>
 				<View className="bg-[#f1f6ff] mb-6 rounded-md shadow-lg">
 					<View className="p-4">
-						<View className="flex-row items-center justify-between">
-							<Text className=" font-semibold">Daftar Cuti Karyawan</Text>
+						<View className="flex-row justify-between items-center">
+							<Text className="font-semibold">Daftar Cuti Karyawan</Text>
 
 							{renderCek()}
 						</View>
@@ -114,7 +114,7 @@ const WebAdmin = () => {
 														setCuti(cuti.map(c => (c.id === cutit.id ? newCuti : c)));
 													})
 												}
-												className="border border-gray-600 bg-green-200 p-3 rounded-md mr-1">
+												className="p-3 mr-1 bg-green-200 rounded-md border border-gray-600">
 												<Text className="text-gray-600">Terima</Text>
 											</TouchableOpacity>
 											<TouchableOpacity
@@ -125,13 +125,13 @@ const WebAdmin = () => {
 														setCuti(cuti.map(c => (c.id === cutit.id ? newCuti : c)));
 													})
 												}
-												className="border border-gray-600 bg-red-200 p-3 rounded-md ml-1">
+												className="p-3 ml-1 bg-red-200 rounded-md border border-gray-600">
 												<Text className="text-gray-600">Tolak</Text>
 											</TouchableOpacity>
 										</>
 									) : (
 										<>
-											<Text className="border border-gray-600 bg-gray-200 p-3 rounded-md mr-1">
+											<Text className="p-3 mr-1 bg-gray-200 rounded-md border border-gray-600">
 												Sudah dikonfirmasi
 											</Text>
 										</>
@@ -166,28 +166,28 @@ const WebAdmin = () => {
 	function renderCek() {
 		return (
 			<Modal animationType="fade" transparent={true} visible={showCek}>
-				<View className="items-center h-full justify-center">
+				<View className="justify-center items-center h-full">
 					<View className="bg-[#f0fafd] rounded-2xl w-full lg:w-[40%] p-5">
 						<View className="flex-row justify-between">
-							<Text className="text-gray-600 text-2xl font-bold">Tambah Karyawan</Text>
+							<Text className="text-2xl font-bold text-gray-600">Tambah Karyawan</Text>
 							<TouchableOpacity onPress={() => setShowCek(false)}>
 								<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 							</TouchableOpacity>
 						</View>
 						<ScrollView showsVerticalScrollIndicator={false}>
 							<View className="flex-col justify-center my-5">
-								<Text className="text-2xl text-gray-600 text-center font-bold">Profile</Text>
+								<Text className="text-2xl font-bold text-center text-gray-600">Profile</Text>
 								<View className="mt-4">
-									<Text className="text-md text-gray-500">Nama Lengkap</Text>
-									<Text className="text-xl border-b-2 border-b-gray-500 py-2">fullName</Text>
+									<Text className="text-gray-500 text-md">Nama Lengkap</Text>
+									<Text className="py-2 text-xl border-b-2 border-b-gray-500">fullName</Text>
 								</View>
 								<View className="mt-4">
-									<Text className="text-md text-gray-500">Alamat Email</Text>
-									<Text className="text-xl border-b-2 border-b-gray-500 py-2">email</Text>
+									<Text className="text-gray-500 text-md">Alamat Email</Text>
+									<Text className="py-2 text-xl border-b-2 border-b-gray-500">email</Text>
 								</View>
 								<View className="mt-4">
-									<Text className="text-md text-gray-500">Nomor Telepon</Text>
-									<Text className="text-xl border-b-2 border-b-gray-500 py-2">phone</Text>
+									<Text className="text-gray-500 text-md">Nomor Telepon</Text>
+									<Text className="py-2 text-xl border-b-2 border-b-gray-500">phone</Text>
 								</View>
 							</View>
 							<View className="flex justify-center items-center">
@@ -196,14 +196,14 @@ const WebAdmin = () => {
 										setShowCek(false);
 									}}
 									className="bg-[#90ee90] w-full p-3 rounded-2xl mb-3">
-									<Text className="text-xl font-bold text-gray-600 text-center">Setuju</Text>
+									<Text className="text-xl font-bold text-center text-gray-600">Setuju</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
 									onPress={async () => {
 										setShowCek(false);
 									}}
 									className="bg-[#DEE9FD] w-full p-3 rounded-2xl mb-3">
-									<Text className="text-xl font-bold text-gray-600 text-center">Tolak</Text>
+									<Text className="text-xl font-bold text-center text-gray-600">Tolak</Text>
 								</TouchableOpacity>
 							</View>
 						</ScrollView>
