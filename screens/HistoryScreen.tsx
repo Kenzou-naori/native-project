@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View, ScrollView, RefreshControl, FlatList, ActivityIndicator, FlatListComponent } from "react-native";
-import React, { useEffect, useState } from "react";
-import { getAttendances } from "../api/attendance";
-import storage from "../utils/storage";
 import { capitalizeFirstLetter, formatDate } from "../api/util";
+import { getAttendances } from "../api/attendance";
+
+import storage from "../utils/storage";
+
+import { StyleSheet, Text, View, RefreshControl, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
 
 export default function HistoryScreen() {
 	const [attendances, setAttendances] = useState<IAttendance[]>([]);

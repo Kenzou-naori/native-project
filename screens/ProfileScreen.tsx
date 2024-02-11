@@ -1,6 +1,7 @@
-import { StyleSheet, Text, TextInput, View, ScrollView, Image, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
 import storage from "../utils/storage";
+
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { useEffect, useState } from "react";
 
 const ProfileScreen = () => {
 	const [fullName, setFullName] = useState("");

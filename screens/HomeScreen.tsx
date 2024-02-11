@@ -1,3 +1,16 @@
+import { getAttendances, postAttendance, updateAttendance } from "../api/attendance";
+import { GetPaidLeave, GetPaidLeaves, SendPaidLeave } from "../api/paidLeave";
+import { getCompany } from "../api/company";
+import { showToast } from "../api/util";
+
+import constant from "../constant/date";
+import storage from "../utils/storage";
+
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect, useCallback } from "react";
+import { StatusBar } from "expo-status-bar";
+import { AxiosError } from "axios";
 import {
 	StyleSheet,
 	Text,
@@ -10,19 +23,7 @@ import {
 	Modal,
 	RefreshControl
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import { StatusBar } from "expo-status-bar";
 
-// import for api
-import constant from "../constant/date";
-import { getCompany } from "../api/company";
-import storage from "../utils/storage";
-import { getAttendances, postAttendance, updateAttendance } from "../api/attendance";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import { AxiosError } from "axios";
-import { GetPaidLeave, GetPaidLeaves, SendPaidLeave } from "../api/paidLeave";
-import { showToast } from "../api/util";
 import Toast from "react-native-toast-message";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -42,7 +43,7 @@ export default function HomeScreen({ navigation }: any) {
 	const [activePaidLeave, setActivePaidLeave] = useState<IPaidLeave | null>(null);
 	const [_, setPaidLeaves] = useState<IPaidLeave[]>([]);
 
-	const onRefresh = React.useCallback(async () => {
+	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
 		const d = new Date();
 

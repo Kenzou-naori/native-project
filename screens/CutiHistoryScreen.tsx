@@ -1,14 +1,16 @@
-import { StyleSheet, Text, View, RefreshControl, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
-import storage from "../utils/storage";
-import { formatDate } from "../api/util";
 import { GetPaidLeaves } from "../api/paidLeave";
+import { formatDate } from "../api/util";
+
+import storage from "../utils/storage";
+
+import { StyleSheet, Text, View, RefreshControl, FlatList } from "react-native";
+import { useCallback, useEffect, useState } from "react";
 
 export default function HistoryScreen() {
 	const [paidLeaves, setPaidLeaves] = useState<IPaidLeave[]>([]);
 	const [refreshing, setRefreshing] = useState(false);
 
-	const onRefresh = React.useCallback(async () => {
+	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
 		const d = new Date();
 		let date = d.getDate().toString(); //Current Date

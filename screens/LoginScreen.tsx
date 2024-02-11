@@ -1,10 +1,14 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import Toast from "react-native-toast-message";
-import { StatusBar } from "expo-status-bar";
-import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { SignIn } from "../api/auth";
+
 import storage from "../utils/storage";
+
+import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
+
+import Toast from "react-native-toast-message";
+
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
 function LoginScreen({ navigation }: { navigation: any }) {
 	const [email, setEMail] = useState("");

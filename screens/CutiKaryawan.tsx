@@ -1,15 +1,16 @@
-import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
-
-import React, { useState } from "react";
-import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-
-import { DataTable } from "react-native-paper";
 import { GetPaidLeaves, SetPaidLeaveStatus } from "../api/admin";
-import { AxiosError } from "axios";
-import Spinner from "react-native-loading-spinner-overlay";
 import { formatDate } from "../api/util";
+
 import storage from "../utils/storage";
+
+import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import { DataTable } from "react-native-paper";
+import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
+
+import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const WebAdmin = () => {
@@ -17,13 +18,11 @@ const WebAdmin = () => {
 	const [showCek, setShowCek] = useState(false);
 	const [cuti, setCuti] = useState<IPaidLeaveWithuser[]>([]);
 	const [totalCuti, setTotalCuti] = useState<number>(0);
-	const [page, setPage] = React.useState<number>(0);
-	const [numberOfItemsPerPageList] = React.useState([10, 20, 30]);
-	const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
-	const from = page * itemsPerPage;
-	const to = Math.min((page + 1) * itemsPerPage, cuti.length);
+	const [page, setPage] = useState<number>(0);
+	const from = page * 25;
+	const to = Math.min((page + 1) * 25, cuti.length);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		setPage(0);
 
 		async function loadCuti() {
@@ -37,7 +36,7 @@ const WebAdmin = () => {
 		}
 
 		loadCuti();
-	}, [itemsPerPage]);
+	});
 
 	return (
 		<ScrollView className="w-full bg-[#DEE9FD]">
