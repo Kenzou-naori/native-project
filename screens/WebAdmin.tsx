@@ -160,7 +160,7 @@ const WebAdmin = () => {
       <View className="p-6 py-6 lg:px-60">
 		<View className="flex-row">
 
-        <View className="flex-row flex-wrap gap-4 w-[60%]">
+        <View className="flex-row py-4 flex-wrap gap-4 w-[60%]">
           <View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
             <Ionicons size={32} color="black" name="people-outline" />
             <View className="flex-col ml-4">
@@ -212,8 +212,17 @@ const WebAdmin = () => {
             backgroundColor={"transparent"}
             paddingLeft={"0"}
             absolute
-			avoidFalseZero
+			      avoidFalseZero
           />
+          <View className="flex-row flex-wrap gap-4">
+
+          <TouchableOpacity className="p-2 bg-blue-300 rounded-md">
+             <Text className=" text-gray-200">Per Minggu</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="p-2 bg-blue-300 rounded-md">
+            <Text className=" text-gray-200">Per Bulan</Text>
+          </TouchableOpacity>
+          </View>
         </View>
         </View>
         <View className="flex-row gap-3">
