@@ -16,6 +16,7 @@ import SettingsScreen from "../screens/HistoryScreen";
 import CutiScreen from "../screens/CutiHistoryScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import WebAdmin from "../screens/WebAdmin";
+import ManageIP from "../screens/ManageIP";
 import KelolaKaryawan from "../screens/KelolaKaryawan";
 import CutiKaryawan from "../screens/CutiKaryawan";
 const homeName = "Dashboard";
@@ -24,6 +25,7 @@ const settingsName = "History";
 const profileName = "Profile";
 const cutiName = "Pengajuan Cuti";
 const WebAdminName = "Admin Dashboard";
+const ManageIPName = "Manage IP";
 const KelolaKaryawanName = "Kelola Karyawan";
 const CutiKaryawanName = "Cuti Karyawan";
 
@@ -61,6 +63,7 @@ function MyDrawer() {
 				<Drawer.Screen name={WebAdminName} component={WebAdmin} />
 				<Drawer.Screen name={KelolaKaryawanName} component={KelolaKaryawan} />
 				<Drawer.Screen name={CutiKaryawanName} component={CutiKaryawan} />
+				<Drawer.Screen name={ManageIPName} component={ManageIP} />
 			</Drawer.Navigator>
 		</PaperProvider>
 	);

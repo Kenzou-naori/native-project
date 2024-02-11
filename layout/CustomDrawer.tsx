@@ -32,6 +32,7 @@ const CustomDrawer = (props: any ) => {
       >
         <DrawerItemList {...props} style={[styles.list]} ></DrawerItemList>
       </DrawerContentScrollView>
+      {/* settings */}
       {/* footer */}
       <View style={[styles.view, styles.marginBottom, styles.footer]}>
         <TouchableOpacity
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   list:{
-    borderRadius: 20
+    borderRadius: 20,
   },
   header:{
     // height: 80,
