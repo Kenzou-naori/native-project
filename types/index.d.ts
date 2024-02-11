@@ -76,7 +76,11 @@ interface IAPIResponseGetAttendances {
 interface IAPIResponseGetAttendancesWithUser {
 	data: {
 		attendances: IAttendanceWithUser[];
-		total: number;
+		totals: {
+			all: number;
+			weekly: TotalDataAttendance;
+			monthly: TotalDataAttendance;
+		}
 	};
 	success: boolean;
 }
@@ -87,6 +91,7 @@ interface IAPIResponsePostAttendance {
 	};
 	success: boolean;
 }
+
 
 type IAttendanceStatus = "hadir" | "izin" | "sakit" | "alpa" | "terlambat";
 interface IAttendance {
@@ -99,6 +104,11 @@ interface IAttendance {
 	checkOut: string;
 	created_at: string;
 	updated_at: string;
+}
+
+interface TotalDataAttendance {
+	present: number;
+	absent: number;
 }
 
 interface IAttendanceWithUser extends IAttendance {

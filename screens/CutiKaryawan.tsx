@@ -36,7 +36,7 @@ const WebAdmin = () => {
 		}
 
 		loadCuti();
-	});
+	}, []);
 
 	return (
 		<ScrollView className="w-full bg-[#DEE9FD]">

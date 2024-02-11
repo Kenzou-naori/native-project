@@ -87,16 +87,6 @@ export async function GetAttendances(
 			}
 		})
 		.then(async (response: AxiosResponse<IAPIResponseGetAttendancesWithUser, any>) => {
-			response.data.data.attendances.sort((a: IAttendanceWithUser, b: IAttendanceWithUser) => {
-				if (a.created_at > b.created_at) {
-					return -1;
-				} else if (a.created_at < b.created_at) {
-					return 1;
-				} else {
-					return 0;
-				}
-			});
-
 			await storage.save({
 				key: "attendances",
 				data: JSON.stringify(response.data.data.attendances)
@@ -104,7 +94,7 @@ export async function GetAttendances(
 
 			await storage.save({
 				key: "totalAttendances",
-				data: JSON.stringify(response.data.data.total)
+				data: JSON.stringify(response.data.data.totals.all)
 			});
 
 			return response;
@@ -229,7 +219,7 @@ export async function GetPaidLeaves(
 			});
 			await storage.save({
 				key: "totalPaidLeaves",
-				data: String(response.data.data.total)
+				data: response.data.data.total
 			});
 
 			return response;
