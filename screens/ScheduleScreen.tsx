@@ -1,14 +1,12 @@
-import { StyleSheet, Text, TouchableOpacity, View, Modal, ScrollView, TextInput } from "react-native";
-import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { StatusBar } from "expo-status-bar";
-import { faCaretRight, faPlusSquare, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import DateTimePicker from "react-native-ui-datepicker";
-import constant from "../constant/date";
-import storage from "../utils/storage";
 import { getSchedule, postSchedule } from "../api/schedule";
 
-const transparent = "rgba(0,0,0,0.5)";
+import constant from "../constant/date";
+import storage from "../utils/storage";
+
+import { StyleSheet, Text, TouchableOpacity, View, Modal, ScrollView, TextInput } from "react-native";
+import { faPlusSquare, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { useEffect, useState } from "react";
 
 interface DetailScreenProps {
 	navigation: any;
