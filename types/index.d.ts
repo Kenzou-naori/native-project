@@ -39,6 +39,7 @@ interface IUser {
 	fullName: string;
 	phone: string;
 	accessLevel: number;
+	created_at : string;
 }
 
 interface IUserData {
