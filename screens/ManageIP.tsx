@@ -5,7 +5,7 @@ import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import { DataTable } from "react-native-paper";
-import { CreateUser, DeleteUser, GetUsers, UpdateUser } from "../api/admin";
+import { CreateUser, DeleteUser, GetUsers, UpdateIPAddresses, UpdateUser } from "../api/admin";
 import { AxiosError } from "axios";
 import { getCompany } from "../api/company";
 import storage from "../utils/storage";
@@ -16,29 +16,21 @@ const ManageIP = () => {
 	const [loading, setLoading] = useState(false);
 	const [showDeleteConfrim, setShowDeleteConfrim] = useState(false);
 	const [showModal, setShowModal] = useState(false);
-	const [karyawan, setKaryawan] = useState<IUser[]>([]);
-	const [company, setCompany] = useState<ICompany | null>(null);
-	const [karyawanId, setKaryawanId] = useState("");
-	const [phone, setPhone] = useState("");
+	const [ipAddresses, setIpAddresses] = useState<string[]>([]);
+	const [newIpAddress, setNewIpAddress] = useState<string>("");
+	const [ipAddress, setIpAddress] = useState<string>("");
 
 
 	useEffect(() => {
-
-		async function loadKaryawan() {
+		async function loadIpAddresses() {
 			setLoading(true);
-			const karyawan = await GetUsers();
-			if (karyawan instanceof AxiosError) {
-				console.log(karyawan);
-			} else {
-				setKaryawan(karyawan.data.data.users);
-				await storage.save({
-					key: "karyawan",
-					data: karyawan.data.data.users
-				});
+			const ipAddresses = await storage.load({ key: "ipAddresses" });
+			if (ipAddresses) {
+				setIpAddresses(JSON.parse(ipAddresses));
 			}
 			setLoading(false);
 		}
-		loadKaryawan();
+		loadIpAddresses();
 	}, []);
 
 	return (
@@ -49,14 +41,14 @@ const ManageIP = () => {
 					<TouchableOpacity
 						onPress={async () => {
 							setLoading(true);
-							const karyawan = await GetUsers();
-							if (karyawan instanceof AxiosError) {
-								console.log(karyawan);
+							const company = await getCompany();
+							if (company instanceof AxiosError) {
+								console.log(company);
 							} else {
-								setKaryawan(karyawan.data.data.users);
+								setIpAddresses(company.data.data.company.ipAddresses);
 								await storage.save({
-									key: "karyawan",
-									data: karyawan.data.data.users
+									key: "ipAddresses",
+									data: JSON.stringify(company.data.data.company.ipAddresses)
 								});
 							}
 							setLoading(false);
@@ -86,24 +78,24 @@ const ManageIP = () => {
 					<DataTable>
 						<DataTable.Header>
 							<DataTable.Title>Alamat IP</DataTable.Title>
-							<DataTable.Title>Aksi</DataTable.Title>
+							<DataTable.Title numeric>Aksi</DataTable.Title>
 						</DataTable.Header>
 
-						{karyawan.length === 0 && (
+						{ipAddresses.length === 0 && (
 							<DataTable.Row>
 								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
 							</DataTable.Row>
 						)}
 
-						{karyawan.map(karyawan => (
-							<DataTable.Row key={karyawan.id} className="py-2 lg:py-4">
-								<DataTable.Cell>{karyawan.phone}</DataTable.Cell>
-								<DataTable.Cell>
+						{ipAddresses.map(ip => (
+							<DataTable.Row key={ip} className="py-2 lg:py-4">
+								<DataTable.Cell>{ip}</DataTable.Cell>
+								<DataTable.Cell numeric>
 									<View className="flex-col gap-1 lg:flex-row">
 										<TouchableOpacity
 											onPress={() => {
-												setKaryawanId(karyawan.id);
+												setIpAddress(ip);
 
 												setShowDeleteConfrim(true);
 											}}
@@ -148,30 +140,22 @@ const ManageIP = () => {
 										className="py-3 text-lg border-b-2 border-b-gray-500"
 										// value={value}
 										// keyboardType="default"
-										onChangeText={text => setPhone(text)}
+										onChangeText={text => setNewIpAddress(text)}
 									/>
 								</View>
 							</View>
 							<TouchableOpacity
 								onPress={async () => {
-									// setShowModal(false);
-
-									// const data: IUserData = {
-									// 	phone: phone,
-									// };
-
-									// const newKaryawan = await CreateUser(data);
-
-									// if (newKaryawan instanceof AxiosError) {
-									// 	console.log(newKaryawan);
-									// } else {
-									// 	setKaryawan([...karyawan, newKaryawan.data.data.user]);
-
-									// 	await storage.save({
-									// 		key: "karyawan",
-									// 		data: karyawan
-									// 	});
-									// }
+									setShowModal(false);
+									setLoading(true);
+									ipAddresses.push(newIpAddress);
+									setIpAddresses(ipAddresses);
+									await UpdateIPAddresses(ipAddresses);
+									await storage.save({
+										key: "ipAddresses",
+										data: JSON.stringify(ipAddresses)
+									});
+									setLoading(false);
 								}}>
 								<View className="bg-[#DEE9FD] rounded-full mt-6">
 									<Text className="py-2 px-3 text-xl font-semibold text-center text-gray-600">Tambah</Text>
@@ -199,18 +183,15 @@ const ManageIP = () => {
 							<TouchableOpacity
 								onPress={async () => {
 									setShowDeleteConfrim(false);
-									const res = await DeleteUser(karyawanId);
-
-									if (res instanceof AxiosError) {
-										console.log(res);
-									} else {
-										setKaryawan(res.data.data.users);
-
-										await storage.save({
-											key: "karyawan",
-											data: karyawan
-										});
-									}
+									setLoading(true);
+									ipAddresses.splice(ipAddresses.indexOf(ipAddress), 1);
+									setIpAddresses(ipAddresses);
+									await UpdateIPAddresses(ipAddresses);
+									await storage.save({
+										key: "ipAddresses",
+										data: JSON.stringify(ipAddresses)
+									});
+									setLoading(false);
 								}}>
 								<View className="bg-[#fddede] rounded-full mt-6">
 									<Text className="py-2 px-3 text-xl font-semibold text-center text-gray-600">Yakin</Text>

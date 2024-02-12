@@ -59,7 +59,7 @@ interface IAPIResponseGetCompany {
 interface ICompany {
 	id: string;
 	name: string;
-	ipAdresses: string[];
+	ipAddresses: string[];
 	checkInTime: string;
 	checkOutTime: string;
 	created_at: string;
@@ -210,6 +210,14 @@ interface IAPIResponseGetPaidLeavesWithUser {
 	data: {
 		paidLeaves: IPaidLeaveWithuser[];
 		total: number;
+	};
+	success: boolean;
+}
+
+
+interface IAPIResponseUpdateCompany {
+	data: {
+		company: ICompany;
 	};
 	success: boolean;
 }

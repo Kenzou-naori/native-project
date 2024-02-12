@@ -10,6 +10,7 @@ import { AxiosError } from "axios";
 import storage from "../utils/storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { getCompany } from "../api/company";
 
 const WebAdmin = () => {
 	const [loading, setLoading] = useState(false);
@@ -50,6 +51,22 @@ const WebAdmin = () => {
 			}
 			setLoading(false);
 		}
+
+		async function loadIpAddresses() {
+			setLoading(true);
+			const company = await getCompany();
+			if (company instanceof AxiosError) {
+				console.log(company);
+			} else {
+				await storage.save({
+					key: "ipAddresses",
+					data: JSON.stringify(company.data.data.company.ipAddresses)
+				});
+			}
+			setLoading(false);
+		}
+		
+		loadIpAddresses();
 		loadKaryawan();
 	}, []);
 
@@ -217,11 +234,13 @@ const WebAdmin = () => {
 							<DataTable.Title>Nama</DataTable.Title>
 							<DataTable.Title>Email</DataTable.Title>
 							<DataTable.Title>No. HP</DataTable.Title>
+							<DataTable.Title>Tipe</DataTable.Title>
 							<DataTable.Title>Aksi</DataTable.Title>
 						</DataTable.Header>
 
 						{karyawan.length === 0 && (
 							<DataTable.Row>
+								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
@@ -234,6 +253,7 @@ const WebAdmin = () => {
 								<DataTable.Cell>{karyawan.fullName}</DataTable.Cell>
 								<DataTable.Cell>{karyawan.email}</DataTable.Cell>
 								<DataTable.Cell>{karyawan.phone}</DataTable.Cell>
+								<DataTable.Cell>{karyawan.accessLevel === 1 ? "Admin" : karyawan.accessLevel === 2 ? "HRD" : "Karyawan"}</DataTable.Cell>
 								<DataTable.Cell>
 									<View className="flex-col gap-1 lg:flex-row">
 										<TouchableOpacity

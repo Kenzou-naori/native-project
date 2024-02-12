@@ -262,3 +262,32 @@ export async function SetPaidLeaveStatus(
 			return error;
 		});
 }
+
+export async function UpdateIPAddresses(
+	ipAddresses: string[]
+): Promise<AxiosResponse<IAPIResponseUpdateCompany, any> | AxiosError<IAPIErrorResponse, any>> {
+	return axios
+		.patch(
+			baseUrl + "/v1/admin/company",
+			{
+				ipAddresses
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${await storage.load({ key: "token" })}`
+				}
+			}
+		)
+		.then(async (response: AxiosResponse<IAPIResponseUpdateCompany, any>) => {
+			return response;
+		})
+		.catch((error: AxiosError<IAPIErrorResponse, any>) => {
+			const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+			let message: string;
+			if (errMessage?.message) {
+				message = errMessage.message;
+				showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
+			}
+			return error;
+		});
+}

@@ -25,8 +25,8 @@ export async function getCompany(): Promise<AxiosResponse<IAPIResponseGetCompany
 		})
 		.then(async (response: AxiosResponse<IAPIResponseGetCompany, any>) => {
 			await storage.save({
-				key: "company",
-				data: JSON.stringify(response.data.data.company)
+				key: "ipAddresses",
+				data: JSON.stringify(response.data.data.company.ipAddresses)
 			});
 
 			return response;
