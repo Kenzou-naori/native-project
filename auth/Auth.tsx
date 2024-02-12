@@ -26,7 +26,7 @@ const scheduleName = "Schedule";
 const settingsName = "History";
 const profileName = "Profile";
 const cutiName = "Pengajuan Cuti";
-const WebAdminName = "HRD Dashboard";
+const WebAdminName = "Dashboard";
 const ManageIPName = "Manage IP";
 const KelolaKaryawanName = "Kelola Karyawan";
 const CutiKaryawanName = "Cuti Karyawan";
@@ -54,31 +54,6 @@ export type AppTheme = typeof theme;
 
 export const useAppTheme = () => useTheme<AppTheme>();
 function MyDrawer() {
-	const [isHRD, setIsHRD] = useState<boolean>(false)
-	useEffect(() => {
-		const isHRD = async () => {
-			// check if user is logged in
-			const isLoggedIn = await storage.load({ key: "isLoggedin" }).catch(_ => {
-				return;
-			});
-	
-			if (isLoggedIn) {
-				storage.load({ key: "user" }).then(res => {
-					const user = JSON.parse(res);
-					if (user.accessLevel === 2) {
-						setIsHRD(true)
-					} else {
-						setIsHRD(false)
-					}
-				});
-			} else {
-				return;
-			}
-		};
-
-		isHRD();
-	}, []);
-
 	return (
 		<PaperProvider theme={theme}>
 			<Drawer.Navigator
@@ -87,17 +62,24 @@ function MyDrawer() {
 					headerStyle: styles.topbar
 				}}
 				drawerContent={props => <CustomDrawer {...props} />}>
-				{isHRD ? (
-					<>
-						<Drawer.Screen name={WebAdminName} component={WebAdmin} />
-						<Drawer.Screen name={CutiKaryawanName} component={CutiKaryawan} />
-					</>
-				) : (
-					<>
-						<Drawer.Screen name={KelolaKaryawanName} component={KelolaKaryawan} />
-						<Drawer.Screen name={ManageIPName} component={ManageIP} />
-					</>
-				)}
+				<Drawer.Screen name={KelolaKaryawanName} component={KelolaKaryawan} />
+				<Drawer.Screen name={ManageIPName} component={ManageIP} />
+			</Drawer.Navigator>
+		</PaperProvider>
+	);
+}
+
+function HRDScreen() {
+	return (
+		<PaperProvider theme={theme}>
+			<Drawer.Navigator
+				screenOptions={{
+					drawerStyle: styles.drawerStyle,
+					headerStyle: styles.topbar
+				}}
+				drawerContent={props => <CustomDrawer {...props} />}>
+				<Drawer.Screen name={WebAdminName} component={WebAdmin} />
+				<Drawer.Screen name={CutiKaryawanName} component={CutiKaryawan} />
 			</Drawer.Navigator>
 		</PaperProvider>
 	);
@@ -188,6 +170,7 @@ function Auth() {
 				<Stack.Screen name="Login" component={LoginScreen} />
 				<Stack.Screen name="Home" component={FirstScreen} />
 				<Stack.Screen name="Admin" component={MyDrawer} />
+				<Stack.Screen name="HRD" component={HRDScreen} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

@@ -154,7 +154,7 @@ const WebAdmin = () => {
 	return (
 		<ScrollView className="w-full bg-[#DEE9FD]">
 			<Spinner visible={loading} textContent={"Loading..."} />
-			<View className="py-6 px-3 lg:px-60">
+			<View className="py-6 px-3 lg:px-10 xl:px-24 2xl:px-60">
 				<View className="flex-row">
 					<View className="flex-row py-4 flex-wrap gap-4 w-[60%]">
 						<View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px] items-center p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
