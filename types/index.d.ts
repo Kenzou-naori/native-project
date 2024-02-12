@@ -39,7 +39,7 @@ interface IUser {
 	fullName: string;
 	phone: string;
 	accessLevel: number;
-	created_at : string;
+	created_at: string;
 }
 
 interface IUserData {
@@ -76,11 +76,7 @@ interface IAPIResponseGetAttendances {
 interface IAPIResponseGetAttendancesWithUser {
 	data: {
 		attendances: IAttendanceWithUser[];
-		totals: {
-			all: number;
-			weekly: TotalDataAttendance;
-			monthly: TotalDataAttendance;
-		}
+		totals: TotalDataAttendance;
 	};
 	success: boolean;
 }
@@ -91,7 +87,6 @@ interface IAPIResponsePostAttendance {
 	};
 	success: boolean;
 }
-
 
 type IAttendanceStatus = "hadir" | "izin" | "sakit" | "alpa" | "terlambat";
 interface IAttendance {
@@ -106,9 +101,15 @@ interface IAttendance {
 	updated_at: string;
 }
 
-interface TotalDataAttendance {
+interface TotalAttendance {
 	present: number;
 	absent: number;
+}
+
+interface TotalDataAttendance {
+	all: number;
+	weekly: TotalAttendance;
+	monthly: TotalAttendance;
 }
 
 interface IAttendanceWithUser extends IAttendance {

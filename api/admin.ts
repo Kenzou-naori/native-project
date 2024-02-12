@@ -94,7 +94,7 @@ export async function GetAttendances(
 
 			await storage.save({
 				key: "totalAttendances",
-				data: JSON.stringify(response.data.data.totals.all)
+				data: JSON.stringify(response.data.data.totals)
 			});
 
 			return response;
