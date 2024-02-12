@@ -33,6 +33,21 @@ export function formatDate(date: string): string {
 	return formatter.format(formattedDate);
 }
 
+export function formatISODate(timestamp: string) {
+	const date: Date = new Date(timestamp);
+
+	let options: Intl.DateTimeFormatOptions = {
+		weekday: "long", // or 'short', 'narrow'
+		year: "numeric",
+		month: "short", // or 'short', 'narrow', '2-digit', 'numeric'
+		day: "numeric" // or '2-digit'
+	};
+
+	const formatter = new Intl.DateTimeFormat("id-ID", options);
+
+	return formatter.format(date);
+}
+
 export function showToast(message: string) {
 	Toast.show({
 		type: "error",

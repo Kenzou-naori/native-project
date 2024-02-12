@@ -1,5 +1,5 @@
 import { GetPaidLeaves, SetPaidLeaveStatus } from "../api/admin";
-import { formatDate } from "../api/util";
+import { formatDate, formatISODate } from "../api/util";
 
 import storage from "../utils/storage";
 
@@ -42,7 +42,7 @@ const WebAdmin = () => {
 		<ScrollView className="w-full bg-[#DEE9FD]">
 			<Spinner visible={loading} textContent={"Loading..."} />
 			{/* refresh */}
-			<View className="py-6 px-3 lg:px-60">
+			<View className="py-6 px-3 lg:px-10 xl:px-24 2xl:px-60">
 				<View className="flex-row">
 					<TouchableOpacity
 						onPress={async () => {
@@ -76,12 +76,14 @@ const WebAdmin = () => {
 							<DataTable.Title>Alasan</DataTable.Title>
 							<DataTable.Title>Tanggal Mulai</DataTable.Title>
 							<DataTable.Title>Lama Cuti</DataTable.Title>
+							<DataTable.Title>Tanggal Selesai</DataTable.Title>
 							<DataTable.Title>Status</DataTable.Title>
 							<DataTable.Title>Aksi</DataTable.Title>
 						</DataTable.Header>
 
 						{cuti.length === 0 && (
 							<DataTable.Row>
+								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
 								<DataTable.Cell>No data</DataTable.Cell>
@@ -97,8 +99,9 @@ const WebAdmin = () => {
 								<DataTable.Cell>{cutit.user.fullName}</DataTable.Cell>
 								<DataTable.Cell>{cutit.user.email}</DataTable.Cell>
 								<DataTable.Cell>{cutit.reason}</DataTable.Cell>
-								<DataTable.Cell>{formatDate(cutit.startDate)}</DataTable.Cell>
+								<DataTable.Cell>{formatISODate(cutit.startDate)}</DataTable.Cell>
 								<DataTable.Cell>{cutit.days} Hari</DataTable.Cell>
+								<DataTable.Cell>{formatISODate(cutit.endDate)}</DataTable.Cell>
 								<DataTable.Cell>
 									{cutit.status === 0 ? "Pending" : cutit.status === 1 ? "Diterima" : "Ditolak"}
 								</DataTable.Cell>

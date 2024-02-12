@@ -174,6 +174,7 @@ interface IPaidLeave {
 	reason: string;
 	startDate: string;
 	days: number;
+	endDate: string;
 	status: number;
 	statusBy: string;
 	created_at: string;
