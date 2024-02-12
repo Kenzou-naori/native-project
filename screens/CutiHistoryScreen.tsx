@@ -1,5 +1,5 @@
 import { GetPaidLeaves } from "../api/paidLeave";
-import { formatDate } from "../api/util";
+import { formatISODate } from "../api/util";
 
 import storage from "../utils/storage";
 
@@ -60,7 +60,7 @@ export default function HistoryScreen() {
 										<Text className="text-2xl font-bold text-gray-600">
 											{item.status === 0 ? "Pending" : item.status === 1 ? "Diterima" : "Ditolak"}
 										</Text>
-										<Text style={styles.content}>{formatDate(item.startDate)}</Text>
+										<Text style={styles.content}>{formatISODate(item.startDate)}</Text>
 									</View>
 									<Text className="text-sm font-semibold">{item.days} Hari</Text>
 								</View>

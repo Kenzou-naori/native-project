@@ -1,14 +1,15 @@
-import { Text, View, ScrollView, StyleSheet, Modal, TouchableOpacity, TextInput } from "react-native";
-
-import { useEffect, useState } from "react";
-import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-
-import { DataTable } from "react-native-paper";
-import { CreateUser, DeleteUser, GetUsers, UpdateIPAddresses, UpdateUser } from "../api/admin";
-import { AxiosError } from "axios";
+import { UpdateIPAddresses } from "../api/admin";
 import { getCompany } from "../api/company";
+
 import storage from "../utils/storage";
+
+import { Text, View, ScrollView, StyleSheet, Modal, TouchableOpacity, TextInput } from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import { DataTable } from "react-native-paper";
+import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
+
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
