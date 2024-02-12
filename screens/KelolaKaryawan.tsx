@@ -37,18 +37,17 @@ const WebAdmin = () => {
 
 		async function loadKaryawan() {
 			setLoading(true);
-			const karyawan = await storage.load({ key: "karyawan" });
-			const karyawanData = JSON.parse(karyawan);
-			const totalKaryawan = await storage.load({ key: "totalKaryawan" });
-
-			setTotalKaryawan(parseInt(totalKaryawan));
-
-			// Sort the karyawanData array in descending order based on the created_at timestamp
-			const sortedKaryawan = karyawanData.sort(
-				(a: IUser, b: IUser) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-			);
-
-			setKaryawan(sortedKaryawan);
+			const karyawan = await GetUsers(page + 1);
+			if (karyawan instanceof AxiosError) {
+				console.log(karyawan);
+			} else {
+				setKaryawan(karyawan.data.data.users);
+				setTotalKaryawan(karyawan.data.data.total);
+				await storage.save({
+					key: "karyawan",
+					data: karyawan.data.data.users
+				});
+			}
 			setLoading(false);
 		}
 		loadKaryawan();
@@ -156,6 +155,17 @@ const WebAdmin = () => {
 		<ScrollView className="w-full bg-[#DEE9FD]">
 			<Spinner visible={loading} textContent={"Loading..."} />
 			<View className="py-6 px-3 lg:px-60">
+				<View className="flex-row">
+					<View className="flex-row py-4 flex-wrap gap-4 w-[60%]">
+						<View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px] items-center p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
+							<Ionicons size={32} color="black" name="people-outline" />
+							<View className="flex-col ml-4">
+								<Text className="text-2xl font-bold text-gray-600">{totalKaryawan}</Text>
+								<Text className="text-xl font-semibold text-gray-600">Karyawan</Text>
+							</View>
+						</View>
+					</View>
+				</View>
 				<View className="flex-row">
 					<TouchableOpacity
 						onPress={async () => {

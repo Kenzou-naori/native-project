@@ -24,7 +24,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
 			if (isLoggedIn) {
 				storage.load({ key: "user" }).then(res => {
 					const user = JSON.parse(res);
-					if (user.accessLevel === 1) {
+					if (user.accessLevel === 1 || user.accessLevel === 2) {
 						navigation.navigate("Admin");
 					} else {
 						navigation.navigate("Home");

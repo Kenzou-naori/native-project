@@ -325,7 +325,7 @@ export default function HomeScreen({ navigation }: any) {
 								</TouchableOpacity>
 							</View>
 						</View>
-						<View className="bg-[#cedfff] rounded-[50px] shadow shadow-gray-800 px-4 py-6">
+						<View className="bg-[#cedfff] rounded-[50px] shadow shadow-gray-800 px-4 py-6 mb-20">
 							{renderModal()}
 							<View>
 								<Text className="font-semibold tracking-wide text-gray-600 text-md">Pengajuan Izin Cuti</Text>

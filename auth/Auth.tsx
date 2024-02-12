@@ -1,14 +1,4 @@
 // In App.js in a new project
-
-import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { MD2LightTheme, PaperProvider, useTheme } from "react-native-paper";
-
 import CustomDrawer from "../layout/CustomDrawer";
 import LoginScreen from "../screens/LoginScreen";
 import HomeScreen from "../screens/HomeScreen";
@@ -19,12 +9,24 @@ import WebAdmin from "../screens/WebAdmin";
 import ManageIP from "../screens/ManageIP";
 import KelolaKaryawan from "../screens/KelolaKaryawan";
 import CutiKaryawan from "../screens/CutiKaryawan";
+import storage from "../utils/storage";
+
+import { MD2LightTheme, PaperProvider, useTheme } from "react-native-paper";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
+import { View, Text, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 const homeName = "Dashboard";
 const scheduleName = "Schedule";
 const settingsName = "History";
 const profileName = "Profile";
 const cutiName = "Pengajuan Cuti";
-const WebAdminName = "Admin Dashboard";
+const WebAdminName = "HRD Dashboard";
 const ManageIPName = "Manage IP";
 const KelolaKaryawanName = "Kelola Karyawan";
 const CutiKaryawanName = "Cuti Karyawan";
@@ -52,6 +54,31 @@ export type AppTheme = typeof theme;
 
 export const useAppTheme = () => useTheme<AppTheme>();
 function MyDrawer() {
+	const [isHRD, setIsHRD] = useState<boolean>(false)
+	useEffect(() => {
+		const isHRD = async () => {
+			// check if user is logged in
+			const isLoggedIn = await storage.load({ key: "isLoggedin" }).catch(_ => {
+				return;
+			});
+	
+			if (isLoggedIn) {
+				storage.load({ key: "user" }).then(res => {
+					const user = JSON.parse(res);
+					if (user.accessLevel === 2) {
+						setIsHRD(true)
+					} else {
+						setIsHRD(false)
+					}
+				});
+			} else {
+				return;
+			}
+		};
+
+		isHRD();
+	}, []);
+
 	return (
 		<PaperProvider theme={theme}>
 			<Drawer.Navigator
@@ -60,10 +87,17 @@ function MyDrawer() {
 					headerStyle: styles.topbar
 				}}
 				drawerContent={props => <CustomDrawer {...props} />}>
-				<Drawer.Screen name={WebAdminName} component={WebAdmin} />
-				<Drawer.Screen name={KelolaKaryawanName} component={KelolaKaryawan} />
-				<Drawer.Screen name={CutiKaryawanName} component={CutiKaryawan} />
-				<Drawer.Screen name={ManageIPName} component={ManageIP} />
+				{isHRD ? (
+					<>
+						<Drawer.Screen name={WebAdminName} component={WebAdmin} />
+						<Drawer.Screen name={CutiKaryawanName} component={CutiKaryawan} />
+					</>
+				) : (
+					<>
+						<Drawer.Screen name={KelolaKaryawanName} component={KelolaKaryawan} />
+						<Drawer.Screen name={ManageIPName} component={ManageIP} />
+					</>
+				)}
 			</Drawer.Navigator>
 		</PaperProvider>
 	);
