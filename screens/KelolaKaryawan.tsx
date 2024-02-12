@@ -58,9 +58,9 @@ const WebAdmin = () => {
 
 		temp.sort((a: IUser, b: IUser) => {
 			if (a.created_at < b.created_at) {
-				return -1;
-			} else if (a.created_at > b.created_at) {
 				return 1;
+			} else if (a.created_at > b.created_at) {
+				return -1;
 			}
 			return 0;
 		});
@@ -72,9 +72,9 @@ const WebAdmin = () => {
 
 		temp.sort((a: IUser, b: IUser) => {
 			if (a.created_at < b.created_at) {
-				return 1;
-			} else if (a.created_at > b.created_at) {
 				return -1;
+			} else if (a.created_at > b.created_at) {
+				return 1;
 			}
 			return 0;
 		});
