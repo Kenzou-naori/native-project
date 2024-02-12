@@ -1,8 +1,20 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { baseUrl, errorResponse } from "./util";
 import storage from "../utils/storage";
+import Toast from "react-native-toast-message";
 
+const showToast = (message: string) => {
+	Toast.show({
+		type: "error",
+		text1: "Warning",
+		onShow: () => console.log("toast visible"),
+		onHide: () => console.log("toast hide"),
+		visibilityTime: 5000,
+		text2: message
+	});
+};
 export async function getCompany(): Promise<AxiosResponse<IAPIResponseGetCompany, any> | AxiosError<IAPIErrorResponse, any>> {
+	
 	const token = await storage.load({ key: "token" });
 
 	return axios
@@ -19,7 +31,7 @@ export async function getCompany(): Promise<AxiosResponse<IAPIResponseGetCompany
 
 			return response;
 		})
-		.catch(error => {
+		.catch((error)  => {
 			errorResponse(error);
 			return error;
 		});
