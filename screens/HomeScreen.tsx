@@ -11,6 +11,7 @@ import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useCallback } from "react";
 import { StatusBar } from "expo-status-bar";
 import { AxiosError } from "axios";
+import { useColorScheme } from "nativewind";
 import {
 	StyleSheet,
 	Text,
@@ -21,7 +22,8 @@ import {
 	TouchableOpacity,
 	TextInput,
 	Modal,
-	RefreshControl
+	RefreshControl,
+	Switch
 } from "react-native";
 
 import Toast from "react-native-toast-message";
@@ -42,6 +44,7 @@ export default function HomeScreen({ navigation }: any) {
 	const [refreshing, setRefreshing] = useState(false);
 	const [activePaidLeave, setActivePaidLeave] = useState<IPaidLeave | null>(null);
 	const [_, setPaidLeaves] = useState<IPaidLeave[]>([]);
+	const {colorScheme, toggleColorScheme} = useColorScheme();
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);
@@ -193,18 +196,40 @@ export default function HomeScreen({ navigation }: any) {
 
 	return (
 		<ScrollView
-			className="mt-6 bg-[#DEE9FD] h-full"
+			className="mt-6 bg-[#DEE9FD] dark:bg-[#212121] h-full"
 			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-			<StatusBar backgroundColor="#DEE9FD" style="dark" />
+			<StatusBar backgroundColor={ 
+				colorScheme === "light" 
+				? "#DEE9FD" 
+				: colorScheme == "dark" 
+				? "#212121"
+				: "DEE9FD"
+			} 
+			style={ colorScheme === "dark" ? "light" : "dark"} />
 			<View className="flex-row justify-between px-5">
-				<View className="p-2 w-60 mx-auto mt-5 flex flex-row justify-center items-center bg-[#DEE9FD] rounded-full shadow-xl shadow-gray-800">
+			<View className="p-2 w-16 mx-auto mt-5 flex flex-row justify-center items-center bg-[#DEE9FD] dark:bg-[#3a3a3a] rounded-full shadow-md shadow-gray-800 dark:shadow-white">
+					{/* <Switch value={colorScheme =='dark'} onChange={toggleColorScheme}/> */}
+					<TouchableOpacity onPress={toggleColorScheme}>
+					<Ionicons size={32} color={colorScheme === "dark" 
+				? "#DEE9FD" 
+				: colorScheme == "light" 
+				? "#212121"
+				: "DEE9FD"} name={colorScheme === "light" 
+				? "sunny-outline" 
+				: colorScheme == "dark" 
+				? "moon-outline"
+				: "sunny-outline"} />
+
+					</TouchableOpacity>
+				</View>
+				<View className="p-2 w-48 mx-auto mt-5 flex flex-row justify-center items-center bg-[#cedfff] dark:bg-[#3a3a3a] rounded-full shadow-md shadow-gray-800 dark:shadow-white ">
 					<Image source={require("../assets/images/logo.png")} className="w-6 h-8" />
-					<Text className="p-2 text-xl font-bold tracking-widest text-center text-gray-600">
+					<Text className="p-2 text-xl font-bold tracking-widest text-center  text-gray-600 dark:text-neutral-300">
 						{company?.name ? company.name : ""}
 					</Text>
 				</View>
 				{/* logout */}
-				<View className="p-2 w-16 mx-auto mt-5 flex flex-row justify-center items-center bg-[#DEE9FD] rounded-full shadow-xl shadow-gray-800">
+				<View className="p-2 w-16 mx-auto mt-5 flex flex-row justify-center items-center bg-[#DEE9FD] dark:bg-[#3a3a3a] rounded-full shadow-md shadow-gray-800 dark:shadow-white ">
 					<TouchableOpacity
 						onPress={async () => {
 							await storage.remove({ key: "user" });
@@ -220,31 +245,31 @@ export default function HomeScreen({ navigation }: any) {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<View className="px-10 mt-6 mb-2">
-				<View className="rounded-full bg-[#cedfff] shadow shadow-gray-800 p-4">
-					<Text className="text-lg font-semibold text-gray-600">Halo,</Text>
-					<Text className="text-xl font-bold text-gray-600">{fullName}</Text>
+			<View className=" px-8 mt-6 mb-2">
+				<View className="rounded-[30px] bg-[#cedfff] dark:bg-[#3a3a3a] shadow-md shadow-gray-800 dark:shadow-white p-4">
+					<Text className="text-lg font-semibold  text-gray-600 dark:text-neutral-300">Halo,</Text>
+					<Text className="text-xl font-bold  text-gray-600 dark:text-neutral-300">{fullName}</Text>
 				</View>
 			</View>
-			<View className="p-5">
+			<View className="p-2">
 				<View className="px-5 rounded-[60px]">
 					<View className="flex flex-col gap-8 justify-center">
-						<View className="bg-[#cedfff] rounded-[60px] shadow shadow-gray-800 p-4">
+						<View className="bg-[#cedfff] dark:bg-[#3a3a3a]  rounded-[60px] shadow shadow-gray-800 dark:shadow-white p-4">
 							<View className="items-center mb-4">
-								<Text className="text-3xl font-bold text-gray-600">{day},</Text>
-								<Text className="text-2xl font-bold text-gray-600">{currentDate}</Text>
+								<Text className="text-3xl font-bold  text-gray-600 dark:text-neutral-300">{day},</Text>
+								<Text className="text-2xl font-bold  text-gray-600 dark:text-neutral-300">{currentDate}</Text>
 							</View>
 							<Separator />
 							<View className="flex-row justify-around">
 								<View className="items-center mt-3">
-									<Text className="text-lg font-bold text-gray-600">Masuk</Text>
+									<Text className="text-lg font-bold  text-gray-600 dark:text-neutral-300">Masuk</Text>
 									<Text
 										className={
 											day === "Sabtu" || day === "Minggu"
-												? "text-2xl text-gray-600 font-medium"
+												? "text-2xl  text-gray-600 dark:text-neutral-300 font-medium"
 												: currentTime >= company?.checkInTime!
 												? "text-red-500 text-2xl font-medium"
-												: "text-2xl text-gray-600 font-medium"
+												: "text-2xl  text-gray-600 dark:text-neutral-300 font-medium"
 										}>
 										{day === "Sabtu" || day === "Minggu"
 											? "—"
@@ -254,8 +279,8 @@ export default function HomeScreen({ navigation }: any) {
 									</Text>
 								</View>
 								<View className="items-center mt-3">
-									<Text className="text-lg font-bold text-gray-600">Keluar</Text>
-									<Text className="text-2xl font-medium text-gray-600">
+									<Text className="text-lg font-bold  text-gray-600 dark:text-neutral-300">Keluar</Text>
+									<Text className="text-2xl font-medium  text-gray-600 dark:text-neutral-300">
 										{day === "Sabtu" || day === "Minggu"
 											? "—"
 											: attendance?.checkIn && !attendance?.checkOut
@@ -268,9 +293,9 @@ export default function HomeScreen({ navigation }: any) {
 							</View>
 						</View>
 
-						<View className="bg-[#cedfff] rounded-[50px] shadow shadow-gray-800 px-4 py-6">
+						<View className="bg-[#cedfff] dark:bg-[#3a3a3a]  rounded-[50px] shadow shadow-gray-800 dark:shadow-white px-4 py-6">
 							<View>
-								<Text className="font-semibold tracking-wide text-gray-600 text-md">Presensi Masuk/Keluar</Text>
+								<Text className="font-semibold tracking-wide  text-gray-600 dark:text-neutral-300 text-md">Presensi Masuk/Keluar</Text>
 							</View>
 							<Separator />
 							<View className="flex-row justify-around pt-4">
@@ -293,7 +318,7 @@ export default function HomeScreen({ navigation }: any) {
 										const attData = JSON.parse(att);
 										setAttendance(attData);
 									}}>
-									<Text className="px-9 text-lg font-semibold text-gray-600">Masuk</Text>
+									<Text className="px-9 text-lg font-semibold  text-gray-600">Masuk</Text>
 								</TouchableOpacity>
 								<TouchableOpacity
 									className={
@@ -325,10 +350,10 @@ export default function HomeScreen({ navigation }: any) {
 								</TouchableOpacity>
 							</View>
 						</View>
-						<View className="bg-[#cedfff] rounded-[50px] shadow shadow-gray-800 px-4 py-6 mb-20">
+						<View className="bg-[#cedfff] dark:bg-[#3a3a3a]  rounded-[50px] shadow shadow-gray-800 dark:shadow-white px-4 py-6 mb-20">
 							{renderModal()}
 							<View>
-								<Text className="font-semibold tracking-wide text-gray-600 text-md">Pengajuan Izin Cuti</Text>
+								<Text className="font-semibold tracking-wide  text-gray-600 dark:text-neutral-300 text-md">Pengajuan Izin Cuti</Text>
 							</View>
 							<Separator />
 							<View className="flex-row justify-around pt-4">
@@ -341,25 +366,25 @@ export default function HomeScreen({ navigation }: any) {
 											: "bg-[#90ee90] px-8 py-2 rounded-[30px]"
 									}
 									onPress={() => setOpenModal(true)}>
-									<Text className="px-5 text-lg font-semibold text-gray-600">Cuti</Text>
+									<Text className="px-5 text-lg font-semibold  text-gray-600">Cuti</Text>
 								</Pressable>
 							</View>
 							<View className="flex-row justify-around pt-4">
 								<View className="flex-col">
-									<Text className="font-bold text-gray-600 text-md">Alasan</Text>
-									<Text className="font-semibold text-gray-600 text-md">
+									<Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Alasan</Text>
+									<Text className="font-semibold  text-gray-600 dark:text-neutral-300 text-md">
 										{activePaidLeave?.reason ? activePaidLeave.reason : "—"}
 									</Text>
 								</View>
 								<View className="flex-col">
-									<Text className="font-bold text-gray-600 text-md">Mulai</Text>
-									<Text className="font-semibold text-gray-600 text-md">
+									<Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Mulai</Text>
+									<Text className="font-semibold  text-gray-600 dark:text-neutral-300 text-md">
 										{activePaidLeave?.startDate ? activePaidLeave.startDate : "—"}
 									</Text>
 								</View>
 								<View className="flex-col">
-									<Text className="font-bold text-gray-600 text-md">Selama</Text>
-									<Text className="font-semibold text-gray-600 text-md">
+									<Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Selama</Text>
+									<Text className="font-semibold  text-gray-600 dark:text-neutral-300 text-md">
 										{activePaidLeave?.days ? activePaidLeave.days : "—"} Hari
 									</Text>
 								</View>
@@ -376,7 +401,7 @@ export default function HomeScreen({ navigation }: any) {
 			<Modal visible={openModal} animationType="slide" transparent={true}>
 				<View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-[156] p-5 -mb-56">
 					<View className="flex-row justify-between">
-						<Text className="text-2xl font-bold text-gray-600">Pengajuan Cuti</Text>
+						<Text className="text-2xl font-bold  text-gray-600 dark:text-neutral-300">Pengajuan Cuti</Text>
 						<TouchableOpacity onPress={() => setOpenModal(false)}>
 							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 						</TouchableOpacity>
@@ -385,7 +410,7 @@ export default function HomeScreen({ navigation }: any) {
 						<View className="flex-col justify-center items-center my-5">
 							{/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
 							<View className="mt-4 w-full">
-								<Text className="font-bold text-gray-600 text-md">Alasan</Text>
+								<Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Alasan</Text>
 								<TextInput
 									className="py-3 text-lg border-b-2 border-b-gray-500"
 									keyboardType="default"
@@ -393,18 +418,18 @@ export default function HomeScreen({ navigation }: any) {
 								/>
 							</View>
 							<View className="mt-4 w-full">
-								{/* <Text className="font-bold text-gray-600 text-md">Mulai</Text>
+								{/* <Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Mulai</Text>
 								<TextInput
 									className="py-3 text-lg border-b-2 border-b-gray-500"
 									// value={value}
 									keyboardType="default"
 									onChangeText={text => setStartTime(text)}
 								/> */}
-								<Text className="font-bold text-gray-600 text-md">Mulai Pada</Text>
+								<Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Mulai Pada</Text>
 								{/* day/month/year section */}
 								<View className="flex-row justify-between">
 									<View className="flex-col">
-										<Text className="font-bold text-gray-600 text-md">Tanggal</Text>
+										<Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Tanggal</Text>
 										<TextInput
 											className="p-3 text-lg border-b-2 border-b-gray-500"
 											// value={dayDate.toString()}
@@ -413,7 +438,7 @@ export default function HomeScreen({ navigation }: any) {
 										/>
 									</View>
 									<View className="flex-col">
-										<Text className="font-bold text-gray-600 text-md">Bulan</Text>
+										<Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Bulan</Text>
 										<TextInput
 											className="p-3 text-lg border-b-2 border-b-gray-500"
 											// value={value}
@@ -422,7 +447,7 @@ export default function HomeScreen({ navigation }: any) {
 										/>
 									</View>
 									<View className="flex-col">
-										<Text className="font-bold text-gray-600 text-md">Tahun</Text>
+										<Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Tahun</Text>
 										<TextInput
 											className="p-3 text-lg border-b-2 border-b-gray-500"
 											// value={value}
@@ -433,7 +458,7 @@ export default function HomeScreen({ navigation }: any) {
 								</View>
 							</View>
 							<View className="mt-4 w-full">
-								<Text className="font-bold text-gray-600 text-md">Selama</Text>
+								<Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Selama</Text>
 								<View className="flex-row">
 									<TextInput
 										className="p-3 text-lg border-b-2 border-b-gray-500"
@@ -441,7 +466,7 @@ export default function HomeScreen({ navigation }: any) {
 										keyboardType="number-pad"
 										onChangeText={text => setEndTime(parseInt(text))}
 									/>
-									<Text className="mt-7 font-bold text-gray-600 text-md">Hari</Text>
+									<Text className="mt-7 font-bold  text-gray-600 dark:text-neutral-300 text-md">Hari</Text>
 								</View>
 							</View>
 						</View>
@@ -482,7 +507,7 @@ export default function HomeScreen({ navigation }: any) {
 								});
 							}}>
 							<View className="bg-[#DEE9FD] rounded-full mt-6">
-								<Text className="py-2 px-3 text-xl font-semibold text-center text-gray-600">Kirim</Text>
+								<Text className="py-2 px-3 text-xl font-semibold text-center  text-gray-600 dark:text-neutral-300">Kirim</Text>
 							</View>
 						</TouchableOpacity>
 					</ScrollView>

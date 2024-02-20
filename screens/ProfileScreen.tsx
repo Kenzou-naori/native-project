@@ -21,14 +21,14 @@ const ProfileScreen = () => {
 	}, []);
 
 	return (
-		<View className="mt-6 bg-[#DEE9FD]">
-			<View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-6 p-5 -mb-6">
+		<View className="mt-6 bg-[#DEE9FD] dark:bg-[#212121] ">
+			<View className="bg-[#f0fafd] dark:bg-[#3a3a3a] rounded-t-[50px] h-full mt-6 p-5 -mb-6">
 				<ScrollView showsVerticalScrollIndicator={false}>
 					<View className="flex-col justify-center my-5">
-						<Text className="text-2xl font-bold text-center text-gray-600">Profile</Text>
+						<Text className="text-2xl font-bold text-center text-gray-600 dark:text-neutral-300 ">Profile</Text>
 						<View className="mt-4">
-							<Text className="text-gray-500 text-md">Nama Lengkap</Text>
-							<Text className="py-2 text-xl border-b-2 border-b-gray-500">{fullName}</Text>
+							<Text className="text-gray-500 dark:text-neutral-300 text-md">Nama Lengkap</Text>
+							<Text className="py-2 text-xl border-b-2 border-b-gray-500 dark:text-neutral-300 ">{fullName}</Text>
 							{/* <TextInput
 								value={value}
 								onChangeText={onChangeText}
@@ -41,8 +41,8 @@ const ProfileScreen = () => {
 							/> */}
 						</View>
 						<View className="mt-4">
-							<Text className="text-gray-500 text-md">Alamat Email</Text>
-							<Text className="py-2 text-xl border-b-2 border-b-gray-500">{email}</Text>
+							<Text className="text-gray-500 dark:text-neutral-300  text-md">Alamat Email</Text>
+							<Text className="py-2 text-xl border-b-2 border-b-gray-500 dark:text-neutral-300 ">{email}</Text>
 
 							{/* <TextInput
 								value={email}
@@ -56,8 +56,8 @@ const ProfileScreen = () => {
 							/> */}
 						</View>
 						<View className="mt-4">
-							<Text className="text-gray-500 text-md">Nomor Telepon</Text>
-							<Text className="py-2 text-xl border-b-2 border-b-gray-500">{phone}</Text>
+							<Text className="text-gray-500 dark:text-neutral-300  text-md">Nomor Telepon</Text>
+							<Text className="py-2 text-xl border-b-2 border-b-gray-500 dark:text-neutral-300 ">{phone}</Text>
 
 							{/* <TextInput
 								value={value}

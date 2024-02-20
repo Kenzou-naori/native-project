@@ -49,7 +49,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
 	return (
 		<View className="bg-white h-full w-full items-center lg:bg-[#DEE9FD]">
 			<StatusBar backgroundColor="#DEE9FD" style="light" />
-			<SafeAreaView className="bg-[#DEE9FD] h-[93%] p-5 w-full lg:w-6/12 items-center rounded-b-[70px] shadow-md shadow-gray-500">
+			<View className="bg-[#DEE9FD] h-[93%] p-5 w-full lg:w-6/12 items-center rounded-b-[70px] shadow-md shadow-gray-500">
 				<Toast />
 				<ScrollView className="mt-6" showsVerticalScrollIndicator={false}>
 					<View className="flex items-center">
@@ -99,7 +99,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
 						</View>
 					</View>
 				</ScrollView>
-			</SafeAreaView>
+			</View>
 		</View>
 	);
 }

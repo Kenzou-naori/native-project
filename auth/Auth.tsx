@@ -20,12 +20,14 @@ import { View, Text, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useColorScheme } from "nativewind";
 
-const homeName = "Dashboard";
+
+const homeName = "Dasbor";
 const scheduleName = "Schedule";
-const settingsName = "History";
-const profileName = "Profile";
-const cutiName = "Pengajuan Cuti";
+const settingsName = "Riwayat Presensi";
+const profileName = "Profil";
+const cutiName = "Riwayat Cuti";
 const WebAdminName = "Dashboard";
 const ManageIPName = "Manage IP";
 const KelolaKaryawanName = "Kelola Karyawan";
@@ -86,6 +88,8 @@ function HRDScreen() {
 }
 
 function FirstScreen() {
+const {colorScheme} = useColorScheme();
+
 	return (
 		<Tab.Navigator
 			initialRouteName={homeName}
@@ -109,20 +113,17 @@ function FirstScreen() {
 					return <Ionicons size={size} color={color} name={iconName!} />;
 				},
 				tabBarStyle: {
-					backgroundColor: "#cedfff",
-					// width: 370,
+					backgroundColor: colorScheme === 'light' ? '#DEE9FD' : '#212121',
 					marginHorizontal: 20,
 					marginBottom: 14,
 					borderRadius: 50,
 					position: "absolute",
-					shadowColor: "black",
+					shadowColor: colorScheme === 'dark' ? '#DEE9FD' : '#212121',
 					shadowOpacity: 1,
 					elevation: 2
 
-					// activeTintColor: "#80acff",
-					// inactiveTintColor: "black",
 				},
-				tabBarShowLabel: false
+				// tabBarShowLabel: false
 			})}>
 			<Tab.Screen
 				name={homeName}
