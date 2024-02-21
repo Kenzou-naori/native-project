@@ -6,18 +6,17 @@ import {
 } from "@react-navigation/drawer";
 import storage from "../utils/storage";
 
-const CustomDrawer = (props: any ) => {
-    
-    const [fullName, setFullName] = useState("");
-        useEffect(() => {
-            const getUserData = async () => {
-                const dataString = await storage.load({ key: "user" });
-                const data = JSON.parse(dataString);
-                setFullName(data.fullName);
-            };
-    
-            getUserData();
-        }, []);
+const CustomDrawer = (props: any) => {
+  const [fullName, setFullName] = useState("");
+  useEffect(() => {
+    const getUserData = async () => {
+      const dataString = await storage.load({ key: "user" });
+      const data = JSON.parse(dataString);
+      setFullName(data.fullName);
+    };
+
+    getUserData();
+  }, []);
   return (
     <View style={styles.container}>
       {/* header */}
@@ -30,7 +29,7 @@ const CustomDrawer = (props: any ) => {
         {...props}
         style={[styles.view, styles.marginBottom, styles.marginTop]}
       >
-        <DrawerItemList {...props} style={[styles.list]} ></DrawerItemList>
+        <DrawerItemList {...props} style={[styles.list]}></DrawerItemList>
       </DrawerContentScrollView>
       {/* settings */}
       {/* footer */}
@@ -57,9 +56,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  text:{
-    color:'white',
-    textAlign : 'center'
+  text: {
+    color: "white",
+    textAlign: "center",
   },
   view: {
     backgroundColor: "#f1f6ff",
@@ -67,21 +66,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     padding: 15,
   },
-  list:{
+  list: {
     borderRadius: 20,
   },
-  header:{
+  header: {
     // height: 80,
-    flexDirection:'column'
+    flexDirection: "column",
   },
-  headerText:{
-    fontSize:12,
-    fontWeight: '600',
-    color: 'gray',
+  headerText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "gray",
   },
-  name:{
-    fontWeight:"bold",
-    fontSize:14,
+  name: {
+    fontWeight: "bold",
+    fontSize: 14,
   },
   marginTop: {
     marginTop: 7,
@@ -92,11 +91,11 @@ const styles = StyleSheet.create({
   footer: {
     height: 70,
   },
-  logout :{
-    backgroundColor : 'red',
-    padding : 10,
+  logout: {
+    backgroundColor: "red",
+    padding: 10,
     borderRadius: 7,
-  }
+  },
 });
 
 export default CustomDrawer;
