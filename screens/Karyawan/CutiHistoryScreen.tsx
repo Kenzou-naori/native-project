@@ -1,7 +1,6 @@
-import { capitalizeFirstLetter, formatDate } from "../api/util";
-import { getAttendances } from "../api/attendance";
-import { getCompany } from "../api/company";
-import storage from "../utils/storage";
+import { GetPaidLeaves } from "../../api/paidLeave";
+import { formatISODate } from "../../api/util";
+import storage from "../../utils/storage";
 
 import {
   StyleSheet,
@@ -12,19 +11,19 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useColorScheme } from "nativewind";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { useCallback, useEffect, useState } from "react";
+import { getCompany } from "../../api/company";
 import { AxiosError } from "axios";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useColorScheme } from "nativewind";
 
 export default function HistoryScreen({ navigation }: any) {
-  const [attendances, setAttendances] = useState<IAttendance[]>([]);
-  const [company, setCompany] = useState<ICompany | null>(null);
-
+  const [paidLeaves, setPaidLeaves] = useState<IPaidLeave[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [company, setCompany] = useState<ICompany | null>(null);
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     const d = new Date();
     let date = d.getDate().toString(); //Current Date
@@ -35,26 +34,20 @@ export default function HistoryScreen({ navigation }: any) {
     month = month.padStart(2, "0");
     year = year.padStart(2, "0");
 
-    await getAttendances(date + "-" + month + "-" + year);
-    await storage.load({ key: "attendances" }).then((attendances) => {
-      setRefreshing(true);
-      const attendancesData = JSON.parse(attendances);
-      setAttendances(attendancesData);
+    await GetPaidLeaves();
+    await storage.load({ key: "paidLeaves" }).then((res) => {
+      setPaidLeaves(JSON.parse(res));
       setRefreshing(false);
     });
-
-    setRefreshing(false);
   }, []);
 
   useEffect(() => {
     async function loadDatas() {
       setRefreshing(true);
-      const attendances = await storage.load({ key: "attendances" });
-      const attendancesData = JSON.parse(attendances);
-
-      setAttendances(attendancesData);
-      setRefreshing(false);
-
+      await storage.load({ key: "paidLeaves" }).then((res) => {
+        setPaidLeaves(JSON.parse(res));
+        setRefreshing(false);
+      });
       await getCompany().then(async (res) => {
         if (res instanceof AxiosError) {
           console.log(res);
@@ -67,7 +60,7 @@ export default function HistoryScreen({ navigation }: any) {
   }, []);
 
   return (
-    <View className="mt-6 bg-[#DEE9FD] dark:bg-[#212121]">
+    <View className="mt-6 bg-[#DEE9FD] dark:bg-[#212121] ">
       <View className="flex-row justify-between px-5">
         <View className="mx-auto mt-5 flex w-16 flex-row items-center justify-center rounded-full bg-[#DEE9FD] p-2 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
           <TouchableOpacity onPress={toggleColorScheme}>
@@ -90,9 +83,10 @@ export default function HistoryScreen({ navigation }: any) {
             />
           </TouchableOpacity>
         </View>
+
         <View className="mx-auto mt-5 flex w-48 flex-row items-center justify-center rounded-full bg-[#cedfff] p-2 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white ">
           <Image
-            source={require("../assets/images/logo.png")}
+            source={require("../../assets/images/logo.png")}
             className="h-8 w-6"
           />
           <Text className="p-2 text-center text-xl font-bold tracking-widest  text-gray-600 dark:text-neutral-300">
@@ -118,39 +112,47 @@ export default function HistoryScreen({ navigation }: any) {
         </View>
       </View>
       <View className="mt-6 h-full rounded-t-[50px] bg-[#f0fafd] p-5 dark:bg-[#3a3a3a]">
-        <View className="my-5 flex-row">
-          <Text className="text-2xl font-bold dark:text-neutral-300">
-            Riwayat Presensi
+        <View className="my-5 flex-row justify-between">
+          <Text className="text-2xl font-bold dark:text-neutral-300 ">
+            Riwayat Pengajuan Cuti
           </Text>
         </View>
-        <View className=" h-screen pb-72">
+        <View className="h-screen pb-52">
           <FlatList
-            data={attendances}
+            data={paidLeaves}
             renderItem={({ item }) => {
               return (
                 <View
                   key={item.id}
-                  className=" mb-2 flex flex-row items-center justify-between rounded-xl border border-[#ccc] bg-[#DEE9FD] p-[20] dark:bg-[#212121]"
+                  className=" mb-2 flex flex-row items-center justify-between rounded-xl border  border-[#ccc] bg-[#DEE9FD] p-[20] dark:bg-[#212121]"
                 >
                   <View>
                     <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300 ">
-                      {capitalizeFirstLetter(item.status)}
+                      {item.status === 0
+                        ? "Pending"
+                        : item.status === 1
+                          ? "Diterima"
+                          : "Ditolak"}
                     </Text>
                     <Text
                       style={styles.content}
                       className="dark:text-neutral-300 "
                     >
-                      {formatDate(item.date)}
+                      {formatISODate(item.startDate)}
                     </Text>
                   </View>
                   <Text className="text-sm font-semibold dark:text-neutral-300 ">
-                    {item.checkIn} - {item.checkOut}
+                    {item.days} Hari
                   </Text>
                 </View>
               );
             }}
             ItemSeparatorComponent={() => <View className="h-4" />}
-            ListEmptyComponent={<Text>Kamu belum melakukan presensi</Text>}
+            ListEmptyComponent={
+              <Text className="dark:text-neutral-300">
+                Kamu belum pernah melakukan pengajuan cuti
+              </Text>
+            }
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }

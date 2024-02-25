@@ -1,17 +1,17 @@
 // In App.js in a new project
 import CustomDrawer from "../layout/CustomDrawer";
-import LoginScreen from "../screens/LoginScreen";
-import HomeScreen from "../screens/HomeScreen";
-import SettingsScreen from "../screens/HistoryScreen";
-import CutiScreen from "../screens/CutiHistoryScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import WebAdmin from "../screens/WebAdmin";
-import ManageIP from "../screens/ManageIP";
-import KelolaKaryawan from "../screens/KelolaKaryawan";
-import CutiKaryawan from "../screens/CutiKaryawan";
-import storage from "../utils/storage";
+import LoginScreen from "../screens/Auth/LoginScreen";
+import HomeScreen from "../screens/Karyawan/HomeScreen";
+import SettingsScreen from "../screens/Karyawan/HistoryScreen";
+import CutiScreen from "../screens/Karyawan/CutiHistoryScreen";
+import ProfileScreen from "../screens/Karyawan/ProfileScreen";
+import WebAdmin from "../screens/Admin/WebAdmin";
+import ManageIP from "../screens/Admin/ManageIP";
+import KelolaKaryawan from "../screens/HRD/KelolaKaryawan";
+import CutiKaryawan from "../screens/HRD/CutiKaryawan";
+import PengaduanUser from "../screens/Admin/Pengaduan";
 
-import { MD2LightTheme, PaperProvider, useTheme } from "react-native-paper";
+import { MD2LightTheme, PaperProvider } from "react-native-paper";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -28,9 +28,10 @@ const settingsName = "Riwayat Presensi";
 const profileName = "Profil";
 const cutiName = "Riwayat Cuti";
 const WebAdminName = "Dashboard";
-const ManageIPName = "Manage IP";
+const ManageIPName = "Manage Lokasi";
 const KelolaKaryawanName = "Kelola Karyawan";
 const CutiKaryawanName = "Cuti Karyawan";
+const PengaduanName = "Pengaduan User";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -51,9 +52,6 @@ const theme = {
   },
 };
 
-export type AppTheme = typeof theme;
-
-export const useAppTheme = () => useTheme<AppTheme>();
 function MyDrawer() {
   return (
     <PaperProvider theme={theme}>
@@ -66,6 +64,7 @@ function MyDrawer() {
       >
         <Drawer.Screen name={KelolaKaryawanName} component={KelolaKaryawan} />
         <Drawer.Screen name={ManageIPName} component={ManageIP} />
+        <Drawer.Screen name={PengaduanName} component={PengaduanUser} />
       </Drawer.Navigator>
     </PaperProvider>
   );

@@ -1,7 +1,7 @@
-import { UpdateIPAddresses } from "../api/admin";
-import { getCompany } from "../api/company";
+import { UpdateIPAddresses } from "../../api/admin";
+import { getCompany } from "../../api/company";
 
-import storage from "../utils/storage";
+import storage from "../../utils/storage";
 
 import {
   Text,
@@ -122,6 +122,59 @@ const ManageIP = () => {
             {renderDeleteConfrim()}
           </DataTable>
         </View>
+        <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg">
+          <View className="p-4" style={{ elevation: 10, zIndex: 10 }}>
+            <View className="flex-row items-center justify-between">
+              <Text className="font-semibold">Daftar Kordinat Lokasi</Text>
+              <View className="flex-row gap-2">
+                <TouchableOpacity
+                  onPress={() => setShowModal(true)}
+                  className="rounded-md border border-gray-600 p-1"
+                >
+                  <Text className="font-semibold text-gray-600">
+                    Tambah Lokasi
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {renderForm()}
+            </View>
+          </View>
+
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title>Kordinat Lokasi</DataTable.Title>
+              <DataTable.Title numeric>Aksi</DataTable.Title>
+            </DataTable.Header>
+
+            {ipAddresses.length === 0 && (
+              <DataTable.Row>
+                <DataTable.Cell>No data</DataTable.Cell>
+                <DataTable.Cell>No data</DataTable.Cell>
+              </DataTable.Row>
+            )}
+
+            {ipAddresses.map((ip) => (
+              <DataTable.Row key={ip} className="py-2 lg:py-4">
+                <DataTable.Cell>{ip}</DataTable.Cell>
+                <DataTable.Cell numeric>
+                  <View className="flex-col gap-1 lg:flex-row">
+                    <TouchableOpacity
+                      onPress={() => {
+                        setIpAddress(ip);
+
+                        setShowDeleteConfrim(true);
+                      }}
+                      className="rounded-md border border-gray-600 bg-red-200 p-3"
+                    >
+                      <Text className="text-gray-600">Hapus</Text>
+                    </TouchableOpacity>
+                  </View>
+                </DataTable.Cell>
+              </DataTable.Row>
+            ))}
+            {renderDeleteConfrim()}
+          </DataTable>
+        </View>
       </View>
     </ScrollView>
   );
@@ -132,7 +185,7 @@ const ManageIP = () => {
           <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
             <View className="flex-row justify-between">
               <Text className="text-2xl font-bold text-gray-600">
-                Tambah Alamat IP
+                Tambah Alamat Lokasi
               </Text>
               <TouchableOpacity onPress={() => setShowModal(false)}>
                 <FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />

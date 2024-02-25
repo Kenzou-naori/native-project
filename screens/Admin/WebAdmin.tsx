@@ -1,6 +1,6 @@
-import { GetAttendances, GetPaidLeaves, GetUsers } from "../api/admin";
-import { capitalizeFirstLetter, formatDate } from "../api/util";
-import storage from "../utils/storage";
+import { GetAttendances, GetPaidLeaves, GetUsers } from "../../api/admin";
+import { capitalizeFirstLetter, formatDate } from "../../api/util";
+import storage from "../../utils/storage";
 
 import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";

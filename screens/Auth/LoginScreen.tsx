@@ -1,6 +1,6 @@
-import { SignIn } from "../api/auth";
+import { SignIn } from "../../api/auth";
 
-import storage from "../utils/storage";
+import storage from "../../utils/storage";
 
 import {
   ScrollView,
@@ -64,7 +64,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
             <Animated.Image
               className="h-96 w-96"
               entering={FadeInUp.duration(1000).springify()}
-              source={require("../assets/images/work.png")}
+              source={require("../../assets/images/work.png")}
             />
           </View>
 

@@ -1,7 +1,7 @@
-import { GetPaidLeaves, SetPaidLeaveStatus } from "../api/admin";
-import { formatDate, formatISODate } from "../api/util";
+import { GetPaidLeaves, SetPaidLeaveStatus } from "../../api/admin";
+import { formatDate, formatISODate } from "../../api/util";
 
-import storage from "../utils/storage";
+import storage from "../../utils/storage";
 
 import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -13,7 +13,7 @@ import { AxiosError } from "axios";
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const WebAdmin = () => {
+const PengaduanUser = () => {
   const [loading, setLoading] = useState(true);
   const [showCek, setShowCek] = useState(false);
   const [cuti, setCuti] = useState<IPaidLeaveWithuser[]>([]);
@@ -65,7 +65,7 @@ const WebAdmin = () => {
         <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg">
           <View className="p-4">
             <View className="flex-row items-center justify-between">
-              <Text className="font-semibold">Daftar Cuti Karyawan</Text>
+              <Text className="font-semibold">Daftar Pengaduan Karyawan</Text>
 
               {renderCek()}
             </View>
@@ -74,19 +74,13 @@ const WebAdmin = () => {
             <DataTable.Header>
               <DataTable.Title>Nama</DataTable.Title>
               <DataTable.Title>Email</DataTable.Title>
-              <DataTable.Title>Alasan</DataTable.Title>
-              <DataTable.Title>Tanggal Mulai</DataTable.Title>
-              <DataTable.Title>Lama Cuti</DataTable.Title>
-              <DataTable.Title>Tanggal Selesai</DataTable.Title>
+              <DataTable.Title>Pengaduan</DataTable.Title>
               <DataTable.Title>Status</DataTable.Title>
               <DataTable.Title>Aksi</DataTable.Title>
             </DataTable.Header>
 
             {cuti.length === 0 && (
               <DataTable.Row>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
                 <DataTable.Cell>No data</DataTable.Cell>
                 <DataTable.Cell>No data</DataTable.Cell>
                 <DataTable.Cell>No data</DataTable.Cell>
@@ -101,15 +95,10 @@ const WebAdmin = () => {
                 <DataTable.Cell>{cutit.user.email}</DataTable.Cell>
                 <DataTable.Cell>{cutit.reason}</DataTable.Cell>
                 <DataTable.Cell>
-                  {formatISODate(cutit.startDate)}
-                </DataTable.Cell>
-                <DataTable.Cell>{cutit.days} Hari</DataTable.Cell>
-                <DataTable.Cell>{formatISODate(cutit.endDate)}</DataTable.Cell>
-                <DataTable.Cell>
                   {cutit.status === 0
                     ? "Pending"
                     : cutit.status === 1
-                      ? "Diterima"
+                      ? "Sudah Betul"
                       : "Ditolak"}
                 </DataTable.Cell>
                 <DataTable.Cell>
@@ -129,9 +118,9 @@ const WebAdmin = () => {
                         }
                         className="mr-1 rounded-md border border-gray-600 bg-green-200 p-3"
                       >
-                        <Text className="text-gray-600">Terima</Text>
+                        <Text className="text-gray-600">Sudah Selesai</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity
+                      {/* <TouchableOpacity
                         onPress={async () =>
                           await SetPaidLeaveStatus(cutit.id, "2").then(() => {
                             const newCuti = cutit;
@@ -146,12 +135,12 @@ const WebAdmin = () => {
                         className="ml-1 rounded-md border border-gray-600 bg-red-200 p-3"
                       >
                         <Text className="text-gray-600">Tolak</Text>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                     </>
                   ) : (
                     <>
                       <Text className="mr-1 rounded-md border border-gray-600 bg-gray-200 p-3">
-                        Sudah dikonfirmasi
+                        Sudah dibetulkan
                       </Text>
                     </>
                   )}
@@ -253,4 +242,4 @@ const WebAdmin = () => {
   }
 };
 
-export default WebAdmin;
+export default PengaduanUser;

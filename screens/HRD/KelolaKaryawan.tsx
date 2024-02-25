@@ -6,21 +6,23 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
+  Pressable,
 } from "react-native";
 
 import { useEffect, useState } from "react";
 import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { useColorScheme } from "nativewind";
 
 import { DataTable } from "react-native-paper";
-import { CreateUser, DeleteUser, GetUsers, UpdateUser } from "../api/admin";
+import { CreateUser, DeleteUser, GetUsers, UpdateUser } from "../../api/admin";
 import { AxiosError } from "axios";
-import storage from "../utils/storage";
+import storage from "../../utils/storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { getCompany } from "../api/company";
+import { getCompany } from "../../api/company";
 
-const WebAdmin = () => {
+const KelolaKaryawan = () => {
   const [loading, setLoading] = useState(false);
   const [showDeleteConfrim, setShowDeleteConfrim] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -36,6 +38,8 @@ const WebAdmin = () => {
   const from = page * 25;
   const to = Math.min((page + 1) * 25, totalKaryawan);
   const [visible, setVisible] = useState(false);
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
 
   const toggleDropdown = () => {
     setVisible(!visible);
@@ -230,7 +234,7 @@ const WebAdmin = () => {
             <View className="flex-row items-center justify-between">
               <Text className="font-semibold">Daftar Karyawan</Text>
               <View className="flex-row gap-2">
-                <TouchableOpacity
+                <Pressable
                   onPress={toggleDropdown}
                   className=" rounded-md border border-gray-600 p-1"
                 >
@@ -243,7 +247,7 @@ const WebAdmin = () => {
                       color="gray"
                     />
                   </View>
-                </TouchableOpacity>
+                </Pressable>
                 <TouchableOpacity
                   onPress={() => setShowModal(true)}
                   className="rounded-md border border-gray-600 p-1"
@@ -594,4 +598,4 @@ const styles = StyleSheet.create({
   //
 });
 
-export default WebAdmin;
+export default KelolaKaryawan;
