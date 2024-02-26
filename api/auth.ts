@@ -37,11 +37,10 @@ export async function SignIn(email: string, password: string, navigation: any) {
 
       if (await storage.load({ key: "isLoggedin" })) {
         const user = await storage.load({ key: "user" });
-        if (
-          JSON.parse(user).accessLevel === 1 ||
-          JSON.parse(user).accessLevel === 2
-        ) {
+        if (JSON.parse(user).accessLevel === 1) {
           navigation.navigate("Admin");
+        } else if (JSON.parse(user).accessLevel === 2) {
+          navigation.navigate("HRD");
         } else {
           navigation.navigate("Home");
         }
