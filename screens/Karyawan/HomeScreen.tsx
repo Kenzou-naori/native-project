@@ -78,29 +78,13 @@ export default function HomeScreen({ navigation }: any) {
 
   const cameraRef = useRef<Camera>(null);
 
-  const updateThemeAndStorage = async (newColorScheme:any) => {
+  const updateThemeAndStorage = async (newColorScheme: any) => {
     try {
-      await AsyncStorage.setItem('darkTheme', newColorScheme);
-      setStoredTheme(newColorScheme);
-      toggleColorScheme(); // Update current theme using nativewind's functionality
+      setColorScheme(newColorScheme);
     } catch (error) {
-      console.error('Error saving theme:', error);
-    }
-  };
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      // aspect: [3, 4],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) { // Use "canceled" here
-      setImage(result.assets[0].uri);
+      console.error("Error saving theme:", error);
+    } finally {
+      await storage.save({ key: "theme", data: newColorScheme });
     }
   };
 
@@ -121,45 +105,55 @@ export default function HomeScreen({ navigation }: any) {
     month = month.padStart(2, "0");
     year = year.padStart(2, "0");
 
-    await getAttendances(date + "-" + month + "-" + year).then(async (res) => {
-      if (res instanceof AxiosError) {
-        console.log(res.response);
-      } else {
-        await storage.load({ key: "attendance" }).then(async (res) => {
-          const attendancesData = JSON.parse(res);
-          setAttendance(attendancesData);
+    await storage.load({ key: "theme" }).then(async (res) => {
+      updateThemeAndStorage(res);
 
-          await getCompany().then(async (res) => {
-            if (res instanceof AxiosError) {
-              console.log(res);
-            } else {
-              setCompany(res.data.data.company);
+      await getAttendances(date + "-" + month + "-" + year).then(
+        async (res) => {
+          if (res instanceof AxiosError) {
+            console.log(res.response);
+          } else {
+            await storage.load({ key: "attendance" }).then(async (res) => {
+              const attendancesData = JSON.parse(res);
+              setAttendance(attendancesData);
 
-              await GetPaidLeave().then(async (res) => {
+              await getCompany().then(async (res) => {
                 if (res instanceof AxiosError) {
-                  console.log(res.response?.data.message);
+                  console.log(res);
                 } else {
-                  setActivePaidLeave(res.data.data.paidLeave);
+                  setCompany(res.data.data.company);
 
-                  await GetPaidLeaves().then((res) => {
+                  await GetPaidLeave().then(async (res) => {
                     if (res instanceof AxiosError) {
                       console.log(res.response?.data.message);
                     } else {
-                      setPaidLeaves(res.data.data.paidLeaves);
-                      setRefreshing(false);
+                      setActivePaidLeave(res.data.data.paidLeave);
+
+                      await GetPaidLeaves().then((res) => {
+                        if (res instanceof AxiosError) {
+                          console.log(res.response?.data.message);
+                        } else {
+                          setPaidLeaves(res.data.data.paidLeaves);
+                          setRefreshing(false);
+                        }
+                      });
                     }
                   });
                 }
               });
-            }
-          });
-        });
-      }
+            });
+          }
+        },
+      );
     });
   }, []);
   // end refresh
   // loadDatas
   useEffect(() => {
+    async function loadTheme() {
+      const storedTheme = await storage.load({ key: "theme" });
+      updateThemeAndStorage(storedTheme);
+    }
 
     async function loadUserData() {
       const dataString = await storage.load({ key: "user" });
@@ -243,6 +237,7 @@ export default function HomeScreen({ navigation }: any) {
     }, 1000);
 
     loadUserData();
+    loadTheme();
     loadDate();
     loadTime();
     loadDatas();
@@ -977,7 +972,6 @@ export default function HomeScreen({ navigation }: any) {
       </Modal>
     );
   }
-
 }
 
 const Separator = () => (
