@@ -4,7 +4,6 @@ import constant from "../constant/date";
 import storage from "../utils/storage";
 
 import {
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -207,45 +206,5 @@ const DetailScreen = ({ value }: DetailScreenProps) => {
     );
   }
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    marginHorizontal: 20,
-  },
-  // card: {
-  // 	borderRadius: 10,
-  // 	borderWidth: 1,
-  // 	borderColor: "#ccc",
-  // 	padding: 20,
-  // 	marginBottom: 20,
-  // 	backgroundColor: "#fff",
-  // 	display: "flex",
-  // 	flexDirection: "column"
-  // },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  content: {
-    fontSize: 16,
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 8,
-  },
-  input: {
-    fontSize: 18,
-    color: "#333",
-    borderWidth: 1,
-    width: 350,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-});
 
 export default DetailScreen;

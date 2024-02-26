@@ -1,27 +1,34 @@
-// api import
+// Sort import by longest to shortest, if same length sort by alphabetical
+
+import { formatISODate, showToast } from "../../api/util";
+import { getCompany } from "../../api/company";
+import constant from "../../constant/date";
+import storage from "../../utils/storage";
 import {
   getAttendances,
   postAttendance,
   updateAttendance,
 } from "../../api/attendance";
-import { GetPaidLeave, GetPaidLeaves, SendPaidLeave } from "../../api/paidLeave";
-import { getCompany } from "../../api/company";
-import { showToast } from "../../api/util";
-import constant from "../../constant/date";
-import storage from "../../utils/storage";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// end api import
-
-// frontend import
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
-  faSquareXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, useCallback } from "react";
+  GetPaidLeave,
+  GetPaidLeaves,
+  SendPaidLeave,
+} from "../../api/paidLeave";
+
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+
+import { useState, useEffect, useCallback, useRef } from "react";
+import {
+  Camera,
+  CameraCapturedPicture,
+  CameraType,
+  FlashMode,
+} from "expo-camera";
+import { useColorScheme } from "nativewind";
 import { StatusBar } from "expo-status-bar";
 import { AxiosError } from "axios";
-import { useColorScheme } from "nativewind";
+
 import {
   Text,
   View,
@@ -35,64 +42,41 @@ import {
   Button,
 } from "react-native";
 
-import Toast from "react-native-toast-message";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import * as ImagePicker from 'expo-image-picker';
+import Toast from "react-native-toast-message";
 
-// end frontend import
-
-const saveTheme = async ({theme}:any) => {
-  try {
-    await AsyncStorage.setItem('theme', theme); // Store theme as string
-  } catch (error) {
-    console.error('Error saving theme:', error);
-  }
-};
-
-const loadTheme = async () => {
-  try {
-    const storedTheme = await AsyncStorage.getItem('theme');
-    return storedTheme || 'dark'; // Return theme or default (e.g., 'dark')
-  } catch (error) {
-    console.error('Error loading theme:', error);
-    return 'dark';
-  }
-};
 // HomeScreen
 export default function HomeScreen({ navigation }: any) {
-  const [day, setDay] = useState("");
-  const [title, setTitle] = useState("");
-  const [dayDate, setDayDate] = useState(0);
-  const [monthDate, setMonthDate] = useState(0);
-  const [yearDate, setYearDate] = useState(0);
-  const [endTime, setEndTime] = useState(1);
-  const [currentDate, setCurrentDate] = useState("");
-  const [currentTime, setCurrentTime] = useState("");
-  const [openModal, setOpenModal] = useState(false);
-  const [openSakit, setOpenSakit] = useState(false);
-  const [company, setCompany] = useState<ICompany | null>(null);
-  const [attendance, setAttendance] = useState<IAttendance | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
+  const [hasCameraPermission] = Camera.useCameraPermissions();
   const [activePaidLeave, setActivePaidLeave] = useState<IPaidLeave | null>(
     null,
   );
+  const [attendance, setAttendance] = useState<IAttendance | null>(null);
+  const [image, setImage] = useState<CameraCapturedPicture | undefined>(
+    undefined,
+  );
+  const [company, setCompany] = useState<ICompany | null>(null);
+  const [isFaceDetected, setIsFaceDetected] = useState(false);
+  const { colorScheme, setColorScheme } = useColorScheme();
   const [_, setPaidLeaves] = useState<IPaidLeave[]>([]);
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-  const [image, setImage] = useState<string | null>(null);
-  const [storedTheme, setStoredTheme] = useState(null); // Initialize stored theme
+  const [user, setUser] = useState<IUser | null>(null);
+  const [openCamera, setOpenCamera] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [currentDate, setCurrentDate] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
+  const [flash, setFlash] = useState(FlashMode.off);
+  const [openModal, setOpenModal] = useState(false);
+  const [openSakit, setOpenSakit] = useState(false);
+  const [type, setType] = useState(CameraType.back);
+  const [cameraFor, setCameraFor] = useState("");
+  const [monthDate, setMonthDate] = useState(0);
+  const [yearDate, setYearDate] = useState(0);
+  const [dayDate, setDayDate] = useState(0);
+  const [endTime, setEndTime] = useState(1);
+  const [title, setTitle] = useState("");
+  const [day, setDay] = useState("");
 
-  useEffect(() => {
-    const fetchTheme = async () => {
-      try {
-        const storedTheme = await AsyncStorage.getItem('darkTheme');
-        setStoredTheme(storedTheme || 'light'); // Use default 'light' if no value found
-      } catch (error) {
-        console.error('Error fetching stored theme:', error);
-      }
-    };
-
-    fetchTheme();
-  }, []); // Load theme on component mount
+  const cameraRef = useRef<Camera>(null);
 
   const updateThemeAndStorage = async (newColorScheme:any) => {
     try {
@@ -176,6 +160,13 @@ export default function HomeScreen({ navigation }: any) {
   // end refresh
   // loadDatas
   useEffect(() => {
+
+    async function loadUserData() {
+      const dataString = await storage.load({ key: "user" });
+      const data = JSON.parse(dataString);
+      setUser(data);
+    }
+
     const d = new Date();
     let date = d.getDate().toString(); //Current Date
     let month = d.getMonth().toString(); //Current Month
@@ -246,12 +237,12 @@ export default function HomeScreen({ navigation }: any) {
         },
       );
     }
-
     const intervalTD = setInterval(() => {
       loadTime();
       loadDate();
     }, 1000);
 
+    loadUserData();
     loadDate();
     loadTime();
     loadDatas();
