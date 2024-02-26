@@ -567,6 +567,32 @@ export default function HomeScreen({ navigation }: any) {
               {/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
               <View className="mt-4 w-full">
                 <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
+                  Foto Dokumen Penguat (Optional)
+                </Text>
+                <Button
+                  title="Buka Kamera"
+                  onPress={() => {
+                    toggleCamera();
+                    setCameraFor("sakit");
+                  }}
+                />
+                <View className="mt-3">
+                  {image && (
+                    <>
+                      <Button
+                        title="Hapus"
+                        onPress={() => setImage(undefined)}
+                      />
+                      <Image
+                        source={{ uri: image.uri }}
+                        className="aspect-[3/4] w-full"
+                      />
+                    </>
+                  )}
+                </View>
+              </View>
+              <View className="mt-4 w-full">
+                <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
                   Alasan
                 </Text>
                 <TextInput
@@ -629,7 +655,6 @@ export default function HomeScreen({ navigation }: any) {
                 </Text>
                 <View className="flex-row">
                   <TextInput
-                  
                     className="border-b-2 border-b-gray-500 p-3 text-lg"
                     // value={value}
                     keyboardType="number-pad"
@@ -668,6 +693,7 @@ export default function HomeScreen({ navigation }: any) {
                   reason: title,
                   startDate: date,
                   days: endTime,
+                  attachment: image?.base64 ?? "",
                 };
                 await SendPaidLeave(data).then((res) => {
                   if (res instanceof AxiosError) {
@@ -689,6 +715,7 @@ export default function HomeScreen({ navigation }: any) {
       </Modal>
     );
   }
+
   function renderSakit() {
     return (
       <Modal visible={openSakit} animationType="slide" transparent={true}>
@@ -697,7 +724,12 @@ export default function HomeScreen({ navigation }: any) {
             <Text className="text-2xl font-bold  text-gray-600 dark:text-neutral-300">
               Pengajuan Izin Sakit
             </Text>
-            <TouchableOpacity onPress={() => setOpenSakit(false)}>
+            <TouchableOpacity
+              onPress={() => {
+                setOpenSakit(false);
+                setImage(undefined);
+              }}
+            >
               <FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
             </TouchableOpacity>
           </View>
@@ -708,63 +740,26 @@ export default function HomeScreen({ navigation }: any) {
                 <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
                   Foto Surat Sakit
                 </Text>
-                <Button title="Pilih foto surat sakit yang diberikan dokter" onPress={pickImage} />
-                <View
-                className="mt-3">
-                    {image && <Image source={{ uri: image }} style={{  aspectRatio:  3 / 4 }} />}
-                </View>
-                {/* <TextInput
-                  className="border-b-2 border-b-gray-500 py-3 text-lg"
-                  keyboardType="default"
-                  onChangeText={(text) => setTitle(text)}
-                /> */}
-              </View>
-              <View className="mt-4 w-full">
-                {/* <Text className="font-bold  text-gray-600 dark:text-neutral-300 text-md">Mulai</Text>
-								<TextInput
-									className="py-3 text-lg border-b-2 border-b-gray-500"
-									// value={value}
-									keyboardType="default"
-									onChangeText={text => setStartTime(text)}
-								/> */}
-                <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
-                  Mulai Pada
-                </Text>
-                {/* day/month/year section */}
-                <View className="flex-row justify-between">
-                  <View className="flex-col">
-                    <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
-                      Tanggal
-                    </Text>
-                    <TextInput
-                      className="border-b-2 border-b-gray-500 p-3 text-lg"
-                      // value={dayDate.toString()}
-                      keyboardType="number-pad"
-                      onChangeText={(text) => setDayDate(parseInt(text))}
-                    />
-                  </View>
-                  <View className="flex-col">
-                    <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
-                      Bulan
-                    </Text>
-                    <TextInput
-                      className="border-b-2 border-b-gray-500 p-3 text-lg"
-                      // value={value}
-                      keyboardType="number-pad"
-                      onChangeText={(text) => setMonthDate(parseInt(text))}
-                    />
-                  </View>
-                  <View className="flex-col">
-                    <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
-                      Tahun
-                    </Text>
-                    <TextInput
-                      className="border-b-2 border-b-gray-500 p-3 text-lg"
-                      // value={value}
-                      keyboardType="number-pad"
-                      onChangeText={(text) => setYearDate(parseInt(text))}
-                    />
-                  </View>
+                <Button
+                  title="Buka Kamera"
+                  onPress={() => {
+                    toggleCamera();
+                    setCameraFor("sakit");
+                  }}
+                />
+                <View className="mt-3">
+                  {image && (
+                    <>
+                      <Button
+                        title="Hapus"
+                        onPress={() => setImage(undefined)}
+                      />
+                      <Image
+                        source={{ uri: image.uri }}
+                        className="aspect-[3/4] w-full"
+                      />
+                    </>
+                  )}
                 </View>
               </View>
               <View className="mt-4 w-full">
@@ -773,7 +768,6 @@ export default function HomeScreen({ navigation }: any) {
                 </Text>
                 <View className="flex-row">
                   <TextInput
-                  
                     className="border-b-2 border-b-gray-500 p-3 text-lg"
                     // value={value}
                     keyboardType="number-pad"
@@ -812,12 +806,14 @@ export default function HomeScreen({ navigation }: any) {
                   reason: title,
                   startDate: date,
                   days: endTime,
+                  attachment: image?.base64 ?? "",
                 };
                 await SendPaidLeave(data).then((res) => {
                   if (res instanceof AxiosError) {
                     console.log(res);
                   } else {
                     setOpenModal(false);
+                    setImage(undefined);
                   }
                 });
               }}

@@ -40,6 +40,7 @@ interface IUser {
   phone: string;
   accessLevel: number;
   created_at: string;
+  photo: string;
 }
 
 interface IUserData {
@@ -166,6 +167,7 @@ interface IAPIPaidLeaveData {
   reason: string;
   startDate: string;
   days: number;
+  attachment: string | "";
 }
 
 interface IPaidLeave {

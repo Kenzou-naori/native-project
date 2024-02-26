@@ -66,7 +66,7 @@ export async function getAttendances(
     });
 }
 
-export async function postAttendance(status: IAttendanceStatus) {
+export async function postAttendance(status: IAttendanceStatus, image: string) {
   const token = await storage.load({ key: "token" });
 
   const data = axios
@@ -74,6 +74,7 @@ export async function postAttendance(status: IAttendanceStatus) {
       baseUrl + "/v1/users/@me/attendances",
       {
         status,
+        image,
       },
       {
         headers: {
