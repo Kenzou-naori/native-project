@@ -260,296 +260,453 @@ export default function HomeScreen({ navigation }: any) {
       clearInterval(intervalTD);
     };
   }, []);
-  // end load datas
-  const [fullName, setFullName] = useState("");
-  useEffect(() => {
-    const getUserData = async () => {
-      const dataString = await storage.load({ key: "user" });
-      const data = JSON.parse(dataString);
-      setFullName(data.fullName);
-    };
 
-    getUserData();
-  }, []);
+  const takePicture = async () => {
+    if (cameraRef) {
+      try {
+        const photo = await cameraRef.current?.takePictureAsync({
+          quality: 0.5,
+          base64: true,
+          skipProcessing: true,
+        });
+
+        if (photo) {
+          setImage(photo);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const toggleCameraType = () => {
+    setType(type === CameraType.back ? CameraType.front : CameraType.back);
+  };
+
+  const toggleCamera = () => {
+    if (!hasCameraPermission?.granted) {
+      Camera.requestCameraPermissionsAsync();
+      console.log("No access to camera");
+      return;
+    }
+
+    setOpenCamera(!openCamera);
+  };
 
   return (
-    <View className=" h-full bg-[#DEE9FD] dark:bg-[#212121]">
-      <StatusBar
-        backgroundColor={
-          colorScheme === "light"
-            ? "#DEE9FD"
-            : colorScheme == "dark"
-              ? "#212121"
-              : "DEE9FD"
-        }
-        style={colorScheme === "dark" ? "light" : "dark"}
-      />
-      <View className="mt-6 flex-row justify-between px-5">
-        <View className="mx-auto mt-5 flex w-16 flex-row items-center justify-center rounded-full bg-[#DEE9FD] p-2 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
-          {/* <Switch value={colorScheme =='dark'} onChange={toggleColorScheme}/> */}
-          <TouchableOpacity onPress={() => updateThemeAndStorage(storedTheme === 'dark' ? 'light' : 'dark')}>
-            <Ionicons
-              size={32}
-              color={
-                colorScheme === "dark"
-                  ? "#DEE9FD"
-                  : colorScheme == "light"
-                    ? "#212121"
-                    : "DEE9FD"
+    <>
+      {renderCamera()}
+      <View className=" h-full bg-[#DEE9FD] dark:bg-[#212121]">
+        <StatusBar
+          backgroundColor={
+            colorScheme === "light"
+              ? "#DEE9FD"
+              : colorScheme == "dark"
+                ? "#212121"
+                : "DEE9FD"
+          }
+          style={colorScheme === "dark" ? "light" : "dark"}
+        />
+        <View className="mt-6 flex-row justify-between px-5">
+          <View className="mx-auto mt-5 flex w-16 flex-row items-center justify-center rounded-full bg-[#DEE9FD] p-2 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
+            {/* <Switch value={colorScheme =='dark'} onChange={toggleColorScheme}/> */}
+            <TouchableOpacity
+              onPress={() =>
+                updateThemeAndStorage(
+                  colorScheme === "light" ? "dark" : "light",
+                )
               }
-              name={
-                colorScheme === "light"
-                  ? "sunny-outline"
-                  : colorScheme == "dark"
-                    ? "moon-outline"
-                    : "sunny-outline"
-              }
+            >
+              <Ionicons
+                size={32}
+                color={
+                  colorScheme === "dark"
+                    ? "#DEE9FD"
+                    : colorScheme == "light"
+                      ? "#212121"
+                      : "DEE9FD"
+                }
+                name={
+                  colorScheme === "light"
+                    ? "sunny-outline"
+                    : colorScheme == "dark"
+                      ? "moon-outline"
+                      : "sunny-outline"
+                }
+              />
+            </TouchableOpacity>
+          </View>
+          <View className="mx-auto mt-5 flex w-48 flex-row items-center justify-center rounded-full bg-[#cedfff] p-2 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white ">
+            <Image
+              source={require("../../assets/images/logo.png")}
+              className="h-8 w-6"
             />
-          </TouchableOpacity>
-        </View>
-        <View className="mx-auto mt-5 flex w-48 flex-row items-center justify-center rounded-full bg-[#cedfff] p-2 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white ">
-          <Image
-            source={require("../../assets/images/logo.png")}
-            className="h-8 w-6"
-          />
-          <Text className="p-2 text-center text-xl font-bold tracking-widest  text-gray-600 dark:text-neutral-300">
-            {company?.name ? company.name : ""}
-          </Text>
-        </View>
-        {/* logout */}
-        <View className="mx-auto mt-5 flex w-16 flex-row items-center justify-center rounded-full bg-[#DEE9FD] p-2 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white ">
-          <TouchableOpacity
-            onPress={async () => {
-              await storage.remove({ key: "user" });
-              await storage.remove({ key: "token" });
-              await storage.remove({ key: "attendance" });
-              await storage.remove({ key: "attendances" });
-              await storage.remove({ key: "paidLeaves" });
-              await storage.save({ key: "isLoggedin", data: false });
-
-              navigation.navigate("Login");
-            }}
-          >
-            <Ionicons size={32} color="red" name="log-out-outline" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <ScrollView
-        className="mt-2 h-full bg-[#DEE9FD] dark:bg-[#212121]"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <View className=" mb-2 mt-2 px-8">
-          <View className="rounded-[30px] bg-[#cedfff] p-4 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
-            <Text className="text-lg font-semibold  text-gray-600 dark:text-neutral-300">
-              Halo,
-            </Text>
-            <Text className="text-xl font-bold  text-gray-600 dark:text-neutral-300">
-              {fullName}
+            <Text className="p-2 text-center text-xl font-bold tracking-widest  text-gray-600 dark:text-neutral-300">
+              {company?.name ? company.name : ""}
             </Text>
           </View>
+          {/* logout */}
+          <View className="mx-auto mt-5 flex w-16 flex-row items-center justify-center rounded-full bg-[#DEE9FD] p-2 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white ">
+            <TouchableOpacity
+              onPress={async () => {
+                await storage.remove({ key: "user" });
+                await storage.remove({ key: "token" });
+                await storage.remove({ key: "attendance" });
+                await storage.remove({ key: "attendances" });
+                await storage.remove({ key: "paidLeaves" });
+                await storage.save({ key: "isLoggedin", data: false });
+
+                navigation.navigate("Login");
+              }}
+            >
+              <Ionicons size={32} color="red" name="log-out-outline" />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View className="p-2">
-          <View className="rounded-[60px] px-5">
-            <View className="flex flex-col justify-center gap-8">
-              <View className="rounded-[60px] bg-[#cedfff]  p-4 shadow shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
-                <View className="mb-4 items-center">
-                  <Text className="text-3xl font-bold  text-gray-600 dark:text-neutral-300">
-                    {day},
-                  </Text>
-                  <Text className="text-2xl font-bold  text-gray-600 dark:text-neutral-300">
-                    {currentDate}
-                  </Text>
-                </View>
-                <Separator />
-                <View className="flex-row justify-around">
-                  <View className="mt-3 items-center">
-                    <Text className="text-lg font-bold  text-gray-600 dark:text-neutral-300">
-                      Masuk
+        <ScrollView
+          className="mt-2 h-full bg-[#DEE9FD] dark:bg-[#212121]"
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View className=" mb-2 mt-2 px-8">
+            <View className="rounded-[30px] bg-[#cedfff] p-4 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
+              <Text className="text-lg font-semibold  text-gray-600 dark:text-neutral-300">
+                Halo,
+              </Text>
+              <Text className="text-xl font-bold  text-gray-600 dark:text-neutral-300">
+                {user ? user.fullName : "—"}
+              </Text>
+            </View>
+          </View>
+          <View className="p-2">
+            <View className="rounded-[60px] px-5">
+              <View className="flex flex-col justify-center gap-8">
+                <View className="rounded-[60px] bg-[#cedfff]  p-4 shadow shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
+                  <View className="mb-4 items-center">
+                    <Text className="text-3xl font-bold  text-gray-600 dark:text-neutral-300">
+                      {day},
                     </Text>
-                    <Text
+                    <Text className="text-2xl font-bold  text-gray-600 dark:text-neutral-300">
+                      {currentDate}
+                    </Text>
+                  </View>
+                  <Separator />
+                  <View className="flex-row justify-around">
+                    <View className="mt-3 items-center">
+                      <Text className="text-lg font-bold  text-gray-600 dark:text-neutral-300">
+                        Masuk
+                      </Text>
+                      <Text
+                        className={
+                          day === "Sabtu" || day === "Minggu"
+                            ? "text-2xl  font-medium text-gray-600 dark:text-neutral-300"
+                            : currentTime >= company?.checkInTime!
+                              ? "text-2xl font-medium text-red-500"
+                              : "text-2xl  font-medium text-gray-600 dark:text-neutral-300"
+                        }
+                      >
+                        {day === "Sabtu" || day === "Minggu"
+                          ? "—"
+                          : attendance?.checkIn
+                            ? attendance.checkIn
+                            : currentTime}
+                      </Text>
+                    </View>
+                    <View className="mt-3 items-center">
+                      <Text className="text-lg font-bold  text-gray-600 dark:text-neutral-300">
+                        Keluar
+                      </Text>
+                      <Text className="text-2xl font-medium  text-gray-600 dark:text-neutral-300">
+                        {day === "Sabtu" || day === "Minggu"
+                          ? "—"
+                          : attendance?.checkIn && !attendance?.checkOut
+                            ? currentTime
+                            : attendance?.checkOut
+                              ? attendance.checkOut
+                              : "—"}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+
+                <View className="rounded-[50px] bg-[#cedfff]  px-4 py-6 shadow shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
+                  <View>
+                    <Text className="text-md font-semibold  tracking-wide text-gray-600 dark:text-neutral-300">
+                      Presensi Masuk/Keluar
+                    </Text>
+                  </View>
+                  <Separator />
+                  <View className="flex-row justify-around pt-4">
+                    <TouchableOpacity
                       className={
                         day === "Sabtu" || day === "Minggu"
-                          ? "text-2xl  font-medium text-gray-600 dark:text-neutral-300"
-                          : currentTime >= company?.checkInTime!
-                            ? "text-2xl font-medium text-red-500"
-                            : "text-2xl  font-medium text-gray-600 dark:text-neutral-300"
-                      }
-                    >
-                      {day === "Sabtu" || day === "Minggu"
-                        ? "—"
-                        : attendance?.checkIn
-                          ? attendance.checkIn
-                          : currentTime}
-                    </Text>
-                  </View>
-                  <View className="mt-3 items-center">
-                    <Text className="text-lg font-bold  text-gray-600 dark:text-neutral-300">
-                      Keluar
-                    </Text>
-                    <Text className="text-2xl font-medium  text-gray-600 dark:text-neutral-300">
-                      {day === "Sabtu" || day === "Minggu"
-                        ? "—"
-                        : attendance?.checkIn && !attendance?.checkOut
-                          ? currentTime
-                          : attendance?.checkOut
-                            ? attendance.checkOut
-                            : "—"}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-
-              <View className="rounded-[50px] bg-[#cedfff]  px-4 py-6 shadow shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
-                <View>
-                  <Text className="text-md font-semibold  tracking-wide text-gray-600 dark:text-neutral-300">
-                    Presensi Masuk/Keluar
-                  </Text>
-                </View>
-                <Separator />
-                <View className="flex-row justify-around pt-4">
-                  <TouchableOpacity
-                    className={
-                      day === "Sabtu" || day === "Minggu"
-                        ? "rounded-[30px] bg-[#e3e3e3] p-2"
-                        : attendance?.checkIn
                           ? "rounded-[30px] bg-[#e3e3e3] p-2"
-                          : "rounded-[30px] bg-[#90ee90] p-2"
-                    }
-                    disabled={
-                      day === "Sabtu" || day === "Minggu"
-                        ? true
-                        : attendance?.checkIn
-                          ? true
-                          : false
-                    }
-                    onPress={async () => {
-                      let status: IAttendanceStatus = "hadir";
-                      currentTime >= company?.checkInTime!
-                        ? (status = "terlambat")
-                        : (status = "hadir");
-
-                      await postAttendance(status);
-
-                      const att = await storage.load({ key: "attendance" });
-                      const attData = JSON.parse(att);
-                      setAttendance(attData);
-                    }}
-                  >
-                    <Text className="px-9 text-lg font-semibold  text-gray-600">
-                      Masuk
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className={
-                      day === "Sabtu" || day === "Minggu"
-                        ? "rounded-[30px] bg-[#e3e3e3] p-2"
-                        : attendance?.checkIn && attendance?.checkOut
-                          ? "invisible rounded-[30px] bg-[#e3e3e3] p-2"
                           : attendance?.checkIn
-                            ? "visible rounded-[30px] bg-[#00A12D] p-2"
-                            : "rounded-[30px] bg-[#e3e3e3] p-2"
-                    }
-                    disabled={
-                      day === "Sabtu" || day === "Minggu"
-                        ? true
-                        : attendance?.checkIn && attendance?.checkOut
-                          ? true
-                          : attendance?.checkIn
-                            ? false
-                            : true
-                    }
-                    onPress={async () => {
-                      await updateAttendance(attendance?.id!);
+                            ? "rounded-[30px] bg-[#e3e3e3] p-2"
+                            : "rounded-[30px] bg-[#90ee90] p-2"
+                      }
+                      onPress={() => {
+                        toggleCamera();
+                        setCameraFor("checkIn");
+                      }}
+                      // disabled={
+                      //   day === "Sabtu" || day === "Minggu"
+                      //     ? true
+                      //     : attendance?.checkIn
+                      //       ? true
+                      //       : false
+                      // }
+                      // onPress={async () => {
+                      //   let status: IAttendanceStatus = "hadir";
+                      //   currentTime >= company?.checkInTime!
+                      //     ? (status = "terlambat")
+                      //     : (status = "hadir");
 
-                      const att = await storage.load({ key: "attendance" });
-                      const attData = JSON.parse(att);
-                      setAttendance(attData);
-                    }}
-                  >
-                    <Text className="px-9 text-lg font-semibold text-gray-600 ">
-                      Keluar
-                    </Text>
-                  </TouchableOpacity>
+                      //   await postAttendance(status);
+
+                      //   const att = await storage.load({ key: "attendance" });
+                      //   const attData = JSON.parse(att);
+                      //   setAttendance(attData);
+                      // }}
+                    >
+                      <Text className="px-9 text-lg font-semibold  text-gray-600">
+                        Masuk
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      className={
+                        day === "Sabtu" || day === "Minggu"
+                          ? "rounded-[30px] bg-[#e3e3e3] p-2"
+                          : attendance?.checkIn && attendance?.checkOut
+                            ? "invisible rounded-[30px] bg-[#e3e3e3] p-2"
+                            : attendance?.checkIn
+                              ? "visible rounded-[30px] bg-[#00A12D] p-2"
+                              : "rounded-[30px] bg-[#e3e3e3] p-2"
+                      }
+                      disabled={
+                        day === "Sabtu" || day === "Minggu"
+                          ? true
+                          : attendance?.checkIn && attendance?.checkOut
+                            ? true
+                            : attendance?.checkIn
+                              ? false
+                              : true
+                      }
+                      onPress={async () => {
+                        await updateAttendance(attendance?.id!);
+
+                        const att = await storage.load({ key: "attendance" });
+                        const attData = JSON.parse(att);
+                        setAttendance(attData);
+                      }}
+                    >
+                      <Text className="px-9 text-lg font-semibold text-gray-600 ">
+                        Keluar
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-              <View className="mb-20 rounded-[50px]  bg-[#cedfff] px-4 py-6 shadow shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
-                {renderModal()}
-                {renderSakit()}
-                <View>
-                  <Text className="text-md font-semibold  tracking-wide text-gray-600 dark:text-neutral-300">
-                    Pengajuan Izin Cuti
-                  </Text>
-                </View>
-                <Separator />
-                <View className="flex-row justify-around pt-4">
-                  <Pressable
-                    className={
-                      day === "Sabtu" || day === "Minggu"
-                        ? "rounded-[30px] bg-[#e3e3e3] px-8 py-2"
-                        : activePaidLeave
-                          ? "rounded-[30px] bg-[#e3e3e3] px-8 py-2"
-                          : "rounded-[30px] bg-[#90ee90] px-8 py-2"
-                    }
-                    onPress={() => setOpenModal(true)}
-                  >
-                    <Text className="px-5 text-lg font-semibold  text-gray-600">
-                      Cuti
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    className={
-                      day === "Sabtu" || day === "Minggu"
-                        ? "rounded-[30px] bg-[#e3e3e3] px-8 py-2"
-                        : activePaidLeave
-                          ? "rounded-[30px] bg-[#e3e3e3] px-8 py-2"
-                          : "rounded-[30px] bg-[#90ee90] px-8 py-2"
-                    }
-                    onPress={() => setOpenSakit(true)}
-                  >
-                    <Text className="px-5 text-lg font-semibold  text-gray-600">
-                      Sakit
-                    </Text>
-                  </Pressable>
-                </View>
-                
-                <View className="flex-row justify-around pt-4">
-                  <View className="flex-col">
-                    <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
-                      Alasan
-                    </Text>
-                    <Text className="text-md  font-semibold text-gray-600 dark:text-neutral-300">
-                      {activePaidLeave?.reason ? activePaidLeave.reason : "—"}
+                <View className="mb-20 rounded-[50px]  bg-[#cedfff] px-4 py-6 shadow shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
+                  {renderModal()}
+                  {renderSakit()}
+                  <View>
+                    <Text className="text-md font-semibold  tracking-wide text-gray-600 dark:text-neutral-300">
+                      Pengajuan Izin Cuti
                     </Text>
                   </View>
-                  <View className="flex-col">
-                    <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
-                      Mulai
-                    </Text>
-                    <Text className="text-md  font-semibold text-gray-600 dark:text-neutral-300">
-                      {activePaidLeave?.startDate
-                        ? activePaidLeave.startDate
-                        : "—"}
-                    </Text>
+                  <Separator />
+                  <View className="flex-row justify-around pt-4">
+                    <Pressable
+                      className={
+                        day === "Sabtu" || day === "Minggu"
+                          ? "rounded-[30px] bg-[#e3e3e3] px-8 py-2"
+                          : activePaidLeave
+                            ? "rounded-[30px] bg-[#e3e3e3] px-8 py-2"
+                            : "rounded-[30px] bg-[#90ee90] px-8 py-2"
+                      }
+                      onPress={() => setOpenModal(true)}
+                    >
+                      <Text className="px-5 text-lg font-semibold  text-gray-600">
+                        Cuti
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      className={
+                        day === "Sabtu" || day === "Minggu"
+                          ? "rounded-[30px] bg-[#e3e3e3] px-8 py-2"
+                          : activePaidLeave
+                            ? "rounded-[30px] bg-[#e3e3e3] px-8 py-2"
+                            : "rounded-[30px] bg-[#90ee90] px-8 py-2"
+                      }
+                      onPress={() => setOpenSakit(true)}
+                    >
+                      <Text className="px-5 text-lg font-semibold  text-gray-600">
+                        Sakit
+                      </Text>
+                    </Pressable>
                   </View>
-                  <View className="flex-col">
-                    <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
-                      Selama
-                    </Text>
-                    <Text className="text-md  font-semibold text-gray-600 dark:text-neutral-300">
-                      {activePaidLeave?.days ? activePaidLeave.days : "—"} Hari
-                    </Text>
+
+                  <View className="flex-row justify-around pt-4">
+                    <View className="flex-col">
+                      <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
+                        Alasan
+                      </Text>
+                      <Text className="text-md  font-semibold text-gray-600 dark:text-neutral-300">
+                        {activePaidLeave?.reason ? activePaidLeave.reason : "—"}
+                      </Text>
+                    </View>
+                    <View className="flex-col">
+                      <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
+                        Mulai
+                      </Text>
+                      <Text className="text-md  font-semibold text-gray-600 dark:text-neutral-300">
+                        {activePaidLeave?.startDate
+                          ? formatISODate(activePaidLeave.startDate)
+                          : "—"}
+                      </Text>
+                    </View>
+                    <View className="flex-col">
+                      <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
+                        Selama
+                      </Text>
+                      <Text className="text-md  font-semibold text-gray-600 dark:text-neutral-300">
+                        {activePaidLeave?.days ? activePaidLeave.days : "—"}{" "}
+                        Hari
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-        <Toast />
-      </ScrollView>
-    </View>
+          <Toast />
+        </ScrollView>
+      </View>
+    </>
   );
+
+  function renderCamera() {
+    return (
+      <Modal visible={openCamera} animationType="slide" transparent={true}>
+        <View className="h-full w-full justify-center bg-[#212121]">
+          {cameraFor === "checkIn" ? (
+            <Text className="absolute left-5 top-10 text-xl text-white dark:text-neutral-300">
+              {hasCameraPermission?.granted
+                ? isFaceDetected === true
+                  ? "Face detected"
+                  : "No face detected or more than one face detected"
+                : "No access to camera"}
+            </Text>
+          ) : (
+            <Text className="absolute left-5 top-10 text-xl text-white dark:text-neutral-300">
+              {hasCameraPermission?.granted
+                ? "Ambil foto surat sakit"
+                : "No access to camera"}
+            </Text>
+          )}
+          <TouchableOpacity
+            onPress={() => setOpenCamera(false)}
+            className="absolute right-5 top-5"
+          >
+            <Ionicons name="close" size={50} color="white" />
+          </TouchableOpacity>
+          {!image ? (
+            <Camera
+              className="aspect-[3/4] w-full"
+              type={type}
+              ref={cameraRef}
+              flashMode={flash}
+              faceDetectorSettings={
+                hasCameraPermission?.granted
+                  ? {
+                      mode: "fast",
+                      detectLandmarks: "all",
+                      runClassifications: "all",
+                    }
+                  : undefined
+              }
+              onFacesDetected={(face) => {
+                setIsFaceDetected(face.faces.length === 1);
+              }}
+            />
+          ) : (
+            <Image
+              source={{ uri: image.uri }}
+              className="aspect-[3/4] w-full"
+            />
+          )}
+
+          <View className="absolute bottom-10 w-full flex-row justify-center">
+            {image ? (
+              <View className="w-full flex-row items-center justify-between px-10">
+                <Ionicons
+                  name="arrow-back"
+                  size={50}
+                  color="white"
+                  onPress={() => setImage(undefined)}
+                />
+                <Ionicons
+                  name="checkmark"
+                  size={50}
+                  color="white"
+                  onPress={async () => {
+                    if (cameraFor === "checkIn") {
+                      let status: IAttendanceStatus = "hadir";
+                      currentTime >= company?.checkInTime!
+                        ? (status = "terlambat")
+                        : (status = "hadir");
+
+                      postAttendance(status, image.base64!);
+
+                      const att = await storage.load({ key: "attendance" });
+                      const attData = JSON.parse(att);
+                      setAttendance(attData);
+
+                      setImage(undefined);
+                      setOpenCamera(false);
+                    } else if (cameraFor === "sakit") {
+                      setOpenCamera(false);
+                    }
+                  }}
+                />
+              </View>
+            ) : (
+              <View className="w-full flex-row justify-between px-10">
+                <Ionicons
+                  name="camera-reverse"
+                  size={50}
+                  color="white"
+                  onPress={toggleCameraType}
+                />
+                <Ionicons
+                  name="camera"
+                  size={50}
+                  color="white"
+                  onPress={
+                    cameraFor === "sakit" || isFaceDetected === true
+                      ? takePicture
+                      : () => {}
+                  }
+                />
+                <Ionicons
+                  name={flash === FlashMode.off ? "flash-off" : "flash"}
+                  size={50}
+                  color="white"
+                  onPress={() =>
+                    setFlash(
+                      flash === FlashMode.off ? FlashMode.on : FlashMode.off,
+                    )
+                  }
+                />
+              </View>
+            )}
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
   function renderModal() {
     return (
       <Modal visible={openModal} animationType="slide" transparent={true}>
