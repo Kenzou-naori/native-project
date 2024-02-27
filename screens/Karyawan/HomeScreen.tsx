@@ -64,10 +64,10 @@ export default function HomeScreen({ navigation }: any) {
   const [refreshing, setRefreshing] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
+  const [type, setType] = useState(CameraType.front);
   const [flash, setFlash] = useState(FlashMode.off);
   const [openModal, setOpenModal] = useState(false);
   const [openSakit, setOpenSakit] = useState(false);
-  const [type, setType] = useState(CameraType.back);
   const [cameraFor, setCameraFor] = useState("");
   const [monthDate, setMonthDate] = useState(0);
   const [yearDate, setYearDate] = useState(0);
@@ -105,46 +105,43 @@ export default function HomeScreen({ navigation }: any) {
     month = month.padStart(2, "0");
     year = year.padStart(2, "0");
 
-    await storage.load({ key: "theme" }).then(async (res) => {
-      updateThemeAndStorage(res);
-
-      await getAttendances(date + "-" + month + "-" + year).then(
-        async (res) => {
-          if (res instanceof AxiosError) {
-            console.log(res.response);
-          } else {
-            await storage.load({ key: "attendance" }).then(async (res) => {
-              const attendancesData = JSON.parse(res);
-              setAttendance(attendancesData);
-
-              await getCompany().then(async (res) => {
-                if (res instanceof AxiosError) {
-                  console.log(res);
-                } else {
-                  setCompany(res.data.data.company);
-
-                  await GetPaidLeave().then(async (res) => {
-                    if (res instanceof AxiosError) {
-                      console.log(res.response?.data.message);
-                    } else {
-                      setActivePaidLeave(res.data.data.paidLeave);
-
-                      await GetPaidLeaves().then((res) => {
-                        if (res instanceof AxiosError) {
-                          console.log(res.response?.data.message);
-                        } else {
-                          setPaidLeaves(res.data.data.paidLeaves);
-                          setRefreshing(false);
-                        }
-                      });
-                    }
-                  });
-                }
-              });
-            });
-          }
-        },
-      );
+    await Promise.allSettled([
+      storage.load({ key: "theme" }).then(async (res) => {
+        updateThemeAndStorage(res);
+      }),
+      getAttendances(date + "-" + month + "-" + year).then(async (res) => {
+        if (res instanceof AxiosError) {
+          console.log(res.response);
+        } else {
+          await storage.load({ key: "attendance" }).then(async (res) => {
+            const attendancesData = JSON.parse(res);
+            setAttendance(attendancesData);
+          });
+        }
+      }),
+      getCompany().then(async (res) => {
+        if (res instanceof AxiosError) {
+          console.log(res);
+        } else {
+          setCompany(res.data.data.company);
+        }
+      }),
+      GetPaidLeave().then(async (res) => {
+        if (res instanceof AxiosError) {
+          console.log(res.response?.data.message);
+        } else {
+          setActivePaidLeave(res.data.data.paidLeave);
+        }
+      }),
+      GetPaidLeaves().then((res) => {
+        if (res instanceof AxiosError) {
+          console.log(res.response?.data.message);
+        } else {
+          setPaidLeaves(res.data.data.paidLeaves);
+        }
+      }),
+    ]).then(() => {
+      setRefreshing(false);
     });
   }, []);
   // end refresh
@@ -188,48 +185,46 @@ export default function HomeScreen({ navigation }: any) {
     }
 
     async function loadDatas() {
+      setRefreshing(true);
       date = date.padStart(2, "0");
       month = (parseInt(month) + 1).toString().padStart(2, "0");
       year = year.padStart(2, "0");
 
-      setRefreshing(true);
-      await getAttendances(date + "-" + month + "-" + year).then(
-        async (res) => {
+      await Promise.allSettled([
+        getAttendances(date + "-" + month + "-" + year).then(async (res) => {
           if (res instanceof AxiosError) {
             console.log(res.response);
           } else {
             await storage.load({ key: "attendance" }).then(async (res) => {
               const attendancesData = JSON.parse(res);
               setAttendance(attendancesData);
-
-              await getCompany().then(async (res) => {
-                if (res instanceof AxiosError) {
-                  console.log(res);
-                } else {
-                  setCompany(res.data.data.company);
-
-                  await GetPaidLeave().then(async (res) => {
-                    if (res instanceof AxiosError) {
-                      console.log(res.response?.data.message);
-                    } else {
-                      setActivePaidLeave(res.data.data.paidLeave);
-
-                      await GetPaidLeaves().then((res) => {
-                        if (res instanceof AxiosError) {
-                          console.log(res.response?.data.message);
-                        } else {
-                          setPaidLeaves(res.data.data.paidLeaves);
-                          setRefreshing(false);
-                        }
-                      });
-                    }
-                  });
-                }
-              });
             });
           }
-        },
-      );
+        }),
+        getCompany().then(async (res) => {
+          if (res instanceof AxiosError) {
+            console.log(res);
+          } else {
+            setCompany(res.data.data.company);
+          }
+        }),
+        GetPaidLeave().then(async (res) => {
+          if (res instanceof AxiosError) {
+            console.log(res.response?.data.message);
+          } else {
+            setActivePaidLeave(res.data.data.paidLeave);
+          }
+        }),
+        GetPaidLeaves().then((res) => {
+          if (res instanceof AxiosError) {
+            console.log(res.response?.data.message);
+          } else {
+            setPaidLeaves(res.data.data.paidLeaves);
+          }
+        }),
+      ]).then(() => {
+        setRefreshing(false);
+      });
     }
     const intervalTD = setInterval(() => {
       loadTime();
@@ -480,11 +475,13 @@ export default function HomeScreen({ navigation }: any) {
                               : true
                       }
                       onPress={async () => {
+                        setRefreshing(true);
                         await updateAttendance(attendance?.id!);
 
                         const att = await storage.load({ key: "attendance" });
                         const attData = JSON.parse(att);
                         setAttendance(attData);
+                        setRefreshing(false);
                       }}
                     >
                       <Text className="px-9 text-lg font-semibold text-gray-600 ">
@@ -643,14 +640,24 @@ export default function HomeScreen({ navigation }: any) {
                         ? (status = "terlambat")
                         : (status = "hadir");
 
-                      postAttendance(status, image.base64!);
-
-                      const att = await storage.load({ key: "attendance" });
-                      const attData = JSON.parse(att);
-                      setAttendance(attData);
-
                       setImage(undefined);
                       setOpenCamera(false);
+                      setRefreshing(true);
+
+                      await postAttendance(status, image.base64!).then(
+                        async (asd) => {
+                          if (asd instanceof AxiosError) {
+                            console.log(asd.response?.data);
+                          }
+                          console.log(asd);
+
+                          const att = await storage.load({ key: "attendance" });
+                          const attData = JSON.parse(att);
+                          setAttendance(attData);
+                        },
+                      );
+
+                      setRefreshing(false);
                     } else if (cameraFor === "sakit") {
                       setOpenCamera(false);
                     }

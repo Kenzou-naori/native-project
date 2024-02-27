@@ -1,44 +1,45 @@
+import storage from "../../utils/storage";
+import {
+  GetUserAttendances,
+  GetUsers,
+} from "../../api/admin";
+
+import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+
+import { PieChart } from "react-native-chart-kit";
+import { DataTable } from "react-native-paper";
+import { useEffect, useState } from "react";
+import { useColorScheme } from "nativewind";
+import { AxiosError } from "axios";
 import {
   Text,
   View,
   ScrollView,
-  StyleSheet,
   Modal,
   TouchableOpacity,
-  TextInput,
   Pressable,
 } from "react-native";
 
-import { useEffect, useState } from "react";
-import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useColorScheme } from "nativewind";
-
-import { DataTable } from "react-native-paper";
-import { CreateUser, DeleteUser, GetUsers, UpdateUser } from "../../api/admin";
-import { AxiosError } from "axios";
-import storage from "../../utils/storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { getCompany } from "../../api/company";
 
-const KelolaKaryawan = () => {
-  const [loading, setLoading] = useState(false);
-  const [showDeleteConfrim, setShowDeleteConfrim] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
+const KelolaAbsensiKaryawan = () => {
+  const [selKaryawan, setSelKaryawan] = useState<IUser>();
   const [karyawan, setKaryawan] = useState<IUser[]>([]);
   const [totalKaryawan, setTotalKaryawan] = useState(0);
-  const [page, setPage] = useState(0);
-  const [karyawanId, setKaryawanId] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const from = page * 25;
-  const to = Math.min((page + 1) * 25, totalKaryawan);
+  const [showDetail, setShowDetail] = useState(false);
+  const [totalPresent, setTotalPresent] = useState(0);
+  const [totalAbsent, setTotalAbsent] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [chart, setChart] = useState(1);
+  const [page, setPage] = useState(0);
+
   const { colorScheme, toggleColorScheme } = useColorScheme();
+
+  const to = Math.min((page + 1) * 25, totalKaryawan);
+  const from = page * 25;
 
   const toggleDropdown = () => {
     setVisible(!visible);
@@ -46,9 +47,9 @@ const KelolaKaryawan = () => {
 
   useEffect(() => {
     setPage(0);
+    setLoading(true);
 
     async function loadKaryawan() {
-      setLoading(true);
       const karyawan = await GetUsers(page + 1);
       if (karyawan instanceof AxiosError) {
         console.log(karyawan);
@@ -60,25 +61,11 @@ const KelolaKaryawan = () => {
           data: karyawan.data.data.users,
         });
       }
-      setLoading(false);
     }
 
-    async function loadIpAddresses() {
-      setLoading(true);
-      const company = await getCompany();
-      if (company instanceof AxiosError) {
-        console.log(company);
-      } else {
-        await storage.save({
-          key: "ipAddresses",
-          data: JSON.stringify(company.data.data.company.ipAddresses),
-        });
-      }
+    Promise.allSettled([loadKaryawan()]).then(() => {
       setLoading(false);
-    }
-
-    loadIpAddresses();
-    loadKaryawan();
+    });
   }, []);
 
   function sortAscending() {
@@ -184,30 +171,38 @@ const KelolaKaryawan = () => {
       );
     }
   }
+
+  const chartConfig = {
+    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: "#08130D",
+    backgroundGradientToOpacity: 0.5,
+    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false, // optional
+  };
+  const data = [
+    {
+      name: "Masuk",
+      attendance: totalPresent,
+      color: "rgb(0, 255, 146)",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },
+    {
+      name: "Tidak Masuk",
+      attendance: totalAbsent,
+      color: "rgb(242,69,69)",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },
+  ];
+
   return (
     <ScrollView className="w-full bg-[#DEE9FD] dark:bg-[#212121]">
       <Spinner visible={loading} textContent={"Loading..."} />
       <View className="px-3 py-6 lg:px-10 xl:px-24 2xl:px-60">
-        <View className="flex-row">
-          <View className="w-[60%] flex-row flex-wrap gap-4 py-4">
-            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] dark:shadow-white lg:w-[247px]">
-              <Ionicons size={32} color= 
-              {colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD"}  name="people-outline" />
-              <View className="ml-4 flex-col">
-                <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
-                  {totalKaryawan}
-                </Text>
-                <Text className="text-xl font-semibold text-gray-600 dark:text-neutral-300">
-                  Karyawan
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
         <View className="flex-row">
           <TouchableOpacity
             onPress={async () => {
@@ -256,16 +251,7 @@ const KelolaKaryawan = () => {
                     />
                   </View>
                 </Pressable>
-                <TouchableOpacity
-                  onPress={() => setShowModal(true)}
-                  className="rounded-md border border-gray-600 p-1"
-                >
-                  <Text className="font-semibold text-gray-600 dark:text-neutral-300">
-                    Tambah Karyawan
-                  </Text>
-                </TouchableOpacity>
               </View>
-              {renderForm()}
             </View>
           </View>
 
@@ -462,36 +448,36 @@ const KelolaKaryawan = () => {
                           : "DEE9FD",
                   }}
                 >
-                  <View className="flex-col gap-1 lg:flex-row">
-                    <TouchableOpacity
-                      onPress={() => {
-                        setKaryawanId(karyawan.id);
+                  {karyawan.accessLevel < 1 ? (
+                    <View className="flex-col gap-1 lg:flex-row">
+                      <TouchableOpacity
+                        className="rounded-md border border-gray-600 bg-red-200 p-3"
+                        onPress={async () => {
+                          setLoading(true);
+                          setSelKaryawan(karyawan);
 
-                        setShowDeleteConfrim(true);
-                      }}
-                      className="rounded-md border border-gray-600 bg-red-200 p-3"
-                    >
-                      <Text className="text-gray-600">Hapus</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setKaryawanId(karyawan.id);
-                        setFullName(karyawan.fullName);
-                        setEmail(karyawan.email);
-                        setPhone(karyawan.phone);
+                          await GetUserAttendances(karyawan.id);
+                          const totalAttendances = await storage.load({
+                            key: "totalAttendances",
+                          });
+                          const totalAttendancesData: TotalDataAttendance =
+                            JSON.parse(totalAttendances);
+                          setTotalPresent(totalAttendancesData.weekly.present);
+                          setTotalAbsent(totalAttendancesData.weekly.absent);
 
-                        setShowUpdateModal(true);
-                      }}
-                      className="rounded-md border border-gray-600 bg-blue-200 p-3"
-                    >
-                      <Text className="text-gray-600">Edit</Text>
-                    </TouchableOpacity>
-                  </View>
+                          setLoading(false);
+                          setShowDetail(true);
+                        }}
+                      >
+                        <Text className="text-gray-600">Detail</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
                 </DataTable.Cell>
               </DataTable.Row>
             ))}
-            {renderUpdateForm()}
-            {renderDeleteConfrim()}
 
             <DataTable.Pagination
               page={page}
@@ -513,255 +499,113 @@ const KelolaKaryawan = () => {
               showFastPaginationControls
               numberOfItemsPerPage={25}
               selectPageDropdownRippleColor={"white"}
-              dropdownItemRippleColor={'white'}
-              paginationControlRippleColor={'white'}
+              dropdownItemRippleColor={"white"}
+              paginationControlRippleColor={"white"}
             />
           </DataTable>
         </View>
       </View>
+
+      {renderDetail()}
     </ScrollView>
   );
-  function renderForm() {
+
+  function renderDetail() {
     return (
-      <Modal animationType="fade" transparent={true} visible={showModal}>
+      <Modal animationType="fade" transparent={true} visible={showDetail}>
         <View className="h-full items-center justify-center">
-          <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
+          <View className="w-full rounded-2xl bg-[#f0fafd] p-5 dark:bg-[#3a3a3a] lg:w-[80%]">
             <View className="flex-row justify-between">
-              <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
-                Tambah Karyawan
+              <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300 ">
+                Detail Presensi
               </Text>
-              <TouchableOpacity onPress={() => setShowModal(false)}>
+              <TouchableOpacity onPress={() => setShowDetail(false)}>
                 <FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
               </TouchableOpacity>
             </View>
-            {/* <View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-[156] p-5 -mb-56"> */}
-            {/* <View className="flex-row justify-between">
-						<Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">Tambah Tugas</Text>
-						<TouchableOpacity onPress={() => setShowModal(false)}>
-							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
-						</TouchableOpacity>
-					</View> */}
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View className="my-5 flex-col items-center justify-center">
-                {/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
-                    Nama Lengkap
-                  </Text>
-                  <TextInput
-                    className="border-b-2 border-b-gray-500 py-3 text-lg"
-                    keyboardType="default"
-                    onChangeText={(text) => setFullName(text)}
-                  />
-                </View>
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
-                    Password
-                  </Text>
-                  <TextInput
-                    className="border-b-2 border-b-gray-500 py-3 text-lg"
-                    // value={value}
-                    // keyboardType="default"
-                    onChangeText={(text) => setPassword(text)}
-                  />
-                </View>
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
-                    Email
-                  </Text>
-                  <TextInput
-                    className="border-b-2 border-b-gray-500 py-3 text-lg"
-                    // value={value}
-                    // keyboardType="default"
-                    onChangeText={(text) => setEmail(text)}
-                  />
-                </View>
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
-                    No. HP
-                  </Text>
-                  <TextInput
-                    className="border-b-2 border-b-gray-500 py-3 text-lg"
-                    // value={value}
-                    // keyboardType="default"
-                    onChangeText={(text) => setPhone(text)}
-                  />
+            <View className="flex-row">
+              <View className=" items-center justify-center">
+                <PieChart
+                  data={data}
+                  width={420}
+                  height={220}
+                  chartConfig={chartConfig}
+                  accessor={"attendance"}
+                  backgroundColor={"transparent"}
+                  paddingLeft={"0"}
+                  absolute
+                  avoidFalseZero
+                />
+                <View className="flex-row flex-wrap gap-4">
+                  <TouchableOpacity
+                    className={
+                      "rounded-md p-2 " +
+                      (chart === 1 ? "bg-gray-500" : "bg-blue-500")
+                    }
+                    onPress={async () => {
+                      const totalAttendances = await storage.load({
+                        key: "totalAttendances",
+                      });
+                      const totalAttendancesData: TotalDataAttendance =
+                        JSON.parse(totalAttendances);
+                      setChart(1);
+                      setTotalPresent(totalAttendancesData.monthly.present);
+                      setTotalAbsent(totalAttendancesData.monthly.absent);
+                    }}
+                    disabled={chart === 1}
+                  >
+                    <Text className=" text-gray-200">Per Bulan</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className={
+                      "rounded-md p-2 " +
+                      (chart === 0 ? "bg-gray-500" : "bg-blue-500")
+                    }
+                    onPress={async () => {
+                      const totalAttendances = await storage.load({
+                        key: "totalAttendances",
+                      });
+                      const totalAttendancesData: TotalDataAttendance =
+                        JSON.parse(totalAttendances);
+                      setChart(0);
+                      setTotalPresent(totalAttendancesData.weekly.present);
+                      setTotalAbsent(totalAttendancesData.weekly.absent);
+                    }}
+                    disabled={chart === 0}
+                  >
+                    <Text className=" text-gray-200">Per Minggu</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-              <TouchableOpacity
-                onPress={async () => {
-                  setShowModal(false);
-
-                  const data: IUserData = {
-                    fullName: fullName,
-                    email: email,
-                    phone: phone,
-                    password: password,
-                  };
-
-                  const newKaryawan = await CreateUser(data);
-
-                  if (newKaryawan instanceof AxiosError) {
-                    console.log(newKaryawan);
-                  } else {
-                    setKaryawan([...karyawan, newKaryawan.data.data.user]);
-
-                    await storage.save({
-                      key: "karyawan",
-                      data: karyawan,
-                    });
-                  }
-                }}
-              >
-                <View className="mt-6 rounded-full bg-[#DEE9FD]">
-                  <Text className="px-3 py-2 text-center text-xl font-semibold text-gray-600 dark:text-neutral-300">
-                    Tambah
-                  </Text>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <View className="my-5 flex-col items-center justify-center">
+                  {/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
+                  <View className="mt-4 w-full">
+                    <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
+                      Nama Lengkap
+                    </Text>
+                    <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
+                      {selKaryawan?.fullName}
+                    </Text>
+                  </View>
+                  <View className="mt-4 w-full">
+                    <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
+                      Email
+                    </Text>
+                    <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
+                      {selKaryawan?.email}
+                    </Text>
+                  </View>
+                  <View className="mt-4 w-full">
+                    <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
+                      No. HP
+                    </Text>
+                    <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
+                      {selKaryawan?.phone}
+                    </Text>
+                  </View>
                 </View>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-        </View>
-        {/* </View> */}
-      </Modal>
-    );
-  }
-  function renderUpdateForm() {
-    return (
-      <Modal animationType="fade" transparent={true} visible={showUpdateModal}>
-        <View className="h-full items-center justify-center">
-          <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
-            <View className="flex-row justify-between">
-              <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
-                Edit Karyawan
-              </Text>
-              <TouchableOpacity onPress={() => setShowUpdateModal(false)}>
-                <FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
-              </TouchableOpacity>
-            </View>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View className="my-5 flex-col items-center justify-center">
-                {/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
-                    Nama Lengkap
-                  </Text>
-                  <TextInput
-                    defaultValue={fullName}
-                    className="border-b-2 border-b-gray-500 py-3 text-lg"
-                    keyboardType="default"
-                    onChangeText={(text) => setFullName(text)}
-                  />
-                </View>
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
-                    Email
-                  </Text>
-                  <TextInput
-                    className="border-b-2 border-b-gray-500 py-3 text-lg"
-                    // value={value}
-                    // keyboardType="default"
-                    defaultValue={email}
-                    onChangeText={(text) => setEmail(text)}
-                  />
-                </View>
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
-                    No. HP
-                  </Text>
-                  <TextInput
-                    className="border-b-2 border-b-gray-500 py-3 text-lg"
-                    // value={value}
-                    // keyboardType="default"
-                    defaultValue={phone}
-                    onChangeText={(text) => setPhone(text)}
-                  />
-                </View>
-              </View>
-              <TouchableOpacity
-                onPress={async () => {
-                  setShowUpdateModal(false);
-                  setLoading(true);
-                  const data: IUserData = {
-                    fullName: fullName,
-                    email: email,
-                    phone: phone,
-                    password: password,
-                  };
-
-                  const updatedKaryawan = await UpdateUser(karyawanId, data);
-
-                  if (updatedKaryawan instanceof AxiosError) {
-                    console.log(updatedKaryawan);
-                  } else {
-                    const index = karyawan.findIndex(
-                      (k) => k.id === updatedKaryawan.data.data.user.id,
-                    );
-                    karyawan[index] = updatedKaryawan.data.data.user;
-
-                    setKaryawan(karyawan);
-
-                    await storage.save({
-                      key: "karyawan",
-                      data: karyawan,
-                    });
-                  }
-                  setLoading(false);
-                }}
-              >
-                <View className="mt-6 rounded-full bg-[#DEE9FD]">
-                  <Text className="px-3 py-2 text-center text-xl font-semibold text-gray-600 dark:text-neutral-300">
-                    Submit
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
-    );
-  }
-  function renderDeleteConfrim() {
-    return (
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={showDeleteConfrim}
-      >
-        <View className="h-full items-center justify-center">
-          <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
-            <View className="flex-row justify-between">
-              <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
-                Apakah anda yakin?
-              </Text>
-              <TouchableOpacity onPress={() => setShowDeleteConfrim(false)}>
-                <FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity
-                onPress={async () => {
-                  setShowDeleteConfrim(false);
-                  const res = await DeleteUser(karyawanId);
-
-                  if (res instanceof AxiosError) {
-                    console.log(res);
-                  } else {
-                    setKaryawan(res.data.data.users);
-
-                    await storage.save({
-                      key: "karyawan",
-                      data: karyawan,
-                    });
-                  }
-                }}
-              >
-                <View className="mt-6 rounded-full bg-[#fddede]">
-                  <Text className="px-3 py-2 text-center text-xl font-semibold text-gray-600 dark:text-neutral-300">
-                    Yakin
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              </ScrollView>
             </View>
           </View>
         </View>
@@ -770,13 +614,4 @@ const KelolaKaryawan = () => {
   }
 };
 
-const styles = StyleSheet.create({
-  TextLight: {
-    color: "gray",
-  },
-  TextDark: {
-    color: "white",
-  },
-});
-
-export default KelolaKaryawan;
+export default KelolaAbsensiKaryawan;

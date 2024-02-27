@@ -7,8 +7,9 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
+  RefreshControl,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LineChart, PieChart } from "react-native-chart-kit";
 
 import { FAB } from "react-native-paper";
@@ -22,17 +23,27 @@ import {
 import { showToast } from "../../api/util";
 
 const UserScreen = ({ navigation }: any) => {
+  const [totalAttendance, setTotalAttendance] = useState<TotalDataAttendance>();
+  const [openStatistik, setOpenStatistik] = useState(false);
+  const [openFeedback, setOpenFeedback] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [chart, setChart] = useState<number>(1);
   const [fullName, setFullName] = useState("");
   const [email, setEMail] = useState("");
   const [phone, setPhone] = useState("");
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-  const [openFeedback, setOpenFeedback] = useState(false);
-  const [openStatistik, setOpenStatistik] = useState(false);
-  const [openProfile, setOpenProfile] = useState(false);
   const [title, setTitle] = useState("");
-  const [totalPresent, setTotalPresent] = useState<number>(0);
-  const [totalAbsent, setTotalAbsent] = useState<number>(0);
-  const [chart, setChart] = useState<number>(1);
+
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    const totalAttendance = await storage.load({ key: "totalAttendance" });
+    const totalAttendanceData: TotalDataAttendance =
+      JSON.parse(totalAttendance);
+    setTotalAttendance(totalAttendanceData);
+    setRefreshing(false);
+  }, []);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -43,10 +54,17 @@ const UserScreen = ({ navigation }: any) => {
       setPhone(data.phone);
     };
 
+    const getTotalAttendance = async () => {
+      const totalAttendance = await storage.load({ key: "totalAttendance" });
+      const totalAttendanceData: TotalDataAttendance =
+        JSON.parse(totalAttendance);
+      setTotalAttendance(totalAttendanceData);
+    };
+
     getUserData();
+    getTotalAttendance();
   }, []);
 
-  
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
     backgroundGradientFromOpacity: 0,
@@ -60,25 +78,35 @@ const UserScreen = ({ navigation }: any) => {
   const data = [
     {
       name: "Masuk",
-      attendance: totalPresent,
+      attendance:
+        chart === 1
+          ? totalAttendance?.monthly.present
+          : totalAttendance?.weekly.present,
       color: "rgb(0, 255, 146)",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15,
     },
     {
       name: "Tidak Masuk",
-      attendance: totalAbsent,
+      attendance:
+        chart === 1
+          ? totalAttendance?.monthly.absent
+          : totalAttendance?.weekly.absent,
       color: "rgb(242,69,69)",
       legendFontColor: "#7F7F7F",
       legendFontSize: 15,
     },
   ];
 
-
   return (
     <View className="mt-6 bg-[#DEE9FD] dark:bg-[#212121] ">
       <View className="mt-6 h-full rounded-t-[50px] bg-[#f0fafd] p-5 dark:bg-[#3a3a3a]">
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           <View className="my-5 flex-col justify-center">
             <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300 ">
               {fullName}
@@ -304,58 +332,44 @@ const UserScreen = ({ navigation }: any) => {
                   </Text>
                 </View>
                 <View className=" items-center justify-center">
-            <PieChart
-              data={data}
-              width={420}
-              height={220}
-              chartConfig={chartConfig}
-              accessor={"attendance"}
-              backgroundColor={"transparent"}
-              paddingLeft={"0"}
-              absolute
-              avoidFalseZero
-            />
-            <View className="flex-row flex-wrap gap-4">
-              <TouchableOpacity
-                className={
-                  "rounded-md p-2 " +
-                  (chart === 1 ? "bg-gray-500" : "bg-blue-500")
-                }
-                onPress={async () => {
-                  const totalAttendances = await storage.load({
-                    key: "totalAttendances",
-                  });
-                  const totalAttendancesData: TotalDataAttendance =
-                    JSON.parse(totalAttendances);
-                  setChart(1);
-                  setTotalPresent(totalAttendancesData.monthly.present);
-                  setTotalAbsent(totalAttendancesData.monthly.absent);
-                }}
-                disabled={chart === 1}
-              >
-                <Text className=" text-gray-200">Per Bulan</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className={
-                  "rounded-md p-2 " +
-                  (chart === 0 ? "bg-gray-500" : "bg-blue-500")
-                }
-                onPress={async () => {
-                  const totalAttendances = await storage.load({
-                    key: "totalAttendances",
-                  });
-                  const totalAttendancesData: TotalDataAttendance =
-                    JSON.parse(totalAttendances);
-                  setChart(0);
-                  setTotalPresent(totalAttendancesData.weekly.present);
-                  setTotalAbsent(totalAttendancesData.weekly.absent);
-                }}
-                disabled={chart === 0}
-              >
-                <Text className=" text-gray-200">Per Minggu</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+                  <PieChart
+                    data={data}
+                    width={400}
+                    height={200}
+                    chartConfig={chartConfig}
+                    accessor={"attendance"}
+                    backgroundColor={"transparent"}
+                    paddingLeft={"0"}
+                    absolute
+                    avoidFalseZero
+                  />
+                  <View className="flex-row flex-wrap gap-4">
+                    <TouchableOpacity
+                      className={
+                        "rounded-md p-2 " +
+                        (chart === 1 ? "bg-gray-500" : "bg-blue-500")
+                      }
+                      onPress={async () => {
+                        setChart(1);
+                      }}
+                      disabled={chart === 1}
+                    >
+                      <Text className=" text-gray-200">Per Bulan</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      className={
+                        "rounded-md p-2 " +
+                        (chart === 0 ? "bg-gray-500" : "bg-blue-500")
+                      }
+                      onPress={() => {
+                        setChart(0);
+                      }}
+                      disabled={chart === 0}
+                    >
+                      <Text className=" text-gray-200">Per Minggu</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
             </ScrollView>
           </View>

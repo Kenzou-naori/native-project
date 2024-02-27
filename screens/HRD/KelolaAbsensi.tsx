@@ -126,11 +126,14 @@ const WebAdmin = () => {
 
     async function loadAll() {
       setLoading(true);
-      await loadAttendances();
-      await loadUsers();
-      await loadCuti();
-      await loadUser();
-      setLoading(false);
+      await Promise.allSettled([
+        loadAttendances(),
+        loadUsers(),
+        loadUser(),
+        loadCuti(),
+      ]).then(() => {
+        setLoading(false);
+      });
     }
 
     loadAll();
@@ -170,14 +173,18 @@ const WebAdmin = () => {
       <View className="px-3 py-6 lg:px-10 xl:px-24 2xl:px-60">
         <View className="flex-row">
           <View className="w-[60%] flex-row flex-wrap gap-4 py-4">
-            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white p-[20] lg:w-[247px]">
-              <Ionicons size={32} color= 
-              {colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD"} 
-                        name="people-outline" />
+            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] dark:shadow-white lg:w-[247px]">
+              <Ionicons
+                size={32}
+                color={
+                  colorScheme === "dark"
+                    ? "#DEE9FD"
+                    : colorScheme == "light"
+                      ? "#212121"
+                      : "DEE9FD"
+                }
+                name="people-outline"
+              />
               <View className="ml-4 flex-col">
                 <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                   {totalKaryawan}
@@ -187,13 +194,18 @@ const WebAdmin = () => {
                 </Text>
               </View>
             </View>
-            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white p-[20] lg:w-[247px]">
-              <Ionicons size={32} color= 
-              {colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD"}  name="location-outline" />
+            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] dark:shadow-white lg:w-[247px]">
+              <Ionicons
+                size={32}
+                color={
+                  colorScheme === "dark"
+                    ? "#DEE9FD"
+                    : colorScheme == "light"
+                      ? "#212121"
+                      : "DEE9FD"
+                }
+                name="location-outline"
+              />
               <View className="ml-4 flex-col">
                 <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                   {totalAttendances}
@@ -212,13 +224,18 @@ const WebAdmin = () => {
 					</View> */}
             {/* <BarChart data={barData}/> */}
 
-            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white p-[20] lg:w-[247px]">
-              <Ionicons size={32} color= 
-              {colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD"}  name="walk-outline" />
+            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] dark:shadow-white lg:w-[247px]">
+              <Ionicons
+                size={32}
+                color={
+                  colorScheme === "dark"
+                    ? "#DEE9FD"
+                    : colorScheme == "light"
+                      ? "#212121"
+                      : "DEE9FD"
+                }
+                name="walk-outline"
+              />
               <View className="ml-4 flex-col">
                 <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                   {totalCuti}
@@ -325,99 +342,141 @@ const WebAdmin = () => {
           </TouchableOpacity>
           {/* logout */}
         </View>
-        <View className="rounded-md bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white shadow-lg">
+        <View className="rounded-md bg-[#f1f6ff] shadow-lg dark:bg-[#3a3a3a] dark:shadow-white">
           <View className="p-8">
             <View className="flex-row items-center justify-between">
-              <Text className="font-semibold text-gray-600 dark:text-neutral-300">Presensi Kehadiran</Text>
+              <Text className="font-semibold text-gray-600 dark:text-neutral-300">
+                Presensi Kehadiran
+              </Text>
               {renderCalendar()}
             </View>
           </View>
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title  textStyle={{
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Nama</DataTable.Title>
-              <DataTable.Title  textStyle={{
+                }}
+              >
+                Nama
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Email</DataTable.Title>
-              <DataTable.Title  textStyle={{
+                }}
+              >
+                Email
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>No. HP</DataTable.Title>
-              <DataTable.Title  textStyle={{
+                }}
+              >
+                No. HP
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Presensi</DataTable.Title>
-              <DataTable.Title  textStyle={{
+                }}
+              >
+                Presensi
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Status</DataTable.Title>
+                }}
+              >
+                Status
+              </DataTable.Title>
             </DataTable.Header>
 
             {attendances.length === 0 && (
               <DataTable.Row>
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>No data</DataTable.Cell>
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>No data</DataTable.Cell>
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>No data</DataTable.Cell>
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>No data</DataTable.Cell>
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>No data</DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
               </DataTable.Row>
             )}
 
@@ -429,46 +488,64 @@ const WebAdmin = () => {
                   setShowDetail(true);
                 }}
               >
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>{attendance.user.fullName}</DataTable.Cell>
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>{attendance.user.email}</DataTable.Cell>
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>{attendance.user.phone}</DataTable.Cell>
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>{formatDate(attendance.date)}</DataTable.Cell>
-                <DataTable.Cell  textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {attendance.user.fullName}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {attendance.user.email}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {attendance.user.phone}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {formatDate(attendance.date)}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
                   {capitalizeFirstLetter(attendance.status)}
                 </DataTable.Cell>
               </DataTable.Row>
@@ -494,137 +571,8 @@ const WebAdmin = () => {
           </DataTable>
         </View>
       </View>
-
-      {renderDetail()}
     </ScrollView>
   );
-
-  function renderDetail() {
-    return (
-      <Modal animationType="fade" transparent={true} visible={showDetail}>
-        <View className="h-full items-center justify-center">
-          
-          <View className="w-full rounded-2xl bg-[#f0fafd] dark:bg-[#3a3a3a] p-5 lg:w-[80%]">
-            
-            <View className="flex-row justify-between">
-              <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300 ">
-                Detail Presensi
-              </Text>
-              <TouchableOpacity onPress={() => setShowDetail(false)}>
-                <FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
-              </TouchableOpacity>
-            </View>
-            {/* <View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-[156] p-5 -mb-56"> */}
-            {/* <View className="flex-row justify-between">
-						<Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300 ">Tambah Tugas</Text>
-						<TouchableOpacity onPress={() => setShowModal(false)}>
-							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
-						</TouchableOpacity>
-					</View> */}
-          <View className="flex-row">
-
-          <View className=" items-center justify-center">
-            <PieChart
-              data={data}
-              width={420}
-              height={220}
-              chartConfig={chartConfig}
-              accessor={"attendance"}
-              backgroundColor={"transparent"}
-              paddingLeft={"0"}
-              absolute
-              avoidFalseZero
-            />
-            <View className="flex-row flex-wrap gap-4">
-              <TouchableOpacity
-                className={
-                  "rounded-md p-2 " +
-                  (chart === 1 ? "bg-gray-500" : "bg-blue-500")
-                }
-                onPress={async () => {
-                  const totalAttendances = await storage.load({
-                    key: "totalAttendances",
-                  });
-                  const totalAttendancesData: TotalDataAttendance =
-                    JSON.parse(totalAttendances);
-                  setChart(1);
-                  setTotalPresent(totalAttendancesData.monthly.present);
-                  setTotalAbsent(totalAttendancesData.monthly.absent);
-                }}
-                disabled={chart === 1}
-              >
-                <Text className=" text-gray-200">Per Bulan</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className={
-                  "rounded-md p-2 " +
-                  (chart === 0 ? "bg-gray-500" : "bg-blue-500")
-                }
-                onPress={async () => {
-                  const totalAttendances = await storage.load({
-                    key: "totalAttendances",
-                  });
-                  const totalAttendancesData: TotalDataAttendance =
-                    JSON.parse(totalAttendances);
-                  setChart(0);
-                  setTotalPresent(totalAttendancesData.weekly.present);
-                  setTotalAbsent(totalAttendancesData.weekly.absent);
-                }}
-                disabled={chart === 0}
-              >
-                <Text className=" text-gray-200">Per Minggu</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View className="my-5 flex-col items-center justify-center">
-                {/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
-                    Nama Lengkap
-                  </Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
-                    {attendance.user.fullName}
-                  </Text>
-                </View>
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">Email</Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
-                    {attendance.user.email}
-                  </Text>
-                </View>
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
-                    No. HP
-                  </Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
-                    {attendance.user.phone}
-                  </Text>
-                </View>
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
-                    Presensi
-                  </Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
-                    {formatDate(attendance.date)}
-                  </Text>
-                </View>
-                <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
-                    Status
-                  </Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
-                    {capitalizeFirstLetter(attendance.status)}
-                  </Text>
-                </View>
-              </View>
-            </ScrollView>
-          </View>
-          </View>
-        </View>
-      </Modal>
-    );
-  }
 
   function renderCalendar() {
     return (

@@ -38,20 +38,15 @@ export async function getAttendances(
         });
       }
 
-      response.data.data.attendances.sort((a, b) => {
-        if (a.created_at > b.created_at) {
-          return -1;
-        } else if (a.created_at < b.created_at) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-
       await storage.save({
         key: "attendances",
         data: JSON.stringify(response.data.data.attendances),
       });
+
+      await storage.save({
+        key: "totalAttendance",
+        data: JSON.stringify(response.data.data.totals),
+      })
 
       return response;
     })
@@ -105,7 +100,7 @@ export async function postAttendance(status: IAttendanceStatus, image: string) {
         message = error.response?.data.message!.replace(":", "")!;
       }
 
-      return showToast(capitalizeFirstLetter(message.replaceAll(":", "")));
+      return error;
     });
 
   return data;

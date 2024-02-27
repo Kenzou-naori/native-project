@@ -123,6 +123,47 @@ export async function GetAttendances(
     });
 }
 
+export async function GetUserAttendances(
+  id: string,
+  page: number = 1,
+): Promise<
+  | AxiosResponse<IAPIResponseGetAttendancesWithUser, any>
+  | AxiosError<IAPIErrorResponse, any>
+> {
+  return axios
+    .get(baseUrl + `/v1/users/${id}/attendances?page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${await storage.load({ key: "token" })}`,
+      },
+    })
+    .then(
+      async (
+        response: AxiosResponse<IAPIResponseGetAttendancesWithUser, any>,
+      ) => {
+        await storage.save({
+          key: "attendances",
+          data: JSON.stringify(response.data.data.attendances),
+        });
+
+        await storage.save({
+          key: "totalAttendances",
+          data: JSON.stringify(response.data.data.totals),
+        });
+
+        return response;
+      },
+    )
+    .catch((error: AxiosError<IAPIErrorResponse, any>) => {
+      const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+      let message: string;
+      if (errMessage?.message) {
+        message = errMessage.message;
+        showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
+      }
+      return error;
+    });
+}
+
 export async function CreateUser(
   data: IUserData,
 ): Promise<

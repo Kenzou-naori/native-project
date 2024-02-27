@@ -70,6 +70,7 @@ interface ICompany {
 interface IAPIResponseGetAttendances {
   data: {
     attendances: IAttendance[];
+    totals: TotalDataAttendance;
   };
   success: boolean;
 }

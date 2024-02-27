@@ -4,10 +4,10 @@ import LoginScreen from "../screens/Auth/LoginScreen";
 import HomeScreen from "../screens/Karyawan/HomeScreen";
 import SettingsScreen from "../screens/Karyawan/HistoryScreen";
 import CutiScreen from "../screens/Karyawan/CutiHistoryScreen";
-import ProfileScreen from "../screens/Karyawan/ProfileScreen";
-import WebAdmin from "../screens/Admin/WebAdmin";
+import WebAdmin from "../screens/HRD/KelolaAbsensi";
 import ManageIP from "../screens/Admin/ManageIP";
-import KelolaKaryawan from "../screens/HRD/KelolaKaryawan";
+import KelolaKaryawan from "../screens/Admin/KelolaKaryawan";
+import KelolaAbsensi from "../screens/HRD/KelolaKaryawan";
 import CutiKaryawan from "../screens/HRD/CutiKaryawan";
 import PengaduanUser from "../screens/Admin/Pengaduan";
 import UserScreen from "../screens/Karyawan/UserScreen";
@@ -107,6 +107,7 @@ function HRDScreen() {
         drawerContent={(props) => <CustomDrawer {...props} />}
       >
         <Drawer.Screen name={WebAdminName} component={WebAdmin} />
+        <Drawer.Screen name={KelolaKaryawanName} component={KelolaAbsensi} />
         <Drawer.Screen name={CutiKaryawanName} component={CutiKaryawan} />
       </Drawer.Navigator>
     </PaperProvider>
