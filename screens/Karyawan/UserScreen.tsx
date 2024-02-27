@@ -21,7 +21,8 @@ import {
   TextInput,
   RefreshControl,
 } from "react-native";
-
+import { postFeedback } from "../../api/feedback";
+import Toast from "react-native-toast-message";
 
 const UserScreen = ({ navigation }: any) => {
   const [totalAttendance, setTotalAttendance] = useState<TotalDataAttendance>();
@@ -185,6 +186,7 @@ const UserScreen = ({ navigation }: any) => {
         }
         onPress={() => setOpenFeedback(true)}
       />
+      <Toast />
     </View>
   );
   function feedbackModal() {
@@ -232,11 +234,24 @@ const UserScreen = ({ navigation }: any) => {
 
             <TouchableOpacity
               onPress={async () => {
+                setRefreshing(true);
                 if (title === "") {
                   showToast("Pengaduan tidak boleh kosong");
+                  setRefreshing(false);
+                  setOpenFeedback(false);
                   return;
                 }
 
+                const data = await postFeedback(title);
+                if (data instanceof Error) {
+                  showToast(data.message);
+                  setRefreshing(false);
+                  setOpenFeedback(false);
+                  return;
+                }
+                
+                showToast("Pengaduan berhasil dikirim");
+                setRefreshing(false);
                 setOpenFeedback(false);
               }}
             >

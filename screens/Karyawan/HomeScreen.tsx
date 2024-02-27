@@ -431,25 +431,13 @@ export default function HomeScreen({ navigation }: any) {
                         toggleCamera();
                         setCameraFor("checkIn");
                       }}
-                      // disabled={
-                      //   day === "Sabtu" || day === "Minggu"
-                      //     ? true
-                      //     : attendance?.checkIn
-                      //       ? true
-                      //       : false
-                      // }
-                      // onPress={async () => {
-                      //   let status: IAttendanceStatus = "hadir";
-                      //   currentTime >= company?.checkInTime!
-                      //     ? (status = "terlambat")
-                      //     : (status = "hadir");
-
-                      //   await postAttendance(status);
-
-                      //   const att = await storage.load({ key: "attendance" });
-                      //   const attData = JSON.parse(att);
-                      //   setAttendance(attData);
-                      // }}
+                      disabled={
+                        day === "Sabtu" || day === "Minggu"
+                          ? true
+                          : attendance?.checkIn
+                            ? true
+                            : false
+                      }
                     >
                       <Text className="px-9 text-lg font-semibold  text-gray-600">
                         Masuk
@@ -563,9 +551,9 @@ export default function HomeScreen({ navigation }: any) {
               </View>
             </View>
           </View>
-          <Toast />
         </ScrollView>
       </View>
+      <Toast />
     </>
   );
 

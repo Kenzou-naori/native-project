@@ -373,3 +373,70 @@ export async function UpdateIPAddresses(
       return error;
     });
 }
+
+export async function GetFeedbacks(
+  page: number = 1,
+): Promise<
+  | AxiosResponse<IAPIResponseGetFeedbacks, any>
+  | AxiosError<IAPIErrorResponse, any>
+> {
+  return axios
+    .get(baseUrl + "/v1/admin/feedbacks?page=" + page, {
+      headers: {
+        Authorization: `Bearer ${await storage.load({ key: "token" })}`,
+      },
+    })
+    .then(async (response: AxiosResponse<IAPIResponseGetFeedbacks, any>) => {
+      await storage.save({
+        key: "feedbacks",
+        data: JSON.stringify(response.data.data.feedbacks),
+      });
+
+      await storage.save({
+        key: "totalFeedbacks",
+        data: JSON.stringify(response.data.data.totalFeedbacks),
+      });
+
+      return response;
+    })
+    .catch((error: AxiosError<IAPIErrorResponse, any>) => {
+      const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+      let message: string;
+      if (errMessage?.message) {
+        message = errMessage.message;
+        showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
+      }
+      return error;
+    });
+}
+
+export async function UpdateFeedbackStatus(
+  id: string,
+  status: string,
+): Promise<
+  | AxiosResponse<IAPIResponseUpdateFeedback, any>
+  | AxiosError<IAPIErrorResponse, any>
+> {
+  return axios
+    .patch(
+      baseUrl + `/v1/admin/feedbacks/${id}`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${await storage.load({ key: "token" })}`,
+        },
+      },
+    )
+    .then(async (response: AxiosResponse<IAPIResponseUpdateFeedback, any>) => {
+      return response;
+    })
+    .catch((error: AxiosError<IAPIErrorResponse, any>) => {
+      const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+      let message: string;
+      if (errMessage?.message) {
+        message = errMessage.message;
+        showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
+      }
+      return error;
+    });
+}

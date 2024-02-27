@@ -223,3 +223,38 @@ interface IAPIResponseUpdateCompany {
   };
   success: boolean;
 }
+
+interface IAPIResponsePostFeedback {
+  data: {
+    feedback: IFeedback;
+  };
+  success: boolean;
+}
+
+interface IAPIResponseGetFeedbacks {
+  data: {
+    feedbacks: IFeedbackWithUser[];
+    totalFeedbacks: number;
+  };
+  success: boolean;
+}
+
+interface IAPIResponseUpdateFeedback {
+  data: {
+    feedback: IFeedback;
+  };
+  success: boolean;
+}
+
+interface IFeedback {
+  id: string;
+  from: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
+}
+
+interface IFeedbackWithUser extends IFeedback {
+  user: IUser;
+}

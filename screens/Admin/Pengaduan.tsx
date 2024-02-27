@@ -1,5 +1,14 @@
-import { GetPaidLeaves, SetPaidLeaveStatus } from "../../api/admin";
-import { formatDate, formatISODate } from "../../api/util";
+import {
+  GetFeedbacks,
+  GetPaidLeaves,
+  SetPaidLeaveStatus,
+  UpdateFeedbackStatus,
+} from "../../api/admin";
+import {
+  capitalizeFirstLetter,
+  formatDate,
+  formatISODate,
+} from "../../api/util";
 
 import storage from "../../utils/storage";
 
@@ -15,26 +24,27 @@ import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const PengaduanUser = () => {
-  const [loading, setLoading] = useState(true);
+  const [feedbacks, setFeedbacks] = useState<IFeedbackWithUser[]>([]);
+  const [totalFeedbacks, setTotalFeedbacks] = useState<number>(0);
   const [showCek, setShowCek] = useState(false);
-  const [cuti, setCuti] = useState<IPaidLeaveWithuser[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
-  const [totalCuti, setTotalCuti] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
   const from = page * 25;
-  const to = Math.min((page + 1) * 25, totalCuti);
+  const to = Math.min((page + 1) * 25, totalFeedbacks);
 
   useEffect(() => {
     setPage(0);
 
     async function loadCuti() {
-      const cuti = await storage.load({ key: "cuti" });
-      const cutiData = JSON.parse(cuti);
-      const totalCuti = await storage.load({ key: "totalCuti" });
+      const feedbacksString = await storage.load({ key: "feedbacks" });
+      const feedbacksData = JSON.parse(feedbacksString);
+      const totalFeedbacks = await storage.load({ key: "totalFeedbacks" });
 
-      setTotalCuti(parseInt(totalCuti));
-      setCuti(cutiData);
+      setTotalFeedbacks(parseInt(totalFeedbacks));
+      setFeedbacks(feedbacksData);
       setLoading(false);
     }
 
@@ -50,12 +60,15 @@ const PengaduanUser = () => {
           <TouchableOpacity
             onPress={async () => {
               setLoading(true);
-              const res = await GetPaidLeaves(page + 1);
-              if (!(res instanceof AxiosError)) {
-                setCuti(res.data.data.paidLeaves);
+              const res = await GetFeedbacks();
+              if (res instanceof AxiosError) {
                 setLoading(false);
+                return;
               }
-              setLoading(false);
+              const feedbacks = res.data.data.feedbacks;
+              const totalFeedbacks = res.data.data.totalFeedbacks;
+              setTotalFeedbacks(totalFeedbacks);
+              setFeedbacks(feedbacks);
             }}
             className="my-4 w-32 rounded-md bg-blue-500 p-3"
           >
@@ -65,10 +78,12 @@ const PengaduanUser = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="mb-6 rounded-md bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white shadow-lg">
+        <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg dark:bg-[#3a3a3a] dark:shadow-white">
           <View className="p-4">
             <View className="flex-row items-center justify-between">
-              <Text className="font-semibold text-gray-600 dark:text-neutral-300">Daftar Pengaduan Karyawan</Text>
+              <Text className="font-semibold text-gray-600 dark:text-neutral-300">
+                Daftar Pengaduan Karyawan
+              </Text>
 
               {renderCek()}
             </View>
@@ -121,31 +136,7 @@ const PengaduanUser = () => {
                         : "DEE9FD",
                 }}
               >
-                Tanggal Mulai
-              </DataTable.Title>
-              <DataTable.Title
-                textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}
-              >
-                Lama Cuti
-              </DataTable.Title>
-              <DataTable.Title
-                textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}
-              >
-                Tanggal Selesai
+                Tanggal Dikirim
               </DataTable.Title>
               <DataTable.Title
                 textStyle={{
@@ -173,8 +164,8 @@ const PengaduanUser = () => {
               </DataTable.Title>
             </DataTable.Header>
 
-            {!cuti ||
-              (cuti.length === 0 && (
+            {!feedbacks ||
+              (feedbacks.length === 0 && (
                 <DataTable.Row>
                   <DataTable.Cell
                     textStyle={{
@@ -248,35 +239,11 @@ const PengaduanUser = () => {
                   >
                     No data
                   </DataTable.Cell>
-                  <DataTable.Cell
-                    textStyle={{
-                      color:
-                        colorScheme === "dark"
-                          ? "#DEE9FD"
-                          : colorScheme == "light"
-                            ? "#212121"
-                            : "DEE9FD",
-                    }}
-                  >
-                    No data
-                  </DataTable.Cell>
-                  <DataTable.Cell
-                    textStyle={{
-                      color:
-                        colorScheme === "dark"
-                          ? "#DEE9FD"
-                          : colorScheme == "light"
-                            ? "#212121"
-                            : "DEE9FD",
-                    }}
-                  >
-                    No data
-                  </DataTable.Cell>
                 </DataTable.Row>
               ))}
 
-            {cuti &&
-              cuti.map((cutit) => (
+            {feedbacks &&
+              feedbacks.map((cutit) => (
                 <DataTable.Row key={cutit.id} className="py-2 lg:py-4">
                   <DataTable.Cell
                     textStyle={{
@@ -312,7 +279,7 @@ const PengaduanUser = () => {
                             : "DEE9FD",
                     }}
                   >
-                    {cutit.reason}
+                    {cutit.content}
                   </DataTable.Cell>
                   <DataTable.Cell
                     textStyle={{
@@ -324,7 +291,7 @@ const PengaduanUser = () => {
                             : "DEE9FD",
                     }}
                   >
-                    {formatISODate(cutit.startDate)}
+                    {formatISODate(cutit.created_at)}
                   </DataTable.Cell>
                   <DataTable.Cell
                     textStyle={{
@@ -336,7 +303,7 @@ const PengaduanUser = () => {
                             : "DEE9FD",
                     }}
                   >
-                    {cutit.days} Hari
+                    {capitalizeFirstLetter(cutit.status)}
                   </DataTable.Cell>
                   <DataTable.Cell
                     textStyle={{
@@ -348,64 +315,45 @@ const PengaduanUser = () => {
                             : "DEE9FD",
                     }}
                   >
-                    {formatISODate(cutit.endDate)}
-                  </DataTable.Cell>
-                  <DataTable.Cell
-                    textStyle={{
-                      color:
-                        colorScheme === "dark"
-                          ? "#DEE9FD"
-                          : colorScheme == "light"
-                            ? "#212121"
-                            : "DEE9FD",
-                    }}
-                  >
-                    {cutit.status === 0
-                      ? "Pending"
-                      : cutit.status === 1
-                        ? "Diterima"
-                        : "Ditolak"}
-                  </DataTable.Cell>
-                  <DataTable.Cell
-                    textStyle={{
-                      color:
-                        colorScheme === "dark"
-                          ? "#DEE9FD"
-                          : colorScheme == "light"
-                            ? "#212121"
-                            : "DEE9FD",
-                    }}
-                  >
-                    {cutit.status < 1 ? (
+                    {cutit.status === "pending" ? (
                       <>
                         <TouchableOpacity
-                          onPress={() =>
-                            SetPaidLeaveStatus(cutit.id, "1").then(() => {
+                          onPress={async () => {
+                            setLoading(true);
+                            await UpdateFeedbackStatus(
+                              cutit.id,
+                              "selesai",
+                            ).then(() => {
                               const newCuti = cutit;
-                              newCuti.status = 1;
-                              setCuti(
-                                cuti.map((c) =>
+                              newCuti.status = "selesai";
+                              setFeedbacks(
+                                feedbacks.map((c) =>
                                   c.id === cutit.id ? newCuti : c,
                                 ),
                               );
-                            })
-                          }
+                            });
+                            setLoading(false);
+                          }}
                           className="mr-1 rounded-md border border-gray-600 bg-green-200 p-3"
                         >
-                          <Text className="text-gray-600">Terima</Text>
+                          <Text className="text-gray-600">Selesai</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          onPress={async () =>
-                            await SetPaidLeaveStatus(cutit.id, "2").then(() => {
-                              const newCuti = cutit;
-                              newCuti.status = 2;
-                              setCuti(
-                                cuti.map((c) =>
-                                  c.id === cutit.id ? newCuti : c,
-                                ),
-                              );
-                            })
-                          }
+                          onPress={async () => {
+                            setLoading(true);
+                            await UpdateFeedbackStatus(cutit.id, "2").then(
+                              () => {
+                                const newCuti = cutit;
+                                newCuti.status = "ditolak";
+                                setFeedbacks(
+                                  feedbacks.map((c) =>
+                                    c.id === cutit.id ? newCuti : c,
+                                  ),
+                                );
+                              },
+                            );
+                            setLoading(false);
+                          }}
                           className="ml-1 rounded-md border border-gray-600 bg-red-200 p-3"
                         >
                           <Text className="text-gray-600">Tolak</Text>
@@ -424,22 +372,23 @@ const PengaduanUser = () => {
 
             <DataTable.Pagination
               page={page}
-              numberOfPages={Math.ceil(totalCuti / 25)}
+              numberOfPages={Math.ceil(totalFeedbacks / 25)}
               onPageChange={async (page) => {
                 setLoading(true);
                 setPage(page);
-                await GetPaidLeaves(page + 1);
-                const paidLeaves = await storage.load({ key: "paidLeaves" });
-                const paidLeavesData: IPaidLeaveWithuser[] =
-                  JSON.parse(paidLeaves);
-                const totalCuti = await storage.load({
-                  key: "totalPaidLeaves",
+                await GetFeedbacks(page).then(async () => {
+                  const feedbacks = await storage.load({ key: "paidLeaves" });
+                  const feedbacksData: IFeedbackWithUser[] =
+                    JSON.parse(feedbacks);
+                  const totalCuti = await storage.load({
+                    key: "totalFeedbacks",
+                  });
+                  setTotalFeedbacks(parseInt(totalCuti));
+                  setFeedbacks(feedbacksData);
                 });
-                setTotalCuti(parseInt(totalCuti));
-                setCuti(paidLeavesData);
                 setLoading(false);
               }}
-              label={`${from + 1}-${to} of ${totalCuti}`}
+              label={`${from + 1}-${to} of ${totalFeedbacks}`}
               showFastPaginationControls
               numberOfItemsPerPage={25}
             />

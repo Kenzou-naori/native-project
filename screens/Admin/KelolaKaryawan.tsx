@@ -1,4 +1,10 @@
-import { CreateUser, DeleteUser, GetUsers, UpdateUser } from "../../api/admin";
+import {
+  CreateUser,
+  DeleteUser,
+  GetFeedbacks,
+  GetUsers,
+  UpdateUser,
+} from "../../api/admin";
 import { getCompany } from "../../api/company";
 
 import storage from "../../utils/storage";
@@ -38,9 +44,9 @@ const KelolaKaryawan = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [page, setPage] = useState(0);
-  
+
   const { colorScheme, toggleColorScheme } = useColorScheme();
-  
+
   const from = page * 25;
   const to = Math.min((page + 1) * 25, totalKaryawan);
 
@@ -51,6 +57,7 @@ const KelolaKaryawan = () => {
   useEffect(() => {
     setPage(0);
 
+    setLoading(true);
     async function loadKaryawan() {
       setLoading(true);
       const karyawan = await GetUsers(page + 1);
@@ -64,11 +71,9 @@ const KelolaKaryawan = () => {
           data: karyawan.data.data.users,
         });
       }
-      setLoading(false);
     }
 
     async function loadIpAddresses() {
-      setLoading(true);
       const company = await getCompany();
       if (company instanceof AxiosError) {
         console.log(company);
@@ -78,11 +83,27 @@ const KelolaKaryawan = () => {
           data: JSON.stringify(company.data.data.company.ipAddresses),
         });
       }
-      setLoading(false);
     }
 
-    loadIpAddresses();
-    loadKaryawan();
+    async function loadFeedbacks() {
+      const feedbacks = await GetFeedbacks();
+      if (feedbacks instanceof AxiosError) {
+        console.log(feedbacks);
+      } else {
+        await storage.save({
+          key: "feedbacks",
+          data: JSON.stringify(feedbacks.data.data.feedbacks),
+        });
+      }
+    }
+
+    Promise.allSettled([
+      loadKaryawan(),
+      loadIpAddresses(),
+      loadFeedbacks(),
+    ]).then(() => {
+      setLoading(false);
+    });
   }, []);
 
   function sortAscending() {
@@ -195,12 +216,17 @@ const KelolaKaryawan = () => {
         <View className="flex-row">
           <View className="w-[60%] flex-row flex-wrap gap-4 py-4">
             <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] dark:shadow-white lg:w-[247px]">
-              <Ionicons size={32} color= 
-              {colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD"}  name="people-outline" />
+              <Ionicons
+                size={32}
+                color={
+                  colorScheme === "dark"
+                    ? "#DEE9FD"
+                    : colorScheme == "light"
+                      ? "#212121"
+                      : "DEE9FD"
+                }
+                name="people-outline"
+              />
               <View className="ml-4 flex-col">
                 <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                   {totalKaryawan}
@@ -517,8 +543,8 @@ const KelolaKaryawan = () => {
               showFastPaginationControls
               numberOfItemsPerPage={25}
               selectPageDropdownRippleColor={"white"}
-              dropdownItemRippleColor={'white'}
-              paginationControlRippleColor={'white'}
+              dropdownItemRippleColor={"white"}
+              paginationControlRippleColor={"white"}
             />
           </DataTable>
         </View>

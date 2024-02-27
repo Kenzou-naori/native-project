@@ -462,8 +462,8 @@ const KelolaAbsensiKaryawan = () => {
                           });
                           const totalAttendancesData: TotalDataAttendance =
                             JSON.parse(totalAttendances);
-                          setTotalPresent(totalAttendancesData.weekly.present);
-                          setTotalAbsent(totalAttendancesData.weekly.absent);
+                          setTotalPresent(totalAttendancesData.monthly.present);
+                          setTotalAbsent(totalAttendancesData.monthly.absent);
 
                           setLoading(false);
                           setShowDetail(true);
