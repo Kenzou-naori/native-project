@@ -1,4 +1,3 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
 import storage from "../utils/storage";
 import {
   baseUrl,
@@ -6,6 +5,8 @@ import {
   errorResponse,
   showToast,
 } from "./util";
+
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 export async function getAttendances(
   date: string,

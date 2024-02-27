@@ -1,33 +1,23 @@
 import storage from "../../utils/storage";
 
-import {
-  Text,
-  View,
-  ScrollView,
-  Modal,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+
 import { useEffect, useState } from "react";
 import { FAB } from "react-native-paper";
 import { useColorScheme } from "nativewind";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 
-import {
-  faChevronRight,
-  faCircleChevronLeft,
-} from "@fortawesome/free-solid-svg-icons";
-import { showToast } from "../../api/util";
 
-const StatistikScreen= ({ navigation }: any) => {
+const StatistikScreen = () => {
+  const [openStatistik, setOpenStatistik] = useState(false);
+  const [openFeedback, setOpenFeedback] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEMail] = useState("");
   const [phone, setPhone] = useState("");
+
   const { colorScheme, toggleColorScheme } = useColorScheme();
-  const [openFeedback, setOpenFeedback] = useState(false);
-  const [openStatistik, setOpenStatistik] = useState(false);
-  const [openProfile, setOpenProfile] = useState(false);
-  const [title, setTitle] = useState("");
 
   useEffect(() => {
     const getUserData = async () => {
@@ -121,6 +111,6 @@ const StatistikScreen= ({ navigation }: any) => {
       />
     </View>
   );
-}
+};
 
 export default StatistikScreen;

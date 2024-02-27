@@ -2,6 +2,8 @@ import { SignIn } from "../../api/auth";
 
 import storage from "../../utils/storage";
 
+import { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
 import {
   ScrollView,
   Text,
@@ -9,8 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
 
 import Toast from "react-native-toast-message";
 

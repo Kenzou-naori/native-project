@@ -23,14 +23,14 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useColorScheme } from "nativewind";
 
 const ManageIP = () => {
-  const [loading, setLoading] = useState(false);
   const [showDeleteConfrim, setShowDeleteConfrim] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [ipAddresses, setIpAddresses] = useState<string[]>([]);
   const [newIpAddress, setNewIpAddress] = useState<string>("");
   const [ipAddress, setIpAddress] = useState<string>("");
-  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  const { colorScheme, toggleColorScheme } = useColorScheme();
 
   useEffect(() => {
     async function loadIpAddresses() {

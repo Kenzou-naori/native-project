@@ -7,12 +7,12 @@ import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { DataTable } from "react-native-paper";
+import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useColorScheme } from "nativewind";
 
 const PengaduanUser = () => {
   const [loading, setLoading] = useState(true);

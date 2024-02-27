@@ -1,8 +1,10 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import Toast from "react-native-toast-message";
+import { baseUrl, capitalizeFirstLetter } from "./util";
 
 import storage from "../utils/storage";
-import { baseUrl, capitalizeFirstLetter } from "./util";
+
+import Toast from "react-native-toast-message";
+
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 const showToast = (message: string) => {
   Toast.show({

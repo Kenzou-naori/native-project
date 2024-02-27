@@ -1,12 +1,15 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useColorScheme } from "nativewind";
+
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
+
+import React, { useEffect, useState } from "react";
+
 import storage from "../utils/storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useColorScheme } from "nativewind";
 
 const CustomDrawer = (props: any) => {
   const [fullName, setFullName] = useState("");

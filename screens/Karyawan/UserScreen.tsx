@@ -1,5 +1,17 @@
+import { showToast } from "../../api/util";
+
 import storage from "../../utils/storage";
 
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faChevronRight,
+  faCircleChevronLeft,
+} from "@fortawesome/free-solid-svg-icons";
+
+import { useCallback, useEffect, useState } from "react";
+import { PieChart } from "react-native-chart-kit";
+import { useColorScheme } from "nativewind";
+import { FAB } from "react-native-paper";
 import {
   Text,
   View,
@@ -9,18 +21,7 @@ import {
   TextInput,
   RefreshControl,
 } from "react-native";
-import { useCallback, useEffect, useState } from "react";
-import { LineChart, PieChart } from "react-native-chart-kit";
 
-import { FAB } from "react-native-paper";
-import { useColorScheme } from "nativewind";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-
-import {
-  faChevronRight,
-  faCircleChevronLeft,
-} from "@fortawesome/free-solid-svg-icons";
-import { showToast } from "../../api/util";
 
 const UserScreen = ({ navigation }: any) => {
   const [totalAttendance, setTotalAttendance] = useState<TotalDataAttendance>();

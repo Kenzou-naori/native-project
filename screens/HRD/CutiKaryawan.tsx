@@ -1,28 +1,29 @@
 import { GetPaidLeaves, SetPaidLeaveStatus } from "../../api/admin";
-import { formatDate, formatISODate } from "../../api/util";
+import { formatISODate } from "../../api/util";
 
 import storage from "../../utils/storage";
 
-import { Text, View, ScrollView, Modal, TouchableOpacity, Pressable } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+
+import { Text, View, ScrollView, Modal, TouchableOpacity, Pressable } from "react-native";
 import { DataTable } from "react-native-paper";
+import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useColorScheme } from "nativewind";
 
 const CutiKaryawan = () => {
-  const [loading, setLoading] = useState(true);
-  const [showCek, setShowCek] = useState(false);
   const [cuti, setCuti] = useState<IPaidLeaveWithuser[]>([]);
   const [totalCuti, setTotalCuti] = useState<number>(0);
-  const [page, setPage] = useState<number>(0);
-  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const [showCek, setShowCek] = useState(false);
   const [visible, setVisible] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState<number>(0);
+  
+  const { colorScheme, toggleColorScheme } = useColorScheme();
 
   const from = page * 25;
   const to = Math.min((page + 1) * 25, totalCuti);

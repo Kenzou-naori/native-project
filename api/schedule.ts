@@ -1,6 +1,8 @@
-import axios, { AxiosResponse } from "axios";
-import storage from "../utils/storage";
 import { errorResponse } from "./util";
+
+import storage from "../utils/storage";
+
+import axios, { AxiosResponse } from "axios";
 
 export async function getSchedule(date: string) {
   const token = await storage.load({ key: "token" });

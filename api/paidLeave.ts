@@ -1,6 +1,8 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import storage from "../utils/storage";
 import { baseUrl, capitalizeFirstLetter, showToast } from "./util";
+
+import storage from "../utils/storage";
+
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 export async function GetPaidLeave(): Promise<
   | AxiosResponse<IAPIResponseGetPaidLeave, any>

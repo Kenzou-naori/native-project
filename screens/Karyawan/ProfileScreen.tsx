@@ -1,5 +1,13 @@
+import { showToast } from "../../api/util";
+
 import storage from "../../utils/storage";
 
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
+import { useColorScheme } from "nativewind";
+import { useEffect, useState } from "react";
+import { FAB } from "react-native-paper";
 import {
   Text,
   View,
@@ -8,22 +16,16 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { useEffect, useState } from "react";
-import { FAB } from "react-native-paper";
-import { useColorScheme } from "nativewind";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import Toast from "react-native-toast-message";
 
-import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { showToast } from "../../api/util";
 
 const ProfileScreen = ({ navigation }: any) => {
+  const [openFeedback, setOpenFeedback] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEMail] = useState("");
   const [phone, setPhone] = useState("");
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-  const [openFeedback, setOpenFeedback] = useState(false);
   const [title, setTitle] = useState("");
+
+  const { colorScheme, toggleColorScheme } = useColorScheme();
 
   useEffect(() => {
     const getUserData = async () => {

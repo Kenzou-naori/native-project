@@ -1,3 +1,15 @@
+import { CreateUser, DeleteUser, GetUsers, UpdateUser } from "../../api/admin";
+import { getCompany } from "../../api/company";
+
+import storage from "../../utils/storage";
+
+import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+
+import { DataTable } from "react-native-paper";
+import { useColorScheme } from "nativewind";
+import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
 import {
   Text,
   View,
@@ -9,36 +21,28 @@ import {
   Pressable,
 } from "react-native";
 
-import { useEffect, useState } from "react";
-import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useColorScheme } from "nativewind";
-
-import { DataTable } from "react-native-paper";
-import { CreateUser, DeleteUser, GetUsers, UpdateUser } from "../../api/admin";
-import { AxiosError } from "axios";
-import storage from "../../utils/storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { getCompany } from "../../api/company";
 
 const KelolaKaryawan = () => {
-  const [loading, setLoading] = useState(false);
   const [showDeleteConfrim, setShowDeleteConfrim] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [karyawan, setKaryawan] = useState<IUser[]>([]);
   const [totalKaryawan, setTotalKaryawan] = useState(0);
-  const [page, setPage] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const [karyawanId, setKaryawanId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
+  const [page, setPage] = useState(0);
+  
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+  
   const from = page * 25;
   const to = Math.min((page + 1) * 25, totalKaryawan);
-  const [visible, setVisible] = useState(false);
-  const { colorScheme, toggleColorScheme } = useColorScheme();
 
   const toggleDropdown = () => {
     setVisible(!visible);

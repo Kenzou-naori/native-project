@@ -2,8 +2,6 @@
 
 import { formatISODate, showToast } from "../../api/util";
 import { getCompany } from "../../api/company";
-import constant from "../../constant/date";
-import storage from "../../utils/storage";
 import {
   getAttendances,
   postAttendance,
@@ -15,20 +13,22 @@ import {
   SendPaidLeave,
 } from "../../api/paidLeave";
 
+import constant from "../../constant/date";
+import storage from "../../utils/storage";
+
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useColorScheme } from "nativewind";
+import { StatusBar } from "expo-status-bar";
+import { AxiosError } from "axios";
 import {
   Camera,
   CameraCapturedPicture,
   CameraType,
   FlashMode,
 } from "expo-camera";
-import { useColorScheme } from "nativewind";
-import { StatusBar } from "expo-status-bar";
-import { AxiosError } from "axios";
-
 import {
   Text,
   View,

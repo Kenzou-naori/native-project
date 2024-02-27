@@ -1,16 +1,16 @@
 // In App.js in a new project
-import CustomDrawer from "../layout/CustomDrawer";
-import LoginScreen from "../screens/Auth/LoginScreen";
-import HomeScreen from "../screens/Karyawan/HomeScreen";
-import SettingsScreen from "../screens/Karyawan/HistoryScreen";
 import CutiScreen from "../screens/Karyawan/CutiHistoryScreen";
-import WebAdmin from "../screens/HRD/KelolaAbsensi";
-import ManageIP from "../screens/Admin/ManageIP";
+import SettingsScreen from "../screens/Karyawan/HistoryScreen";
 import KelolaKaryawan from "../screens/Admin/KelolaKaryawan";
 import KelolaAbsensi from "../screens/HRD/KelolaKaryawan";
+import HomeScreen from "../screens/Karyawan/HomeScreen";
+import UserScreen from "../screens/Karyawan/UserScreen";
 import CutiKaryawan from "../screens/HRD/CutiKaryawan";
 import PengaduanUser from "../screens/Admin/Pengaduan";
-import UserScreen from "../screens/Karyawan/UserScreen";
+import LoginScreen from "../screens/Auth/LoginScreen";
+import WebAdmin from "../screens/HRD/KelolaAbsensi";
+import CustomDrawer from "../layout/CustomDrawer";
+import ManageIP from "../screens/Admin/ManageIP";
 
 
 import { MD2LightTheme, PaperProvider } from "react-native-paper";
@@ -18,16 +18,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import { View, Text, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
+
+import { useColorScheme } from "nativewind";
+import { StyleSheet } from "react-native";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useColorScheme } from "nativewind";
 
 const homeName = "Dasbor";
 const scheduleName = "Schedule";
 const settingsName = "Riwayat Presensi";
-const profileName = "Profil";
 const cutiName = "Riwayat Cuti";
 const WebAdminName = "Dashboard";
 const ManageIPName = "Manage Lokasi";
@@ -39,8 +38,6 @@ const UserScreenName = "Me"
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
-
-
 
 const theme = {
   // Extend Material Design 2 theme

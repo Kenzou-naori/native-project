@@ -1,38 +1,24 @@
 import { GetAttendances, GetPaidLeaves, GetUsers } from "../../api/admin";
 import { capitalizeFirstLetter, formatDate } from "../../api/util";
+
 import storage from "../../utils/storage";
 
 import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import { LineChart, PieChart } from "react-native-chart-kit";
 import { Calendar } from "react-native-calendars";
+import { PieChart } from "react-native-chart-kit";
 import { DataTable } from "react-native-paper";
+import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useColorScheme } from "nativewind";
 
 const WebAdmin = () => {
-  const [loading, setLoading] = useState(false);
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-  const [showModal, setShowModal] = useState(false);
-  const [showDetail, setShowDetail] = useState(false);
-  const [selected, setSelected] = useState("");
-  const [state, setState] = useState({
-    fromDate: "",
-    toDate: "",
-    dateError: "hghg",
-  });
-
-  const [user, setUser] = useState<IUser>();
   const [attendances, setAttendances] = useState<IAttendanceWithUser[]>([]);
   const [totalAttendances, setTotalAttendances] = useState<number>(0);
-  const [totalPresent, setTotalPresent] = useState<number>(0);
-  const [totalAbsent, setTotalAbsent] = useState<number>(0);
-  const [chart, setChart] = useState<number>(1);
   const [attendance, setAttendance] = useState<IAttendanceWithUser>({
     id: "",
     user: {
@@ -53,12 +39,27 @@ const WebAdmin = () => {
     created_at: "",
     updated_at: "",
   });
-  const [karyawan, setKaryawan] = useState<IUser[]>([]);
   const [totalKaryawan, setTotalKaryawan] = useState<number>(0);
-  const [cuti, setCuti] = useState<IPaidLeave[]>([]);
+  const [totalPresent, setTotalPresent] = useState<number>(0);
+  const [totalAbsent, setTotalAbsent] = useState<number>(0);
+  const [karyawan, setKaryawan] = useState<IUser[]>([]);
   const [totalCuti, setTotalCuti] = useState<number>(0);
-
+  const [showDetail, setShowDetail] = useState(false);
+  const [cuti, setCuti] = useState<IPaidLeave[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [chart, setChart] = useState<number>(1);
+  const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState("");
   const [page, setPage] = useState<number>(0);
+  const [user, setUser] = useState<IUser>();
+  const [state, setState] = useState({
+    fromDate: "",
+    toDate: "",
+    dateError: "hghg",
+  });
+
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
   const from = page * 25;
   const to = Math.min((page + 1) * 25, totalAttendances);
 

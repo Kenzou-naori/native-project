@@ -1,7 +1,12 @@
 import { GetPaidLeaves } from "../../api/paidLeave";
 import { formatISODate } from "../../api/util";
+import { getCompany } from "../../api/company";
+
 import storage from "../../utils/storage";
 
+import { useCallback, useEffect, useState } from "react";
+import { useColorScheme } from "nativewind";
+import { AxiosError } from "axios";
 import {
   StyleSheet,
   Text,
@@ -11,17 +16,14 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { useCallback, useEffect, useState } from "react";
-import { getCompany } from "../../api/company";
-import { AxiosError } from "axios";
+
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useColorScheme } from "nativewind";
 
 export default function HistoryScreen({ navigation }: any) {
   const [paidLeaves, setPaidLeaves] = useState<IPaidLeave[]>([]);
-  const [refreshing, setRefreshing] = useState(false);
   const [company, setCompany] = useState<ICompany | null>(null);
   const { colorScheme, toggleColorScheme } = useColorScheme();
+  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

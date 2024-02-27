@@ -1,8 +1,14 @@
 import { capitalizeFirstLetter, formatDate } from "../../api/util";
 import { getAttendances } from "../../api/attendance";
 import { getCompany } from "../../api/company";
+
 import storage from "../../utils/storage";
 
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
+import { useColorScheme } from "nativewind";
+import { AxiosError } from "axios";
 import {
   StyleSheet,
   Text,
@@ -15,22 +21,18 @@ import {
   TextInput,
   Modal,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useColorScheme } from "nativewind";
+
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { AxiosError } from "axios";
-import { FAB } from "react-native-paper";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCircleChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
+import React, { useEffect, useState } from "react";
 
 export default function HistoryScreen({ navigation }: any) {
   const [attendances, setAttendances] = useState<IAttendance[]>([]);
   const [company, setCompany] = useState<ICompany | null>(null);
-  const [title, setTitle] = useState("");
-  const [dayDate, setDayDate] = useState(0);
   const [openFeedback, setOpenFeedback] = useState(false);
-
   const [refreshing, setRefreshing] = useState(false);
+  const [title, setTitle] = useState("");
+
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
   const onRefresh = React.useCallback(async () => {
