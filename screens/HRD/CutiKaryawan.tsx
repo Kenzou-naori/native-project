@@ -20,7 +20,7 @@ const WebAdmin = () => {
   const [totalCuti, setTotalCuti] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
   const from = page * 25;
-  const to = Math.min((page + 1) * 25, cuti.length);
+  const to = Math.min((page + 1) * 25, cuti ? cuti.length : 0);
 
   useEffect(() => {
     setPage(0);
@@ -82,7 +82,7 @@ const WebAdmin = () => {
               <DataTable.Title>Aksi</DataTable.Title>
             </DataTable.Header>
 
-            {cuti.length === 0 && (
+            {!cuti || cuti.length === 0 && (
               <DataTable.Row>
                 <DataTable.Cell>No data</DataTable.Cell>
                 <DataTable.Cell>No data</DataTable.Cell>
@@ -95,7 +95,7 @@ const WebAdmin = () => {
               </DataTable.Row>
             )}
 
-            {cuti.map((cutit) => (
+            {cuti && cuti.map((cutit) => (
               <DataTable.Row key={cutit.id} className="py-2 lg:py-4">
                 <DataTable.Cell>{cutit.user.fullName}</DataTable.Cell>
                 <DataTable.Cell>{cutit.user.email}</DataTable.Cell>
