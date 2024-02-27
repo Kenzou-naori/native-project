@@ -10,6 +10,8 @@ import ManageIP from "../screens/Admin/ManageIP";
 import KelolaKaryawan from "../screens/HRD/KelolaKaryawan";
 import CutiKaryawan from "../screens/HRD/CutiKaryawan";
 import PengaduanUser from "../screens/Admin/Pengaduan";
+import UserScreen from "../screens/Karyawan/UserScreen";
+
 
 import { MD2LightTheme, PaperProvider } from "react-native-paper";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -32,6 +34,7 @@ const ManageIPName = "Manage Lokasi";
 const KelolaKaryawanName = "Kelola Karyawan";
 const CutiKaryawanName = "Cuti Karyawan";
 const PengaduanName = "Pengaduan User";
+const UserScreenName = "Me"
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -129,7 +132,7 @@ function FirstScreen() {
             iconName = focused ? "reader-outline" : "reader-outline";
           } else if (rn === cutiName) {
             iconName = focused ? "walk-outline" : "walk-outline";
-          } else if (rn === profileName) {
+          } else if (rn === UserScreenName) {
             iconName = focused ? "person-circle" : "person-circle-outline";
           }
 
@@ -177,8 +180,8 @@ function FirstScreen() {
         }}
       />
       <Tab.Screen
-        name={profileName}
-        component={ProfileScreen}
+        name={UserScreenName}
+        component={UserScreen}
         options={{
           headerShown: false,
         }}

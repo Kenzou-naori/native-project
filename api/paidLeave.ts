@@ -31,12 +31,12 @@ export async function GetPaidLeave(): Promise<
     });
 }
 
-export async function GetPaidLeaves(): Promise<
+export async function GetPaidLeaves(status: number | null = null): Promise<
   | AxiosResponse<IAPIResponseGetPaidLeaves, any>
   | AxiosError<IAPIErrorResponse, any>
 > {
   return axios
-    .get(baseUrl + "/v1/users/@me/paidLeaves", {
+    .get(baseUrl + "/v1/users/@me/paidLeaves" + status ? "?status=" + status : "" , {
       headers: {
         Authorization: `Bearer ${await storage.load({ key: "token" })}`,
       },

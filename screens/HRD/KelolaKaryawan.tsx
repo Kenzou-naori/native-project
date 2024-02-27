@@ -191,7 +191,12 @@ const KelolaKaryawan = () => {
         <View className="flex-row">
           <View className="w-[60%] flex-row flex-wrap gap-4 py-4">
             <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] dark:shadow-white lg:w-[247px]">
-              <Ionicons size={32} color="black" name="people-outline" />
+              <Ionicons size={32} color= 
+              {colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD"}  name="people-outline" />
               <View className="ml-4 flex-col">
                 <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                   {totalKaryawan}

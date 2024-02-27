@@ -3,7 +3,7 @@ import { formatDate, formatISODate } from "../../api/util";
 
 import storage from "../../utils/storage";
 
-import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, Modal, TouchableOpacity, Pressable } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { DataTable } from "react-native-paper";
@@ -21,6 +21,8 @@ const CutiKaryawan = () => {
   const [totalCuti, setTotalCuti] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
   const { colorScheme, toggleColorScheme } = useColorScheme();
+  const [visible, setVisible] = useState(false);
+
 
   const from = page * 25;
   const to = Math.min((page + 1) * 25, totalCuti);
@@ -40,7 +42,58 @@ const CutiKaryawan = () => {
 
     loadCuti();
   }, []);
+  
 
+  const toggleDropdown = () => {
+    setVisible(!visible);
+  };
+
+  function renderDropdown() {
+    if (visible) {
+      return (
+        <View
+          className="absolute top-10 float-right w-48 flex-col rounded-lg bg-white shadow-lg"
+          style={{ elevation: 999, zIndex: 999 }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              toggleDropdown();
+            }}
+            className="border-b-gray-3 v00 border-b py-4"
+          >
+            <Text className="px-2">A-Z</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              toggleDropdown();
+              // sortZA();
+            }}
+            className="border-b-gray-3 v00 border-b py-4"
+          >
+            <Text className="px-2">Pending</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              toggleDropdown();
+              // sortAscending();
+            }}
+            className="border-b-gray-3 v00 border-b py-4"
+          >
+            <Text className="px-2">Terbaru</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              toggleDropdown();
+              // sortDescending();
+            }}
+            className="border-b-gray-3 v00 border-b py-4"
+          >
+            <Text className="px-2">Terlama</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+  }
   return (
     <ScrollView className="w-full bg-[#DEE9FD] dark:bg-[#212121]">
       <Spinner visible={loading} textContent={"Loading..."} />
@@ -59,276 +112,389 @@ const CutiKaryawan = () => {
             }}
             className="my-4 w-32 rounded-md bg-blue-500 p-3"
           >
+            
             <Text className="text-center text-white">
               <Ionicons color="white" name="refresh-circle-outline" size={17} />
               Refresh
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="mb-6 rounded-md bg-[#f1f6ff] dark:bg-[#3a3a3a] shadow-lg">
-          <View className="p-4">
+        <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg dark:bg-[#3a3a3a]">
+        <View className="p-4" style={{ elevation: 10, zIndex: 10 }}>
             <View className="flex-row items-center justify-between">
-              <Text className="font-semibold">Daftar Cuti Karyawan</Text>
+              <Text className="font-semibold text-gray-600 dark:text-neutral-300">
+                Daftar Karyawan
+              </Text>
+              <View className="flex-row gap-2">
+                <Pressable
+                  onPress={toggleDropdown}
+                  className=" rounded-md border border-gray-600 p-1"
+                >
+                  {renderDropdown()}
+                  <View className="flex-row items-center justify-end">
+                    <Text className="font-semibold text-gray-600 dark:text-neutral-300">
+                      Sort By
+                    </Text>
+                    <Ionicons
+                      name="chevron-down-outline"
+                      size={18}
+                      color="gray"
+                    />
+                  </View>
+                </Pressable>
+              </View>
 
               {renderCek()}
             </View>
           </View>
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title   textStyle={{
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Nama</DataTable.Title>
-              <DataTable.Title   textStyle={{
+                }}
+              >
+                Nama
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Email</DataTable.Title>
-              <DataTable.Title   textStyle={{
+                }}
+              >
+                Email
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Alasan</DataTable.Title>
-              <DataTable.Title   textStyle={{
+                }}
+              >
+                Alasan
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Tanggal Mulai</DataTable.Title>
-              <DataTable.Title   textStyle={{
+                }}
+              >
+                Tanggal Mulai
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Lama Cuti</DataTable.Title>
-              <DataTable.Title   textStyle={{
+                }}
+              >
+                Lama Cuti
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Tanggal Selesai</DataTable.Title>
-              <DataTable.Title   textStyle={{
+                }}
+              >
+                Tanggal Selesai
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Status</DataTable.Title>
-              <DataTable.Title   textStyle={{
+                }}
+              >
+                Status
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
                   color:
                     colorScheme === "dark"
                       ? "#DEE9FD"
                       : colorScheme == "light"
                         ? "#212121"
                         : "DEE9FD",
-                }}>Aksi</DataTable.Title>
+                }}
+              >
+                Aksi
+              </DataTable.Title>
             </DataTable.Header>
 
-            {!cuti || cuti.length === 0 && (
-              <DataTable.Row>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }} >No data</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }} >No data</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }} >No data</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }} >No data</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }} >No data</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }} >No data</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }} >No data</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }} >No data</DataTable.Cell>
-              </DataTable.Row>
-            )}
+            {!cuti ||
+              (cuti.length === 0 && (
+                <DataTable.Row>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    No data
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    No data
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    No data
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    No data
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    No data
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    No data
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    No data
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    No data
+                  </DataTable.Cell>
+                </DataTable.Row>
+              ))}
 
-            {cuti && cuti.map((cutit) => (
-              <DataTable.Row key={cutit.id} className="py-2 lg:py-4">
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>{cutit.user.fullName}</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>{cutit.user.email}</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>{cutit.reason}</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>
-                  {formatISODate(cutit.startDate)}
-                </DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>{cutit.days} Hari</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>{formatISODate(cutit.endDate)}</DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>
-                  {cutit.status === 0
-                    ? "Pending"
-                    : cutit.status === 1
-                      ? "Diterima"
-                      : "Ditolak"}
-                </DataTable.Cell>
-                <DataTable.Cell   textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}>
-                  {cutit.status < 1 ? (
-                    <>
-                      <TouchableOpacity
-                        onPress={() =>
-                          SetPaidLeaveStatus(cutit.id, "1").then(() => {
-                            const newCuti = cutit;
-                            newCuti.status = 1;
-                            setCuti(
-                              cuti.map((c) =>
-                                c.id === cutit.id ? newCuti : c,
-                              ),
-                            );
-                          })
-                        }
-                        className="mr-1 rounded-md border border-gray-600 bg-green-200 p-3"
-                      >
-                        <Text className="text-gray-600">Terima</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={async () =>
-                          await SetPaidLeaveStatus(cutit.id, "2").then(() => {
-                            const newCuti = cutit;
-                            newCuti.status = 2;
-                            setCuti(
-                              cuti.map((c) =>
-                                c.id === cutit.id ? newCuti : c,
-                              ),
-                            );
-                          })
-                        }
-                        className="ml-1 rounded-md border border-gray-600 bg-red-200 p-3"
-                      >
-                        <Text className="text-gray-600">Tolak</Text>
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <>
-                      <Text className="mr-1 rounded-md border border-gray-600 bg-gray-200 p-3">
-                        Sudah dikonfirmasi
-                      </Text>
-                    </>
-                  )}
-                </DataTable.Cell>
-              </DataTable.Row>
-            ))}
+            {cuti &&
+              cuti.map((cutit) => (
+                <DataTable.Row key={cutit.id} className="py-2 lg:py-4">
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    {cutit.user.fullName}
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    {cutit.user.email}
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    {cutit.reason}
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    {formatISODate(cutit.startDate)}
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    {cutit.days} Hari
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    {formatISODate(cutit.endDate)}
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    {cutit.status === 0
+                      ? "Pending"
+                      : cutit.status === 1
+                        ? "Diterima"
+                        : "Ditolak"}
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    textStyle={{
+                      color:
+                        colorScheme === "dark"
+                          ? "#DEE9FD"
+                          : colorScheme == "light"
+                            ? "#212121"
+                            : "DEE9FD",
+                    }}
+                  >
+                    {cutit.status < 1 ? (
+                      <>
+                        <TouchableOpacity
+                          onPress={() =>
+                            SetPaidLeaveStatus(cutit.id, "1").then(() => {
+                              const newCuti = cutit;
+                              newCuti.status = 1;
+                              setCuti(
+                                cuti.map((c) =>
+                                  c.id === cutit.id ? newCuti : c,
+                                ),
+                              );
+                            })
+                          }
+                          className="mr-1 rounded-md border border-gray-600 bg-green-200 p-3"
+                        >
+                          <Text className="text-gray-600">Terima</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={async () =>
+                            await SetPaidLeaveStatus(cutit.id, "2").then(() => {
+                              const newCuti = cutit;
+                              newCuti.status = 2;
+                              setCuti(
+                                cuti.map((c) =>
+                                  c.id === cutit.id ? newCuti : c,
+                                ),
+                              );
+                            })
+                          }
+                          className="ml-1 rounded-md border border-gray-600 bg-red-200 p-3"
+                        >
+                          <Text className="text-gray-600">Tolak</Text>
+                        </TouchableOpacity>
+                      </>
+                    ) : (
+                      <>
+                        <Text className="mr-1 rounded-md border border-gray-600 bg-gray-200 p-3">
+                          Sudah dikonfirmasi
+                        </Text>
+                      </>
+                    )}
+                  </DataTable.Cell>
+                </DataTable.Row>
+              ))}
 
             <DataTable.Pagination
               page={page}
