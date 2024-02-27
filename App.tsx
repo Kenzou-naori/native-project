@@ -1,4 +1,5 @@
 import Auth from "./auth/Auth";
+
 import { NativeWindStyleSheet } from "nativewind";
 
 NativeWindStyleSheet.setOutput({

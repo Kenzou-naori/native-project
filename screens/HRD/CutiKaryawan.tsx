@@ -141,7 +141,7 @@ const CutiKaryawan = () => {
                 }}>Aksi</DataTable.Title>
             </DataTable.Header>
 
-            {cuti.length === 0 && (
+            {!cuti || cuti.length === 0 && (
               <DataTable.Row>
                 <DataTable.Cell   textStyle={{
                   color:
@@ -210,7 +210,7 @@ const CutiKaryawan = () => {
               </DataTable.Row>
             )}
 
-            {cuti.map((cutit) => (
+            {cuti && cuti.map((cutit) => (
               <DataTable.Row key={cutit.id} className="py-2 lg:py-4">
                 <DataTable.Cell   textStyle={{
                   color:
