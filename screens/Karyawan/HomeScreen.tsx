@@ -4,24 +4,28 @@ import {
   postAttendance,
   updateAttendance,
 } from "../../api/attendance";
-import { GetPaidLeave, GetPaidLeaves, SendPaidLeave } from "../../api/paidLeave";
+import {
+  GetPaidLeave,
+  GetPaidLeaves,
+  SendPaidLeave,
+} from "../../api/paidLeave";
 import { getCompany } from "../../api/company";
 import { showToast } from "../../api/util";
 import constant from "../../constant/date";
 import storage from "../../utils/storage";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // end api import
 
 // frontend import
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faSquareXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useCallback } from "react";
 import { StatusBar } from "expo-status-bar";
 import { AxiosError } from "axios";
 import { useColorScheme } from "nativewind";
+import { Camera, CameraType } from "expo-camera";
+
 import {
   Text,
   View,
@@ -37,25 +41,25 @@ import {
 
 import Toast from "react-native-toast-message";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
 // end frontend import
 
-const saveTheme = async ({theme}:any) => {
+const saveTheme = async ({ theme }: any) => {
   try {
-    await AsyncStorage.setItem('theme', theme); // Store theme as string
+    await AsyncStorage.setItem("theme", theme); // Store theme as string
   } catch (error) {
-    console.error('Error saving theme:', error);
+    console.error("Error saving theme:", error);
   }
 };
 
 const loadTheme = async () => {
   try {
-    const storedTheme = await AsyncStorage.getItem('theme');
-    return storedTheme || 'dark'; // Return theme or default (e.g., 'dark')
+    const storedTheme = await AsyncStorage.getItem("theme");
+    return storedTheme || "dark"; // Return theme or default (e.g., 'dark')
   } catch (error) {
-    console.error('Error loading theme:', error);
-    return 'dark';
+    console.error("Error loading theme:", error);
+    return "dark";
   }
 };
 // HomeScreen
@@ -79,30 +83,31 @@ export default function HomeScreen({ navigation }: any) {
   const [_, setPaidLeaves] = useState<IPaidLeave[]>([]);
   const { colorScheme, toggleColorScheme } = useColorScheme();
   const [image, setImage] = useState<string | null>(null);
-  const [storedTheme, setStoredTheme] = useState(null); // Initialize stored theme
 
-  useEffect(() => {
-    const fetchTheme = async () => {
-      try {
-        const storedTheme = await AsyncStorage.getItem('darkTheme');
-        setStoredTheme(storedTheme || 'light'); // Use default 'light' if no value found
-      } catch (error) {
-        console.error('Error fetching stored theme:', error);
-      }
-    };
+  // const [storedTheme, setStoredTheme] = useState(null); // Initialize stored theme
 
-    fetchTheme();
-  }, []); // Load theme on component mount
+  // useEffect(() => {
+  //   const fetchTheme = async () => {
+  //     try {
+  //       const storedTheme = await AsyncStorage.getItem('darkTheme');
+  //       setStoredTheme(storedTheme || 'light'); // Use default 'light' if no value found
+  //     } catch (error) {
+  //       console.error('Error fetching stored theme:', error);
+  //     }
+  //   };
 
-  const updateThemeAndStorage = async (newColorScheme:any) => {
-    try {
-      await AsyncStorage.setItem('darkTheme', newColorScheme);
-      setStoredTheme(newColorScheme);
-      toggleColorScheme(); // Update current theme using nativewind's functionality
-    } catch (error) {
-      console.error('Error saving theme:', error);
-    }
-  };
+  //   fetchTheme();
+  // }, []); // Load theme on component mount
+
+  // const updateThemeAndStorage = async (newColorScheme:any) => {
+  //   try {
+  //     await AsyncStorage.setItem('darkTheme', newColorScheme);
+  //     setStoredTheme(newColorScheme);
+  //     toggleColorScheme(); // Update current theme using nativewind's functionality
+  //   } catch (error) {
+  //     console.error('Error saving theme:', error);
+  //   }
+  // };
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -115,10 +120,23 @@ export default function HomeScreen({ navigation }: any) {
 
     console.log(result);
 
-    if (!result.canceled) { // Use "canceled" here
+    if (!result.canceled) {
+      // Use "canceled" here
       setImage(result.assets[0].uri);
     }
   };
+  const [type, setType] = useState(CameraType.back);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+
+  // if (!permission) ...
+
+  // if (!permission.granted) ...
+
+  function toggleCameraType() {
+    setType((current) =>
+      current === CameraType.back ? CameraType.front : CameraType.back,
+    );
+  }
 
   // When refresh
   const onRefresh = useCallback(async () => {
@@ -287,7 +305,7 @@ export default function HomeScreen({ navigation }: any) {
       <View className="mt-6 flex-row justify-between px-5">
         <View className="mx-auto mt-5 flex w-16 flex-row items-center justify-center rounded-full bg-[#DEE9FD] p-2 shadow-md shadow-gray-800 dark:bg-[#3a3a3a] dark:shadow-white">
           {/* <Switch value={colorScheme =='dark'} onChange={toggleColorScheme}/> */}
-          <TouchableOpacity onPress={() => updateThemeAndStorage(storedTheme === 'dark' ? 'light' : 'dark')}>
+          <TouchableOpacity onPress={toggleColorScheme}>
             <Ionicons
               size={32}
               color={
@@ -513,7 +531,7 @@ export default function HomeScreen({ navigation }: any) {
                     </Text>
                   </Pressable>
                 </View>
-                
+
                 <View className="flex-row justify-around pt-4">
                   <View className="flex-col">
                     <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
@@ -629,7 +647,6 @@ export default function HomeScreen({ navigation }: any) {
                 </Text>
                 <View className="flex-row">
                   <TextInput
-                  
                     className="border-b-2 border-b-gray-500 p-3 text-lg"
                     // value={value}
                     keyboardType="number-pad"
@@ -708,10 +725,17 @@ export default function HomeScreen({ navigation }: any) {
                 <Text className="text-md  font-bold text-gray-600 dark:text-neutral-300">
                   Foto Surat Sakit
                 </Text>
-                <Button title="Pilih foto surat sakit yang diberikan dokter" onPress={pickImage} />
-                <View
-                className="mt-3">
-                    {image && <Image source={{ uri: image }} style={{  aspectRatio:  3 / 4 }} />}
+                <Button
+                  title="Pilih foto surat sakit yang diberikan dokter"
+                  onPress={pickImage}
+                />
+                <View className="mt-3">
+                  {image && (
+                    <Image
+                      source={{ uri: image }}
+                      style={{ aspectRatio: 3 / 4 }}
+                    />
+                  )}
                 </View>
                 {/* <TextInput
                   className="border-b-2 border-b-gray-500 py-3 text-lg"
@@ -773,7 +797,6 @@ export default function HomeScreen({ navigation }: any) {
                 </Text>
                 <View className="flex-row">
                   <TextInput
-                  
                     className="border-b-2 border-b-gray-500 p-3 text-lg"
                     // value={value}
                     keyboardType="number-pad"
@@ -833,7 +856,6 @@ export default function HomeScreen({ navigation }: any) {
       </Modal>
     );
   }
-
 }
 
 const Separator = () => (

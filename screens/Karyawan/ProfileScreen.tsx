@@ -95,7 +95,7 @@ const ProfileScreen = ({ navigation }: any) => {
       />
     </View>
   );
-  function feedbackModal() { 
+  function feedbackModal() {
     return (
       <Modal visible={openFeedback} animationType="fade" transparent={true}>
         <View className="h-full rounded-[20px] bg-[#f0fafd] p-5 dark:bg-[#3a3a3a]">

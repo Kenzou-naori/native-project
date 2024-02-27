@@ -12,11 +12,14 @@ import { AxiosError } from "axios";
 
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useColorScheme } from "nativewind";
 
 const PengaduanUser = () => {
   const [loading, setLoading] = useState(true);
   const [showCek, setShowCek] = useState(false);
   const [cuti, setCuti] = useState<IPaidLeaveWithuser[]>([]);
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
   const [totalCuti, setTotalCuti] = useState<number>(0);
   const [page, setPage] = useState<number>(0);
   const from = page * 25;
@@ -39,7 +42,7 @@ const PengaduanUser = () => {
   }, []);
 
   return (
-    <ScrollView className="w-full bg-[#DEE9FD]">
+    <ScrollView className="w-full bg-[#DEE9FD] dark:bg-[#212121]">
       <Spinner visible={loading} textContent={"Loading..."} />
       {/* refresh */}
       <View className="px-3 py-6 lg:px-10 xl:px-24 2xl:px-60">
@@ -62,46 +65,136 @@ const PengaduanUser = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg">
+        <View className="mb-6 rounded-md bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white shadow-lg">
           <View className="p-4">
             <View className="flex-row items-center justify-between">
-              <Text className="font-semibold">Daftar Pengaduan Karyawan</Text>
+              <Text className="font-semibold text-gray-600 dark:text-neutral-300">Daftar Pengaduan Karyawan</Text>
 
               {renderCek()}
             </View>
           </View>
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title>Nama</DataTable.Title>
-              <DataTable.Title>Email</DataTable.Title>
-              <DataTable.Title>Pengaduan</DataTable.Title>
-              <DataTable.Title>Status</DataTable.Title>
-              <DataTable.Title>Aksi</DataTable.Title>
+              <DataTable.Title textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>Nama</DataTable.Title>
+              <DataTable.Title textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>Email</DataTable.Title>
+              <DataTable.Title textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>Pengaduan</DataTable.Title>
+              <DataTable.Title textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>Status</DataTable.Title>
+              <DataTable.Title textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>Aksi</DataTable.Title>
             </DataTable.Header>
 
             {cuti.length === 0 && (
               <DataTable.Row>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>No data</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>No data</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>No data</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>No data</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>No data</DataTable.Cell>
               </DataTable.Row>
             )}
 
             {cuti.map((cutit) => (
               <DataTable.Row key={cutit.id} className="py-2 lg:py-4">
-                <DataTable.Cell>{cutit.user.fullName}</DataTable.Cell>
-                <DataTable.Cell>{cutit.user.email}</DataTable.Cell>
-                <DataTable.Cell>{cutit.reason}</DataTable.Cell>
-                <DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>{cutit.user.fullName}</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>{cutit.user.email}</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>{cutit.reason}</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>
                   {cutit.status === 0
                     ? "Pending"
                     : cutit.status === 1
                       ? "Sudah Betul"
                       : "Ditolak"}
                 </DataTable.Cell>
-                <DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>
                   {cutit.status < 1 ? (
                     <>
                       <TouchableOpacity

@@ -1,6 +1,13 @@
 {
   "extends": "expo/tsconfig.base",
-  "include": ["nativewindapp.d.ts", "./**/*", ".navigation", "screens/"],
+  "include": [
+    "nativewindapp.d.ts",
+    "./**/*",
+    ".navigation",
+    "screens/",
+    "auth/Auth.tsx",
+    "layout/CustomDrawer.tsx"
+  ],
   "compilerOptions": {
     "strict": true,
     "target": "esnext",

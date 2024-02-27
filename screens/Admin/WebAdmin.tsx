@@ -13,6 +13,7 @@ import { AxiosError } from "axios";
 
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useColorScheme } from "nativewind";
 
 const WebAdmin = () => {
   const [loading, setLoading] = useState(false);
@@ -55,6 +56,7 @@ const WebAdmin = () => {
   const [totalKaryawan, setTotalKaryawan] = useState<number>(0);
   const [cuti, setCuti] = useState<IPaidLeave[]>([]);
   const [totalCuti, setTotalCuti] = useState<number>(0);
+  const { colorScheme, toggleColorScheme } = useColorScheme();
 
   const [page, setPage] = useState<number>(0);
   const from = page * 25;
@@ -160,7 +162,7 @@ const WebAdmin = () => {
     },
   ];
   return (
-    <ScrollView className="w-full bg-[#DEE9FD]">
+    <ScrollView className="w-full bg-[#DEE9FD] dark:bg-[#212121]">
       <Spinner visible={loading} textContent={"Loading..."} />
       {/* <View className="absolute p-3 my-36 w-48 h-96 bg-white">
             <Text>hllo</Text>
@@ -168,24 +170,44 @@ const WebAdmin = () => {
       <View className="px-3 py-6 lg:px-10 xl:px-24 2xl:px-60">
         <View className="flex-row">
           <View className="w-[60%] flex-row flex-wrap gap-4 py-4">
-            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] lg:w-[247px]">
-              <Ionicons size={32} color="black" name="people-outline" />
+            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] lg:w-[247px]">
+              <Ionicons
+                size={32}
+                color={
+                  colorScheme === "dark"
+                    ? "#DEE9FD"
+                    : colorScheme == "light"
+                      ? "#212121"
+                      : "DEE9FD"
+                }
+                name="people-outline"
+              />
               <View className="ml-4 flex-col">
-                <Text className="text-2xl font-bold text-gray-600">
+                <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                   {totalKaryawan}
                 </Text>
-                <Text className="text-xl font-semibold text-gray-600">
+                <Text className="text-xl font-semibold text-gray-600 dark:text-neutral-300">
                   Karyawan
                 </Text>
               </View>
             </View>
-            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] lg:w-[247px]">
-              <Ionicons size={32} color="black" name="location-outline" />
+            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] lg:w-[247px]">
+              <Ionicons
+                size={32}
+                color={
+                  colorScheme === "dark"
+                    ? "#DEE9FD"
+                    : colorScheme == "light"
+                      ? "#212121"
+                      : "DEE9FD"
+                }
+                name="location-outline"
+              />
               <View className="ml-4 flex-col">
-                <Text className="text-2xl font-bold text-gray-600">
+                <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                   {totalAttendances}
                 </Text>
-                <Text className="text-xl font-semibold text-gray-600">
+                <Text className="text-xl font-semibold text-gray-600 dark:text-neutral-300">
                   Presensi
                 </Text>
               </View>
@@ -193,19 +215,29 @@ const WebAdmin = () => {
             {/* <View className="border rounded-2xl border-gray-400 w-[45%] lg:w-[247px]  p-[20] mb-[20] mt-4 flex-row bg-[#f1f6ff]">
 						<Ionicons size={32} color="black" name="hand-left-outline" />
 						<View className="flex-col ml-4">
-							<Text className="text-2xl font-bold text-gray-600">0</Text>
-							<Text className="text-xl font-semibold text-gray-600">Izin</Text>
+							<Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">0</Text>
+							<Text className="text-xl font-semibold text-gray-600 dark:text-neutral-300">Izin</Text>
 						</View>
 					</View> */}
             {/* <BarChart data={barData}/> */}
 
-            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] lg:w-[247px]">
-              <Ionicons size={32} color="black" name="walk-outline" />
+            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] lg:w-[247px]">
+              <Ionicons
+                size={32}
+                color={
+                  colorScheme === "dark"
+                    ? "#DEE9FD"
+                    : colorScheme == "light"
+                      ? "#212121"
+                      : "DEE9FD"
+                }
+                name="walk-outline"
+              />
               <View className="ml-4 flex-col">
-                <Text className="text-2xl font-bold text-gray-600">
+                <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                   {totalCuti}
                 </Text>
-                <Text className="text-xl font-semibold text-gray-600">
+                <Text className="text-xl font-semibold text-gray-600 dark:text-neutral-300">
                   Cuti
                 </Text>
               </View>
@@ -307,29 +339,141 @@ const WebAdmin = () => {
           </TouchableOpacity>
           {/* logout */}
         </View>
-        <View className="rounded-md bg-[#f1f6ff] shadow-lg">
+        <View className="rounded-md bg-[#f1f6ff] shadow-lg dark:bg-[#3a3a3a]">
           <View className="p-8">
             <View className="flex-row items-center justify-between">
-              <Text className="font-semibold">Presensi Kehadiran</Text>
+              <Text className="font-semibold text-gray-600 dark:text-neutral-300">
+                Presensi Kehadiran
+              </Text>
               {renderCalendar()}
             </View>
           </View>
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title>Nama</DataTable.Title>
-              <DataTable.Title>Email</DataTable.Title>
-              <DataTable.Title>No. HP</DataTable.Title>
-              <DataTable.Title>Presensi</DataTable.Title>
-              <DataTable.Title>Status</DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                Nama
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                Email
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                No. HP
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                Presensi
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                Status
+              </DataTable.Title>
             </DataTable.Header>
 
             {attendances.length === 0 && (
               <DataTable.Row>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
               </DataTable.Row>
             )}
 
@@ -341,11 +485,64 @@ const WebAdmin = () => {
                   setShowDetail(true);
                 }}
               >
-                <DataTable.Cell>{attendance.user.fullName}</DataTable.Cell>
-                <DataTable.Cell>{attendance.user.email}</DataTable.Cell>
-                <DataTable.Cell>{attendance.user.phone}</DataTable.Cell>
-                <DataTable.Cell>{formatDate(attendance.date)}</DataTable.Cell>
-                <DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {attendance.user.fullName}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {attendance.user.email}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {attendance.user.phone}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {formatDate(attendance.date)}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
                   {capitalizeFirstLetter(attendance.status)}
                 </DataTable.Cell>
               </DataTable.Row>

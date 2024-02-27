@@ -37,6 +37,8 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+
+
 const theme = {
   // Extend Material Design 2 theme
 
@@ -48,7 +50,7 @@ const theme = {
   // Specify a custom nested property
   colors: {
     ...MD2LightTheme.colors,
-    myOwnColor: "#BADA55",
+    myOwnColor: "#212121",
   },
 };
 
@@ -59,6 +61,16 @@ function MyDrawer() {
         screenOptions={{
           drawerStyle: styles.drawerStyle,
           headerStyle: styles.topbar,
+          drawerInactiveTintColor: 'gray',
+          drawerActiveTintColor: 'lightgray',
+          drawerActiveBackgroundColor: 'gray',
+          headerTintColor : 'white',
+          drawerType : 'permanent',
+          headerShown : false,
+          headerTitleStyle : {
+            color :'black',
+            
+          }
         }}
         drawerContent={(props) => <CustomDrawer {...props} />}
       >
@@ -77,7 +89,18 @@ function HRDScreen() {
         screenOptions={{
           drawerStyle: styles.drawerStyle,
           headerStyle: styles.topbar,
+          drawerInactiveTintColor: 'gray',
+          drawerActiveTintColor: 'lightgray',
+          drawerActiveBackgroundColor: 'gray',
+          headerTintColor : 'white',
+          drawerType : 'permanent',
+          headerShown : false,
+          headerTitleStyle : {
+            color :'black',
+            
+          }
         }}
+        
         drawerContent={(props) => <CustomDrawer {...props} />}
       >
         <Drawer.Screen name={WebAdminName} component={WebAdmin} />

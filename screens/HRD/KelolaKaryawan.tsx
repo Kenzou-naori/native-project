@@ -40,7 +40,6 @@ const KelolaKaryawan = () => {
   const [visible, setVisible] = useState(false);
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
-
   const toggleDropdown = () => {
     setVisible(!visible);
   };
@@ -186,18 +185,18 @@ const KelolaKaryawan = () => {
     }
   }
   return (
-    <ScrollView className="w-full bg-[#DEE9FD]">
+    <ScrollView className="w-full bg-[#DEE9FD] dark:bg-[#212121]">
       <Spinner visible={loading} textContent={"Loading..."} />
       <View className="px-3 py-6 lg:px-10 xl:px-24 2xl:px-60">
         <View className="flex-row">
           <View className="w-[60%] flex-row flex-wrap gap-4 py-4">
-            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] lg:w-[247px]">
+            <View className="mb-[20] mt-4 w-[45%] flex-row items-center rounded-2xl border border-gray-400 bg-[#f1f6ff] p-[20] dark:bg-[#3a3a3a] dark:shadow-white lg:w-[247px]">
               <Ionicons size={32} color="black" name="people-outline" />
               <View className="ml-4 flex-col">
-                <Text className="text-2xl font-bold text-gray-600">
+                <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                   {totalKaryawan}
                 </Text>
-                <Text className="text-xl font-semibold text-gray-600">
+                <Text className="text-xl font-semibold text-gray-600 dark:text-neutral-300">
                   Karyawan
                 </Text>
               </View>
@@ -229,10 +228,12 @@ const KelolaKaryawan = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg">
+        <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg dark:bg-[#3a3a3a] dark:shadow-white">
           <View className="p-4" style={{ elevation: 10, zIndex: 10 }}>
             <View className="flex-row items-center justify-between">
-              <Text className="font-semibold">Daftar Karyawan</Text>
+              <Text className="font-semibold text-gray-600 dark:text-neutral-300">
+                Daftar Karyawan
+              </Text>
               <View className="flex-row gap-2">
                 <Pressable
                   onPress={toggleDropdown}
@@ -240,7 +241,9 @@ const KelolaKaryawan = () => {
                 >
                   {renderDropdown()}
                   <View className="flex-row items-center justify-end">
-                    <Text className="font-semibold text-gray-600">Sort By</Text>
+                    <Text className="font-semibold text-gray-600 dark:text-neutral-300">
+                      Sort By
+                    </Text>
                     <Ionicons
                       name="chevron-down-outline"
                       size={18}
@@ -252,7 +255,7 @@ const KelolaKaryawan = () => {
                   onPress={() => setShowModal(true)}
                   className="rounded-md border border-gray-600 p-1"
                 >
-                  <Text className="font-semibold text-gray-600">
+                  <Text className="font-semibold text-gray-600 dark:text-neutral-300">
                     Tambah Karyawan
                   </Text>
                 </TouchableOpacity>
@@ -263,36 +266,197 @@ const KelolaKaryawan = () => {
 
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title>Nama</DataTable.Title>
-              <DataTable.Title>Email</DataTable.Title>
-              <DataTable.Title>No. HP</DataTable.Title>
-              <DataTable.Title>Tipe</DataTable.Title>
-              <DataTable.Title>Aksi</DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                Nama
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                Email
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                No. HP
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                Tipe
+              </DataTable.Title>
+              <DataTable.Title
+                textStyle={{
+                  color:
+                    colorScheme === "dark"
+                      ? "#DEE9FD"
+                      : colorScheme == "light"
+                        ? "#212121"
+                        : "DEE9FD",
+                }}
+              >
+                Aksi
+              </DataTable.Title>
             </DataTable.Header>
 
             {karyawan.length === 0 && (
               <DataTable.Row>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  No data
+                </DataTable.Cell>
               </DataTable.Row>
             )}
 
             {karyawan.map((karyawan) => (
               <DataTable.Row key={karyawan.id} className="py-2 lg:py-4">
-                <DataTable.Cell>{karyawan.fullName}</DataTable.Cell>
-                <DataTable.Cell>{karyawan.email}</DataTable.Cell>
-                <DataTable.Cell>{karyawan.phone}</DataTable.Cell>
-                <DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {karyawan.fullName}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {karyawan.email}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
+                  {karyawan.phone}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
                   {karyawan.accessLevel === 1
                     ? "Admin"
                     : karyawan.accessLevel === 2
                       ? "HRD"
                       : "Karyawan"}
                 </DataTable.Cell>
-                <DataTable.Cell>
+                <DataTable.Cell
+                  textStyle={{
+                    color:
+                      colorScheme === "dark"
+                        ? "#DEE9FD"
+                        : colorScheme == "light"
+                          ? "#212121"
+                          : "DEE9FD",
+                  }}
+                >
                   <View className="flex-col gap-1 lg:flex-row">
                     <TouchableOpacity
                       onPress={() => {
@@ -343,6 +507,9 @@ const KelolaKaryawan = () => {
               label={`${from + 1}-${to} of ${totalKaryawan}`}
               showFastPaginationControls
               numberOfItemsPerPage={25}
+              selectPageDropdownRippleColor={"white"}
+              dropdownItemRippleColor={'white'}
+              paginationControlRippleColor={'white'}
             />
           </DataTable>
         </View>
@@ -355,7 +522,7 @@ const KelolaKaryawan = () => {
         <View className="h-full items-center justify-center">
           <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
             <View className="flex-row justify-between">
-              <Text className="text-2xl font-bold text-gray-600">
+              <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                 Tambah Karyawan
               </Text>
               <TouchableOpacity onPress={() => setShowModal(false)}>
@@ -364,7 +531,7 @@ const KelolaKaryawan = () => {
             </View>
             {/* <View className="bg-[#f0fafd] rounded-t-[50px] h-full mt-[156] p-5 -mb-56"> */}
             {/* <View className="flex-row justify-between">
-						<Text className="text-2xl font-bold text-gray-600">Tambah Tugas</Text>
+						<Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">Tambah Tugas</Text>
 						<TouchableOpacity onPress={() => setShowModal(false)}>
 							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 						</TouchableOpacity>
@@ -373,7 +540,7 @@ const KelolaKaryawan = () => {
               <View className="my-5 flex-col items-center justify-center">
                 {/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
                 <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600">
+                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
                     Nama Lengkap
                   </Text>
                   <TextInput
@@ -383,7 +550,7 @@ const KelolaKaryawan = () => {
                   />
                 </View>
                 <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600">
+                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
                     Password
                   </Text>
                   <TextInput
@@ -394,7 +561,9 @@ const KelolaKaryawan = () => {
                   />
                 </View>
                 <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600">Email</Text>
+                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
+                    Email
+                  </Text>
                   <TextInput
                     className="border-b-2 border-b-gray-500 py-3 text-lg"
                     // value={value}
@@ -403,7 +572,7 @@ const KelolaKaryawan = () => {
                   />
                 </View>
                 <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600">
+                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
                     No. HP
                   </Text>
                   <TextInput
@@ -440,7 +609,7 @@ const KelolaKaryawan = () => {
                 }}
               >
                 <View className="mt-6 rounded-full bg-[#DEE9FD]">
-                  <Text className="px-3 py-2 text-center text-xl font-semibold text-gray-600">
+                  <Text className="px-3 py-2 text-center text-xl font-semibold text-gray-600 dark:text-neutral-300">
                     Tambah
                   </Text>
                 </View>
@@ -458,7 +627,7 @@ const KelolaKaryawan = () => {
         <View className="h-full items-center justify-center">
           <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
             <View className="flex-row justify-between">
-              <Text className="text-2xl font-bold text-gray-600">
+              <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                 Edit Karyawan
               </Text>
               <TouchableOpacity onPress={() => setShowUpdateModal(false)}>
@@ -469,7 +638,7 @@ const KelolaKaryawan = () => {
               <View className="my-5 flex-col items-center justify-center">
                 {/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
                 <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600">
+                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
                     Nama Lengkap
                   </Text>
                   <TextInput
@@ -480,7 +649,9 @@ const KelolaKaryawan = () => {
                   />
                 </View>
                 <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600">Email</Text>
+                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
+                    Email
+                  </Text>
                   <TextInput
                     className="border-b-2 border-b-gray-500 py-3 text-lg"
                     // value={value}
@@ -490,7 +661,7 @@ const KelolaKaryawan = () => {
                   />
                 </View>
                 <View className="mt-4 w-full">
-                  <Text className="text-md font-bold text-gray-600">
+                  <Text className="text-md font-bold text-gray-600 dark:text-neutral-300">
                     No. HP
                   </Text>
                   <TextInput
@@ -534,7 +705,7 @@ const KelolaKaryawan = () => {
                 }}
               >
                 <View className="mt-6 rounded-full bg-[#DEE9FD]">
-                  <Text className="px-3 py-2 text-center text-xl font-semibold text-gray-600">
+                  <Text className="px-3 py-2 text-center text-xl font-semibold text-gray-600 dark:text-neutral-300">
                     Submit
                   </Text>
                 </View>
@@ -555,7 +726,7 @@ const KelolaKaryawan = () => {
         <View className="h-full items-center justify-center">
           <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
             <View className="flex-row justify-between">
-              <Text className="text-2xl font-bold text-gray-600">
+              <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                 Apakah anda yakin?
               </Text>
               <TouchableOpacity onPress={() => setShowDeleteConfrim(false)}>
@@ -581,7 +752,7 @@ const KelolaKaryawan = () => {
                 }}
               >
                 <View className="mt-6 rounded-full bg-[#fddede]">
-                  <Text className="px-3 py-2 text-center text-xl font-semibold text-gray-600">
+                  <Text className="px-3 py-2 text-center text-xl font-semibold text-gray-600 dark:text-neutral-300">
                     Yakin
                   </Text>
                 </View>
@@ -595,7 +766,12 @@ const KelolaKaryawan = () => {
 };
 
 const styles = StyleSheet.create({
-  //
+  TextLight: {
+    color: "gray",
+  },
+  TextDark: {
+    color: "white",
+  },
 });
 
 export default KelolaKaryawan;

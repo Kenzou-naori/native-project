@@ -20,6 +20,7 @@ import { AxiosError } from "axios";
 
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useColorScheme } from "nativewind";
 
 const ManageIP = () => {
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,8 @@ const ManageIP = () => {
   const [ipAddresses, setIpAddresses] = useState<string[]>([]);
   const [newIpAddress, setNewIpAddress] = useState<string>("");
   const [ipAddress, setIpAddress] = useState<string>("");
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
 
   useEffect(() => {
     async function loadIpAddresses() {
@@ -42,7 +45,7 @@ const ManageIP = () => {
   }, []);
 
   return (
-    <ScrollView className="w-full bg-[#DEE9FD]">
+    <ScrollView className="w-full bg-[#DEE9FD] dark:bg-[#212121]">
       <Spinner visible={loading} textContent={"Loading..."} />
       <View className="px-3 py-6 lg:px-10 xl:px-24 2xl:px-60">
         <View className="flex-row">
@@ -69,16 +72,16 @@ const ManageIP = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg">
+        <View className="mb-6 rounded-md bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white shadow-lg">
           <View className="p-4" style={{ elevation: 10, zIndex: 10 }}>
             <View className="flex-row items-center justify-between">
-              <Text className="font-semibold">Daftar Alamat IP</Text>
+              <Text className="font-semibold text-gray-600 dark:text-neutral-300">Daftar Alamat IP</Text>
               <View className="flex-row gap-2">
                 <TouchableOpacity
                   onPress={() => setShowModal(true)}
                   className="rounded-md border border-gray-600 p-1"
                 >
-                  <Text className="font-semibold text-gray-600">
+                  <Text className="font-semibold text-gray-600 dark:text-neutral-300">
                     Tambah Alamat IP
                   </Text>
                 </TouchableOpacity>
@@ -89,21 +92,57 @@ const ManageIP = () => {
 
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title>Alamat IP</DataTable.Title>
-              <DataTable.Title numeric>Aksi</DataTable.Title>
+              <DataTable.Title textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>Alamat IP</DataTable.Title>
+              <DataTable.Title textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }} numeric>Aksi</DataTable.Title>
             </DataTable.Header>
 
             {ipAddresses.length === 0 && (
               <DataTable.Row>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>No data</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>No data</DataTable.Cell>
               </DataTable.Row>
             )}
 
             {ipAddresses.map((ip) => (
               <DataTable.Row key={ip} className="py-2 lg:py-4">
-                <DataTable.Cell>{ip}</DataTable.Cell>
-                <DataTable.Cell numeric>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>{ip}</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }} numeric>
                   <View className="flex-col gap-1 lg:flex-row">
                     <TouchableOpacity
                       onPress={() => {
@@ -122,16 +161,16 @@ const ManageIP = () => {
             {renderDeleteConfrim()}
           </DataTable>
         </View>
-        <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg">
+        <View className="mb-6 rounded-md bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white shadow-lg">
           <View className="p-4" style={{ elevation: 10, zIndex: 10 }}>
             <View className="flex-row items-center justify-between">
-              <Text className="font-semibold">Daftar Kordinat Lokasi</Text>
+              <Text className="font-semibold text-gray-600 dark:text-neutral-300">Daftar Kordinat Lokasi</Text>
               <View className="flex-row gap-2">
                 <TouchableOpacity
                   onPress={() => setShowModal(true)}
                   className="rounded-md border border-gray-600 p-1"
                 >
-                  <Text className="font-semibold text-gray-600">
+                  <Text className="font-semibold text-gray-600 dark:text-neutral-300">
                     Tambah Lokasi
                   </Text>
                 </TouchableOpacity>
@@ -142,21 +181,57 @@ const ManageIP = () => {
 
           <DataTable>
             <DataTable.Header>
-              <DataTable.Title>Kordinat Lokasi</DataTable.Title>
-              <DataTable.Title numeric>Aksi</DataTable.Title>
+              <DataTable.Title textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>Kordinat Lokasi</DataTable.Title>
+              <DataTable.Title textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }} numeric>Aksi</DataTable.Title>
             </DataTable.Header>
 
             {ipAddresses.length === 0 && (
               <DataTable.Row>
-                <DataTable.Cell>No data</DataTable.Cell>
-                <DataTable.Cell>No data</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>No data</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>No data</DataTable.Cell>
               </DataTable.Row>
             )}
 
             {ipAddresses.map((ip) => (
               <DataTable.Row key={ip} className="py-2 lg:py-4">
-                <DataTable.Cell>{ip}</DataTable.Cell>
-                <DataTable.Cell numeric>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }}>{ip}</DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: 
+                colorScheme === "dark"
+                  ? "#DEE9FD"
+                  : colorScheme == "light"
+                    ? "#212121"
+                    : "DEE9FD"
+              }} numeric>
                   <View className="flex-col gap-1 lg:flex-row">
                     <TouchableOpacity
                       onPress={() => {
@@ -184,7 +259,7 @@ const ManageIP = () => {
         <View className="h-full items-center justify-center">
           <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
             <View className="flex-row justify-between">
-              <Text className="text-2xl font-bold text-gray-600">
+              <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300">
                 Tambah Alamat Lokasi
               </Text>
               <TouchableOpacity onPress={() => setShowModal(false)}>

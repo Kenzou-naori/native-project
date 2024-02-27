@@ -205,19 +205,17 @@ export default function HistoryScreen({ navigation }: any) {
                   className="border-b-2 border-b-gray-500 py-3 text-lg"
                   keyboardType="default"
                   onChangeText={(text) => setTitle(text)}
-                  />
+                />
               </View>
-                  </View>
-             
+            </View>
+
             <TouchableOpacity
               onPress={async () => {
-  
                 if (title === "") {
                   showToast("Alasan tidak boleh kosong");
                   return;
-              
                 }
-  
+
                 // const data: IAPIPaidLeaveData = {
                 //   reason: title,
                 //   startDate: date,
@@ -227,8 +225,8 @@ export default function HistoryScreen({ navigation }: any) {
                 //   if (res instanceof AxiosError) {
                 //     console.log(res);
                 //   } else {
-                    setOpenFeedback(false);
-                  // }
+                setOpenFeedback(false);
+                // }
                 // });
               }}
             >
