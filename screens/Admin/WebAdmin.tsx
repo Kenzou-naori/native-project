@@ -53,7 +53,6 @@ const WebAdmin = () => {
     created_at: "",
     updated_at: "",
   });
-  const barData = [{ value: 15 }, { value: 30 }, { value: 26 }, { value: 40 }];
   const [karyawan, setKaryawan] = useState<IUser[]>([]);
   const [totalKaryawan, setTotalKaryawan] = useState<number>(0);
   const [cuti, setCuti] = useState<IPaidLeave[]>([]);
@@ -504,7 +503,9 @@ const WebAdmin = () => {
     return (
       <Modal animationType="fade" transparent={true} visible={showDetail}>
         <View className="h-full items-center justify-center">
-          <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
+          
+          <View className="w-full rounded-2xl bg-[#f0fafd] dark:bg-[#3a3a3a] p-5 lg:w-[80%]">
+            
             <View className="flex-row justify-between">
               <Text className="text-2xl font-bold text-gray-600 dark:text-neutral-300 ">
                 Detail Presensi
@@ -520,6 +521,61 @@ const WebAdmin = () => {
 							<FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
 						</TouchableOpacity>
 					</View> */}
+          <View className="flex-row">
+
+          <View className=" items-center justify-center">
+            <PieChart
+              data={data}
+              width={420}
+              height={220}
+              chartConfig={chartConfig}
+              accessor={"attendance"}
+              backgroundColor={"transparent"}
+              paddingLeft={"0"}
+              absolute
+              avoidFalseZero
+            />
+            <View className="flex-row flex-wrap gap-4">
+              <TouchableOpacity
+                className={
+                  "rounded-md p-2 " +
+                  (chart === 1 ? "bg-gray-500" : "bg-blue-500")
+                }
+                onPress={async () => {
+                  const totalAttendances = await storage.load({
+                    key: "totalAttendances",
+                  });
+                  const totalAttendancesData: TotalDataAttendance =
+                    JSON.parse(totalAttendances);
+                  setChart(1);
+                  setTotalPresent(totalAttendancesData.monthly.present);
+                  setTotalAbsent(totalAttendancesData.monthly.absent);
+                }}
+                disabled={chart === 1}
+              >
+                <Text className=" text-gray-200">Per Bulan</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className={
+                  "rounded-md p-2 " +
+                  (chart === 0 ? "bg-gray-500" : "bg-blue-500")
+                }
+                onPress={async () => {
+                  const totalAttendances = await storage.load({
+                    key: "totalAttendances",
+                  });
+                  const totalAttendancesData: TotalDataAttendance =
+                    JSON.parse(totalAttendances);
+                  setChart(0);
+                  setTotalPresent(totalAttendancesData.weekly.present);
+                  setTotalAbsent(totalAttendancesData.weekly.absent);
+                }}
+                disabled={chart === 0}
+              >
+                <Text className=" text-gray-200">Per Minggu</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View className="my-5 flex-col items-center justify-center">
                 {/* <Text className="text-2xl font-bold">Riwayat Presensi</Text> */}
@@ -527,13 +583,13 @@ const WebAdmin = () => {
                   <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
                     Nama Lengkap
                   </Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg">
+                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
                     {attendance.user.fullName}
                   </Text>
                 </View>
                 <View className="mt-4 w-full">
                   <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">Email</Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg">
+                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
                     {attendance.user.email}
                   </Text>
                 </View>
@@ -541,7 +597,7 @@ const WebAdmin = () => {
                   <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
                     No. HP
                   </Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg">
+                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
                     {attendance.user.phone}
                   </Text>
                 </View>
@@ -549,7 +605,7 @@ const WebAdmin = () => {
                   <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
                     Presensi
                   </Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg">
+                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
                     {formatDate(attendance.date)}
                   </Text>
                 </View>
@@ -557,12 +613,13 @@ const WebAdmin = () => {
                   <Text className="text-md font-bold text-gray-600 dark:text-neutral-300 ">
                     Status
                   </Text>
-                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg">
+                  <Text className="border-b-2 border-b-gray-500 py-3 text-lg text-gray-600 dark:text-neutral-300 ">
                     {capitalizeFirstLetter(attendance.status)}
                   </Text>
                 </View>
               </View>
             </ScrollView>
+          </View>
           </View>
         </View>
       </Modal>
