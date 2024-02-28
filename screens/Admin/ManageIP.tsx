@@ -161,7 +161,7 @@ const ManageIP = () => {
             {renderDeleteConfrim()}
           </DataTable>
         </View>
-        <View className="mb-6 rounded-md bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white shadow-lg">
+        {/* <View className="mb-6 rounded-md bg-[#f1f6ff] dark:bg-[#3a3a3a] dark:shadow-white shadow-lg">
           <View className="p-4" style={{ elevation: 10, zIndex: 10 }}>
             <View className="flex-row items-center justify-between">
               <Text className="font-semibold text-gray-600 dark:text-neutral-300">Daftar Kordinat Lokasi</Text>
@@ -249,7 +249,7 @@ const ManageIP = () => {
             ))}
             {renderDeleteConfrim()}
           </DataTable>
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );
