@@ -33,6 +33,7 @@ const UserScreen = ({ navigation }: any) => {
   const [chart, setChart] = useState<number>(1);
   const [fullName, setFullName] = useState("");
   const [email, setEMail] = useState("");
+  const [error, setError] = useState("");
   const [phone, setPhone] = useState("");
   const [title, setTitle] = useState("");
 
@@ -229,6 +230,11 @@ const UserScreen = ({ navigation }: any) => {
                   keyboardType="default"
                   onChangeText={(text) => setTitle(text)}
                 />
+                {error !== "" && (
+                  <Text className="text-lg font-semibold text-red-500">
+                    {error}
+                  </Text>
+                )}
               </View>
             </View>
 
@@ -236,17 +242,14 @@ const UserScreen = ({ navigation }: any) => {
               onPress={async () => {
                 setRefreshing(true);
                 if (title === "") {
-                  showToast("Pengaduan tidak boleh kosong");
+                  setError("Pengaduan tidak boleh kosong");
                   setRefreshing(false);
-                  setOpenFeedback(false);
                   return;
                 }
 
                 const data = await postFeedback(title);
                 if (data instanceof Error) {
-                  showToast(data.message);
                   setRefreshing(false);
-                  setOpenFeedback(false);
                   return;
                 }
                 

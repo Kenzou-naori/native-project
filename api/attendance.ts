@@ -86,21 +86,13 @@ export async function postAttendance(status: IAttendanceStatus, image: string) {
 
       return response.data.data.attendance;
     })
-    .catch((error: AxiosError<IAPIErrorResponse, any>) => {
-      const errMessage: string[] = error.response?.data.message!.split(";")!;
-      let message: string = "";
-      if (errMessage.length > 1) {
-        for (let i = 0; i < errMessage.length; i++) {
-          if (i === 0) {
-            message += errMessage[i].replace("tidak boleh kosong", "");
-          } else {
-            message += "dan" + errMessage[i];
-          }
-        }
-      } else {
-        message = error.response?.data.message!.replace(":", "")!;
+    .catch((error) => {
+      const errMessage: IAPIErrorResponse | undefined = error.response?.data;
+      let message: string;
+      if (errMessage?.message) {
+        message = errMessage.message;
+        showToast(capitalizeFirstLetter(message.replaceAll(":", ""))); // Call the toast function here
       }
-
       return error;
     });
 
