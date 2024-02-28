@@ -178,6 +178,7 @@ interface IPaidLeave {
   startDate: string;
   days: number;
   endDate: string;
+  attachment: string;
   status: number;
   statusBy: string;
   created_at: string;

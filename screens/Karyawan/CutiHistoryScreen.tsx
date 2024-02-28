@@ -36,27 +36,27 @@ export default function HistoryScreen({ navigation }: any) {
     month = month.padStart(2, "0");
     year = year.padStart(2, "0");
 
-    await GetPaidLeaves();
-    await storage.load({ key: "paidLeaves" }).then((res) => {
-      setPaidLeaves(JSON.parse(res));
-      setRefreshing(false);
+    await GetPaidLeaves(0).then((res) => {
+      if (res instanceof AxiosError) {
+        console.log(res.request);
+      } else {
+        setPaidLeaves(res.data.data.paidLeaves);
+      }
     });
+    setRefreshing(false);
   }, []);
 
   useEffect(() => {
     async function loadDatas() {
       setRefreshing(true);
-      await storage.load({ key: "paidLeaves" }).then((res) => {
-        setPaidLeaves(JSON.parse(res));
-        setRefreshing(false);
-      });
-      await getCompany().then(async (res) => {
+      await GetPaidLeaves().then((res) => {
         if (res instanceof AxiosError) {
-          console.log(res);
+          console.log(res.response?.data.message);
         } else {
-          setCompany(res.data.data.company);
+          setPaidLeaves(res.data.data.paidLeaves);
         }
       });
+      setRefreshing(false);
     }
     loadDatas();
   }, []);

@@ -38,15 +38,17 @@ export async function GetPaidLeaves(status: number | null = null): Promise<
   | AxiosError<IAPIErrorResponse, any>
 > {
   return axios
-    .get(baseUrl + "/v1/users/@me/paidLeaves" + status ? "?status=" + status : "" , {
+    .get(`${baseUrl}/v1/users/@me/paidLeaves${status ? `?status=${status}` : "" }` , {
       headers: {
         Authorization: `Bearer ${await storage.load({ key: "token" })}`,
       },
     })
     .then(async (response: AxiosResponse<IAPIResponseGetPaidLeaves, any>) => {
+      console.log(response.data.data);
+
       await storage.save({
         key: "paidLeaves",
-        data: JSON.stringify(response.data.data.paidLeaves),
+        data: response.data.data.paidLeaves,
       });
 
       return response;
@@ -77,7 +79,7 @@ export async function SendPaidLeave(
     .then(async (response: AxiosResponse<IAPIResponsePostPaidLeave, any>) => {
       await storage.save({
         key: "paidLeaves",
-        data: response.data.data.paidLeave,
+        data: JSON.stringify(response.data.data.paidLeave),
       });
 
       return response;

@@ -133,13 +133,6 @@ export default function HomeScreen({ navigation }: any) {
           setActivePaidLeave(res.data.data.paidLeave);
         }
       }),
-      GetPaidLeaves().then((res) => {
-        if (res instanceof AxiosError) {
-          console.log(res.response?.data.message);
-        } else {
-          setPaidLeaves(res.data.data.paidLeaves);
-        }
-      }),
     ]).then(() => {
       setRefreshing(false);
     });
@@ -213,13 +206,6 @@ export default function HomeScreen({ navigation }: any) {
             console.log(res.response?.data.message);
           } else {
             setActivePaidLeave(res.data.data.paidLeave);
-          }
-        }),
-        GetPaidLeaves().then((res) => {
-          if (res instanceof AxiosError) {
-            console.log(res.response?.data.message);
-          } else {
-            setPaidLeaves(res.data.data.paidLeaves);
           }
         }),
       ]).then(() => {
@@ -919,30 +905,19 @@ export default function HomeScreen({ navigation }: any) {
             </View>
             <TouchableOpacity
               onPress={async () => {
-                const date =
-                  dayDate.toString().padStart(2, "0") +
-                  "-" +
-                  monthDate.toString().padStart(2, "0") +
-                  "-" +
-                  yearDate.toString().padStart(2, "0");
+                const date = new Date();
+                const day = date.getDate().toString().padStart(2, "0");
+                const month = (date.getMonth() + 1).toString().padStart(2, "0");
+                const year = date.getFullYear().toString().padStart(2, "0");
 
-                if (title === "") {
-                  showToast("Alasan tidak boleh kosong");
-                  return;
-                } else if (date === "--") {
-                  showToast("Tanggal tidak boleh kosong");
-                  return;
-                } else if (endTime === 0) {
+                if (endTime === 0) {
                   showToast("Lama cuti tidak boleh kosong");
-                  return;
-                } else if (currentDate > date) {
-                  showToast("Tanggal tidak boleh kurang dari hari ini");
                   return;
                 }
 
                 const data: IAPIPaidLeaveData = {
-                  reason: title,
-                  startDate: date,
+                  reason: "Sakit",
+                  startDate: day + "-" + month + "-" + year,
                   days: endTime,
                   attachment: image?.base64 ?? "",
                 };
@@ -950,7 +925,7 @@ export default function HomeScreen({ navigation }: any) {
                   if (res instanceof AxiosError) {
                     console.log(res);
                   } else {
-                    setOpenModal(false);
+                    setOpenSakit(false);
                     setImage(undefined);
                   }
                 });

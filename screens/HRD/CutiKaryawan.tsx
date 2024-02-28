@@ -1,16 +1,24 @@
 import { GetPaidLeaves, SetPaidLeaveStatus } from "../../api/admin";
-import { formatISODate } from "../../api/util";
+import { baseUrl, formatISODate, showToast } from "../../api/util";
 
 import storage from "../../utils/storage";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 
-import { Text, View, ScrollView, Modal, TouchableOpacity, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  Modal,
+  TouchableOpacity,
+  Pressable,
+  Image,
+} from "react-native";
 import { DataTable } from "react-native-paper";
 import { useColorScheme } from "nativewind";
 import { useEffect, useState } from "react";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 
 import Spinner from "react-native-loading-spinner-overlay";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -18,11 +26,13 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 const CutiKaryawan = () => {
   const [cuti, setCuti] = useState<IPaidLeaveWithuser[]>([]);
   const [totalCuti, setTotalCuti] = useState<number>(0);
+  const [token, setToken] = useState<string>("");
+  const [image, setImage] = useState<string>("");
   const [showCek, setShowCek] = useState(false);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState<number>(0);
-  
+
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
   const from = page * 25;
@@ -33,17 +43,20 @@ const CutiKaryawan = () => {
 
     async function loadCuti() {
       const cuti = await storage.load({ key: "cuti" });
-      const cutiData = JSON.parse(cuti);
+      const cutiData: IPaidLeaveWithuser[] = JSON.parse(cuti);
       const totalCuti = await storage.load({ key: "totalCuti" });
 
       setTotalCuti(parseInt(totalCuti));
       setCuti(cutiData);
+
+      await storage.load({ key: "token" }).then((res) => {
+        setToken(res);
+      });
       setLoading(false);
     }
 
     loadCuti();
   }, []);
-  
 
   const toggleDropdown = () => {
     setVisible(!visible);
@@ -113,7 +126,6 @@ const CutiKaryawan = () => {
             }}
             className="my-4 w-32 rounded-md bg-blue-500 p-3"
           >
-            
             <Text className="text-center text-white">
               <Ionicons color="white" name="refresh-circle-outline" size={17} />
               Refresh
@@ -121,7 +133,7 @@ const CutiKaryawan = () => {
           </TouchableOpacity>
         </View>
         <View className="mb-6 rounded-md bg-[#f1f6ff] shadow-lg dark:bg-[#3a3a3a]">
-        <View className="p-4" style={{ elevation: 10, zIndex: 10 }}>
+          <View className="p-4" style={{ elevation: 10, zIndex: 10 }}>
             <View className="flex-row items-center justify-between">
               <Text className="font-semibold text-gray-600 dark:text-neutral-300">
                 Daftar Karyawan
@@ -208,18 +220,6 @@ const CutiKaryawan = () => {
                         : "DEE9FD",
                 }}
               >
-                Lama Cuti
-              </DataTable.Title>
-              <DataTable.Title
-                textStyle={{
-                  color:
-                    colorScheme === "dark"
-                      ? "#DEE9FD"
-                      : colorScheme == "light"
-                        ? "#212121"
-                        : "DEE9FD",
-                }}
-              >
                 Tanggal Selesai
               </DataTable.Title>
               <DataTable.Title
@@ -232,7 +232,7 @@ const CutiKaryawan = () => {
                         : "DEE9FD",
                 }}
               >
-                Status
+                Gambar
               </DataTable.Title>
               <DataTable.Title
                 textStyle={{
@@ -251,30 +251,6 @@ const CutiKaryawan = () => {
             {!cuti ||
               (cuti.length === 0 && (
                 <DataTable.Row>
-                  <DataTable.Cell
-                    textStyle={{
-                      color:
-                        colorScheme === "dark"
-                          ? "#DEE9FD"
-                          : colorScheme == "light"
-                            ? "#212121"
-                            : "DEE9FD",
-                    }}
-                  >
-                    No data
-                  </DataTable.Cell>
-                  <DataTable.Cell
-                    textStyle={{
-                      color:
-                        colorScheme === "dark"
-                          ? "#DEE9FD"
-                          : colorScheme == "light"
-                            ? "#212121"
-                            : "DEE9FD",
-                    }}
-                  >
-                    No data
-                  </DataTable.Cell>
                   <DataTable.Cell
                     textStyle={{
                       color:
@@ -411,18 +387,6 @@ const CutiKaryawan = () => {
                             : "DEE9FD",
                     }}
                   >
-                    {cutit.days} Hari
-                  </DataTable.Cell>
-                  <DataTable.Cell
-                    textStyle={{
-                      color:
-                        colorScheme === "dark"
-                          ? "#DEE9FD"
-                          : colorScheme == "light"
-                            ? "#212121"
-                            : "DEE9FD",
-                    }}
-                  >
                     {formatISODate(cutit.endDate)}
                   </DataTable.Cell>
                   <DataTable.Cell
@@ -435,11 +399,35 @@ const CutiKaryawan = () => {
                             : "DEE9FD",
                     }}
                   >
-                    {cutit.status === 0
-                      ? "Pending"
-                      : cutit.status === 1
-                        ? "Diterima"
-                        : "Ditolak"}
+                    <TouchableOpacity
+                      onPress={async () => {
+                        setLoading(true);
+                        axios
+                          .get(
+                            `${baseUrl}/v1/users/@me/paidLeave/attachment/${cutit.id}`,
+                            {
+                              headers: {
+                                Authorization: `Bearer ${token}`,
+                              },
+                            },
+                          )
+                          .then((res) => {
+                            showToast("Berhasil mengambil gambar");
+                            setImage(res.data.data.attachment);
+                            setLoading(false);
+                          })
+                          .catch((err) => {
+                            showToast("Gagal mengambil gambar");
+                            setLoading(false);
+                          })
+                          .finally(() => {
+                            setLoading(false);
+                          });
+                      }}
+                      className="rounded-md border border-gray-600 bg-blue-200 p-3"
+                    >
+                      <Text className="text-gray-600">Lihat</Text>
+                    </TouchableOpacity>
                   </DataTable.Cell>
                   <DataTable.Cell
                     textStyle={{
@@ -521,8 +509,33 @@ const CutiKaryawan = () => {
           </DataTable>
         </View>
       </View>
+      {renderImage()}
     </ScrollView>
   );
+
+  function renderImage() {
+    return (
+      <Modal animationType="fade" transparent={true} visible={image !== ""}>
+        <View className="h-full items-center justify-center">
+          <View className="w-full rounded-2xl bg-[#f0fafd] p-5 lg:w-[40%]">
+            <View className="flex-row justify-between">
+              <Text className="text-2xl font-bold text-gray-600">
+                Lihat Gambar
+              </Text>
+              <TouchableOpacity onPress={() => setImage("")}>
+                <FontAwesomeIcon icon={faSquareXmark} size={25} color="red" />
+              </TouchableOpacity>
+            </View>
+            <Image
+              source={{ uri: `data:image/jpeg;base64,${image}` }}
+              style={{ width: 200, height: 200 }}
+            />
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
   function renderCek() {
     return (
       <Modal animationType="fade" transparent={true} visible={showCek}>
